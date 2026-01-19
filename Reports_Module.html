@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Credit Rating Portfolio Reports - All Templates">
+    <title>Portfolio Reports | Credit Assessment System</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- SheetJS (xlsx.full.min.js) -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    
+    <style>
+        /* ============================================
+           CSS VARIABLES (Theme Colors)
+           ============================================ */
+        :root {
+            --primary-dark: #11224E;
+            --primary-orange: #F87B1B;
+            --accent-green: #CBD99B;
+            --background-light: #EEEEEE;
+            --text-dark: #1a1a1a;
+            --text-light: #6c757d;
+            --border-color: #dee2e6;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --sidebar-width: 280px;
+            --header-height: 60px;
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+        
+        /* ============================================
+           HEADER / TOP BAR
+           ============================================ */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 1040;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+        }
+        
+        .hamburger-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-right: 1rem;
+            transition: transform var(--transition-speed);
+        }
+        
+        .hamburger-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .header-brand {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .theme-toggle {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* ============================================
+           LEFT SIDEBAR NAVIGATION
+           ============================================ */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: white;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            z-index: 1030;
+            transform: translateX(-100%);
+            transition: transform var(--transition-speed) ease-in-out;
+            overflow-y: auto;
+        }
+        
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: 100%;
+            height: calc(100vh - var(--header-height));
+            background: rgba(0,0,0,0.5);
+            z-index: 1020;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed), visibility var(--transition-speed);
+        }
+        
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 1rem 0;
+        }
+        
+        .sidebar-nav-item {
+            margin: 0.25rem 0.75rem;
+        }
+        
+        .sidebar-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all var(--transition-speed);
+            font-weight: 500;
+        }
+        
+        .sidebar-nav-link:hover,
+        .sidebar-nav-link.active {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            color: white;
+        }
+        
+        .sidebar-nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+        
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 1rem 0.75rem;
+        }
+        
+        /* ============================================
+           MAIN CONTENT AREA
+           ============================================ */
+        .main-content {
+            margin-top: var(--header-height);
+            padding: 2rem 1rem;
+            min-height: calc(100vh - var(--header-height));
+        }
+        
+        @media (min-width: 992px) {
+            .main-content {
+                padding: 2rem 3rem;
+            }
+        }
+        
+        /* ============================================
+           SECTION CARDS
+           ============================================ */
+        .section-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--background-light);
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* ============================================
+           REPORT PREVIEW TABLE
+           ============================================ */
+        .report-preview {
+            overflow-x: auto;
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            background: white;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+        }
+        
+        .report-table th,
+        .report-table td {
+            padding: 0.5rem 0.3rem;
+            text-align: center;
+            border: 1px solid #d0d0d0;
+            white-space: nowrap;
+        }
+        
+        /* Header Row 1: Template Title */
+        .report-table thead tr:first-child th {
+            background: #4472C4;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        /* Header Row 2: Section Labels */
+        .report-table thead tr:nth-child(2) th {
+            background: #5B9BD5;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 30px;
+            z-index: 9;
+        }
+        
+        /* Header Row 3: Column Headers */
+        .report-table thead tr:nth-child(3) th {
+            background: #BDD7EE;
+            color: #1F4E78;
+            font-weight: 600;
+            font-size: 0.7rem;
+            position: sticky;
+            top: 60px;
+            z-index: 8;
+        }
+        
+        /* Data Rows */
+        .report-table tbody tr:nth-child(odd) {
+            background: #F2F2F2;
+        }
+        
+        .report-table tbody tr:nth-child(even) {
+            background: white;
+        }
+        
+        .report-table tbody td:first-child,
+        .report-table tbody td:nth-child(2) {
+            font-weight: 600;
+            background: #E7E6E6;
+            position: sticky;
+            left: 0;
+            z-index: 5;
+        }
+        
+        .report-table tbody td:nth-child(2) {
+            left: 80px;
+        }
+        
+        .report-table tbody td:last-child {
+            background: #FFF2CC;
+            font-weight: 700;
+            color: #C65911;
+        }
+        
+        /* NA cells styling */
+        .report-table tbody td.na-cell {
+            background: #D3D3D3;
+            color: #666;
+            font-style: italic;
+        }
+        
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        .btn-action {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.875rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            margin: 0 0.25rem;
+            font-weight: 600;
+        }
+        
+        .btn-primary-custom {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .btn-primary-custom:hover {
+            background: #1a3570;
+            transform: translateY(-2px);
+        }
+        
+        .btn-orange {
+            background: var(--primary-orange);
+            color: white;
+        }
+        
+        .btn-orange:hover {
+            background: #e06a0a;
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        .btn-success-custom {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success-custom:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        /* ============================================
+           FORM ELEMENTS
+           ============================================ */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .form-control,
+        .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            transition: all var(--transition-speed);
+        }
+        
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.2rem rgba(248, 123, 27, 0.25);
+        }
+        
+        /* ============================================
+           TOAST NOTIFICATIONS
+           ============================================ */
+        .toast-container {
+            position: fixed;
+            top: calc(var(--header-height) + 1rem);
+            right: 1rem;
+            z-index: 1050;
+        }
+        
+        /* ============================================
+           LOADING SPINNER
+           ============================================ */
+        .loading-spinner {
+            border: 4px solid rgba(248, 123, 27, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-orange);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            .header-brand {
+                font-size: 1rem;
+            }
+            
+            .user-profile .user-name {
+                display: none;
+            }
+            
+            .btn-action {
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+            }
+        }
+        
+        /* ============================================
+           ACCESSIBILITY
+           ============================================ */
+        *:focus {
+            outline: 2px solid var(--primary-orange);
+            outline-offset: 2px;
+        }
+        
+        button:focus,
+        a:focus {
+            outline-width: 3px;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================
+         TOP HEADER
+         ============================================ -->
+    <header class="top-header" role="banner">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation menu">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <a href="#" class="header-brand">
+            <i class="fas fa-file-excel"></i>
+            Portfolio Reports - All Templates
+        </a>
+        
+        <div class="header-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+            
+            <div class="user-profile" role="button" tabindex="0" aria-label="User profile menu">
+                <div class="user-avatar">AD</div>
+                <span class="user-name d-none d-md-inline">Admin</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </header>
+    
+    <!-- ============================================
+         SIDEBAR OVERLAY
+         ============================================ -->
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+    
+    <!-- ============================================
+         LEFT SIDEBAR NAVIGATION
+         ============================================ -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+        <nav>
+            <ul class="sidebar-nav">
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link" onclick="returnToDashboard()"> -->
+                        <!-- <i class="fas fa-home"></i> -->
+                        <!-- <span>Dashboard</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-file-alt"></i> -->
+                        <!-- <span>Assessments</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <li class="sidebar-nav-item">
+                    <a href="#reports" class="sidebar-nav-link active" data-page="reports">
+                        <i class="fas fa-file-excel"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+                
+                <!-- <div class="sidebar-divider"></div> -->
+                
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-chart-bar"></i> -->
+                        <!-- <span>Analytics</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-cog"></i> -->
+                        <!-- <span>Settings</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- ============================================
+         MAIN CONTENT AREA
+         ============================================ -->
+    <main class="main-content" id="mainContent" role="main">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+            <div>
+                <h1 class="h2 mb-1" style="color: var(--primary-dark); font-weight: 700;">Comprehensive Portfolio Report</h1>
+                <p class="text-muted mb-0">All 4 rating templates with detailed scoring breakdown (20 customers)</p>
+            </div>
+            <div class="d-flex gap-2 mt-2 mt-md-0">
+                <button class="btn btn-action btn-success-custom" id="generateReportBtn">
+                    <i class="fas fa-sync me-2"></i>Generate Report
+                </button>
+                <button class="btn btn-action btn-orange" id="downloadExcelBtn">
+                    <i class="fas fa-download me-2"></i>Download Excel
+                </button>
+            </div>
+        </div>
+        
+        <!-- Report Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="section-card text-center">
+                    <h3 class="text-primary" style="font-size: 2rem;">20</h3>
+                    <p class="text-muted mb-0">Total Customers</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="section-card text-center">
+                    <h3 class="text-success" style="font-size: 2rem;">4</h3>
+                    <p class="text-muted mb-0">Rating Templates</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="section-card text-center">
+                    <h3 class="text-warning" style="font-size: 2rem;">18</h3>
+                    <p class="text-muted mb-0">Single Template</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="section-card text-center">
+                    <h3 class="text-danger" style="font-size: 2rem;">2</h3>
+                    <p class="text-muted mb-0">Multi-Template</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Report Filters -->
+        <div class="section-card">
+            <h5 style="color: var(--primary-dark); margin-bottom: 1rem;">
+                <i class="fas fa-filter me-2"></i>Report Filters
+            </h5>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="templateFilter" class="form-label">Template Filter</label>
+                        <select class="form-select" id="templateFilter">
+                            <option value="all" selected>All Templates</option>
+                            <option value="contracting">Contracting & Services</option>
+                            <option value="trading">Trading & Manufacturing</option>
+                            <option value="real-estate">Investment Real Estate</option>
+                            <option value="personal">Personal Net Worth</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="dateFrom" class="form-label">Date From</label>
+                        <input type="date" class="form-control" id="dateFrom" value="2025-01-01">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="dateTo" class="form-label">Date To</label>
+                        <input type="date" class="form-control" id="dateTo" value="2025-11-20">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="statusFilter" class="form-label">Status</label>
+                        <select class="form-select" id="statusFilter">
+                            <option value="all">All Status</option>
+                            <option value="completed" selected>Completed</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Report Preview -->
+        <div class="section-card">
+            <div class="section-header">
+                <h5 class="section-title">
+                    <i class="fas fa-table"></i>
+                    Report Preview - All Templates
+                </h5>
+                <div>
+                    <span class="badge bg-primary">20 Customers</span>
+                    <span class="badge bg-success ms-2">4 Templates</span>
+                </div>
+            </div>
+            
+            <div class="alert alert-info" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Note:</strong> 18 customers are assigned to single templates. 2 customers (Ahmed Al-Rashid, Sultan Trading Co.) are assessed across multiple templates. Empty cells show "NA".
+            </div>
+            
+            <div class="report-preview" id="reportPreview">
+                <!-- Report table will be generated here -->
+            </div>
+        </div>
+    </main>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Main Application JavaScript -->
+    <script>
+        // ============================================
+        // APPLICATION STATE & STORAGE
+        // ============================================
+        const STORAGE_KEYS = {
+            theme: 'appTheme'
+        };
+        
+        let appState = {
+            sidebarOpen: false,
+            reportData: []
+        };
+        
+        // ============================================
+        // TEMPLATE COLUMN DEFINITIONS
+        // ============================================
+        const TEMPLATE_COLUMNS = {
+            contracting: {
+                name: 'Contracting & Services',
+                qualitative: [
+                    'Constitution and Establishment',
+                    'Number of Years in Business',
+                    'Availability of un-utilized Credit Limits',
+                    'Existence of financial planning and Control',
+                    'Position in the Market',
+                    'Govt./private sector contracting',
+                    'Sensitivity to Economic Shocks',
+                    'Contractor Grade',
+                    'Past track record',
+                    'Competition & Demand',
+                    'Qualified Resources'
+                ],
+                quantitative: [
+                    'Affiliates due to Net Worth',
+                    'Current Ratio',
+                    'Debt to Equity Ratio',
+                    'Operating Revenue to Ext. Liabilities',
+                    'Inv Assets To Total Assets',
+                    'Net Profit Margin',
+                    'Working Capital Turnover',
+                    'Change in Debt Ratio'
+                ],
+                miscellaneous: [
+                    'Account Conduct - Persistent ever-greening',
+                    'Drastic fall in Capital markets',
+                    'Deteriorating Global Economic sentiments',
+                    '# of Notches'
+                ],
+                mandatory: [
+                    'Age of Financial Information',
+                    'Quality of Financial Information',
+                    'Historical Account Performance',
+                    'Qualification of Audit Report'
+                ]
+            },
+            trading: {
+                name: 'Trading & Manufacturing',
+                qualitative: [
+                    'Constitution & Establishment',
+                    'Years in Business',
+                    'Unutilized Credit Limits',
+                    'Financial Planning & Control',
+                    'Position in Market',
+                    'Competition/Supply & Demand',
+                    'Economic Sensitivity',
+                    'Customer Base',
+                    'Quality of Receivables',
+                    'Distribution Channel',
+                    'Price Volatility Management'
+                ],
+                quantitative: [
+                    'Affiliates to Net Worth',
+                    'Current Ratio',
+                    'Debt Equity Ratio',
+                    'Ops Revenue / Ext Liabilities',
+                    'Investment Assets to Total Assets',
+                    'Net Profit Margin (NPM)',
+                    'Working Capital Turnover (WCT)',
+                    'Change in Debt Ratio'
+                ],
+                miscellaneous: [
+                    'Management changes',
+                    'Market position change',
+                    'Legal disputes',
+                    '# of Notches'
+                ],
+                mandatory: [
+                    'Age of Financial Info',
+                    'Quality of Financial Info',
+                    'Historical Account Performance',
+                    'Audit Report Qualification'
+                ]
+            },
+            realEstate: {
+                name: 'Investment Real Estate & Finance',
+                qualitative: [
+                    'Constitution & Establishment',
+                    'Management Character',
+                    'Years in Business',
+                    'Unutilized Credit Lines',
+                    'Financial Planning & Control',
+                    'Asset Quality (Diversification)',
+                    'Asset Quality (Risk)',
+                    'Real Estate Concentration'
+                ],
+                quantitative: [
+                    'Current Debt to Total Debt',
+                    'Debt Equity Ratio (DER)',
+                    'Interest Coverage (ICR)',
+                    'Return on Assets (ROA)',
+                    'Change in DER',
+                    'Change in Quick Ratio',
+                    'Change in ROA',
+                    'Unrealized Gains to Net Profit',
+                    'Unquoted Assets to Total Assets',
+                    'Ops Cash / Ext Liabilities'
+                ],
+                miscellaneous: [
+                    'Diversification Risk',
+                    'Real Estate Market Volatility',
+                    'Regulatory Changes',
+                    '# of Notches'
+                ],
+                mandatory: [
+                    'Age of Financial Info',
+                    'Quality of Financial Info',
+                    'Historical Account Performance',
+                    'Audit Report Qualification'
+                ]
+            },
+            personal: {
+                name: 'Personal Net Worth Declaration',
+                qualitative: [
+                    'Years in Business',
+                    'Existence of Legal Heirs',
+                    'Management Character',
+                    'Availability of Financial Resources',
+                    'Income Diversification',
+                    'Years in Relationship',
+                    'Accessibility',
+                    'Credit History',
+                    'Unquoted Assets'
+                ],
+                quantitative: [
+                    'Debt Equity Ratio',
+                    'Cash / Current Liabilities',
+                    'Interest Coverage (ICR)',
+                    'EBIT / Total Current Liabilities',
+                    'LN(Networth)',
+                    'Growth in Net Worth'
+                ],
+                miscellaneous: [
+                    'Succession Risk',
+                    'Key Person Risk',
+                    'Estate Planning Issues',
+                    '# of Notches'
+                ],
+                mandatory: [
+                    'Age of Financial Info',
+                    'Quality of Financial Info',
+                    'Historical Account Performance'
+                ]
+            }
+        };
+        
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            initializeEventListeners();
+            generateReport();
+            loadTheme();
+        });
+        
+        function initializeApp() {
+            console.log('Comprehensive Reports Module Initialized');
+            appState.reportData = generateComprehensiveReportData();
+        }
+        
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        function initializeEventListeners() {
+            document.getElementById('hamburgerBtn').addEventListener('click', toggleSidebar);
+            document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            document.getElementById('generateReportBtn').addEventListener('click', generateReport);
+            document.getElementById('downloadExcelBtn').addEventListener('click', downloadExcel);
+        }
+        
+        // ============================================
+        // SIDEBAR NAVIGATION
+        // ============================================
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const hamburger = document.getElementById('hamburgerBtn');
+            
+            appState.sidebarOpen = !appState.sidebarOpen;
+            
+            if (appState.sidebarOpen) {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                hamburger.setAttribute('aria-expanded', 'true');
+            } else {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+            }
+        }
+        
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarOverlay').classList.remove('active');
+            document.getElementById('hamburgerBtn').setAttribute('aria-expanded', 'false');
+            appState.sidebarOpen = false;
+        }
+        
+        function returnToDashboard() {
+            window.location.href = 'credit-assessment-system.html';
+        }
+        
+        // ============================================
+        // GENERATE COMPREHENSIVE REPORT DATA
+        // ============================================
+        function generateComprehensiveReportData() {
+            const customers = [
+                // Multi-template customers (2)
+                { cif: 'CIF-001', name: 'Ahmed Al-Rashid', templates: ['contracting', 'trading'] },
+                { cif: 'CIF-002', name: 'Sultan Trading Co.', templates: ['trading', 'realEstate'] },
+                
+                // Single template customers (18)
+                { cif: 'CIF-003', name: 'Fatima Construction', templates: ['contracting'] },
+                { cif: 'CIF-004', name: 'Mohammed Engineering', templates: ['contracting'] },
+                { cif: 'CIF-005', name: 'Aisha Services Ltd', templates: ['contracting'] },
+                { cif: 'CIF-006', name: 'Omar Contracting', templates: ['contracting'] },
+                { cif: 'CIF-007', name: 'Layla Infrastructure', templates: ['contracting'] },
+                
+                { cif: 'CIF-008', name: 'Khalid Trading Corp', templates: ['trading'] },
+                { cif: 'CIF-009', name: 'Mariam Manufacturing', templates: ['trading'] },
+                { cif: 'CIF-010', name: 'Abdullah Exports', templates: ['trading'] },
+                { cif: 'CIF-011', name: 'Sara Imports Ltd', templates: ['trading'] },
+                { cif: 'CIF-012', name: 'Ali Wholesale Co', templates: ['trading'] },
+                
+                { cif: 'CIF-013', name: 'Noor Real Estate', templates: ['realEstate'] },
+                { cif: 'CIF-014', name: 'Youssef Properties', templates: ['realEstate'] },
+                { cif: 'CIF-015', name: 'Hana Investments', templates: ['realEstate'] },
+                { cif: 'CIF-016', name: 'Ibrahim Finance Co', templates: ['realEstate'] },
+                
+                { cif: 'CIF-017', name: 'Zahra Mohammed', templates: ['personal'] },
+                { cif: 'CIF-018', name: 'Hassan Abdullah', templates: ['personal'] },
+                { cif: 'CIF-019', name: 'Amina Ahmed', templates: ['personal'] },
+                { cif: 'CIF-020', name: 'Rashid Ibrahim', templates: ['personal'] }
+            ];
+            
+            return customers.map(customer => {
+                const row = {
+                    cif: customer.cif,
+                    name: customer.name,
+                    templates: customer.templates
+                };
+                
+                // Generate data for each template
+                ['contracting', 'trading', 'realEstate', 'personal'].forEach(templateKey => {
+                    const hasTemplate = customer.templates.includes(templateKey);
+                    const template = TEMPLATE_COLUMNS[templateKey];
+                    
+                    // Qualitative parameters
+                    template.qualitative.forEach((param, idx) => {
+                        const key = `${templateKey}_q${idx + 1}`;
+                        row[key] = hasTemplate ? randomInt(0, 35) : 'NA';
+                    });
+                    
+                    // Quantitative parameters
+                    template.quantitative.forEach((param, idx) => {
+                        const key = `${templateKey}_r${idx + 1}`;
+                        row[key] = hasTemplate ? randomDecimal(0, 45) : 'NA';
+                    });
+                    
+                    // Miscellaneous parameters
+                    template.miscellaneous.forEach((param, idx) => {
+                        const key = `${templateKey}_m${idx + 1}`;
+                        row[key] = hasTemplate ? (idx < 3 ? randomInt(-20, 0) : randomInt(-3, 0)) : 'NA';
+                    });
+                    
+                    // Mandatory Adjustments
+                    template.mandatory.forEach((param, idx) => {
+                        const key = `${templateKey}_a${idx + 1}`;
+                        row[key] = hasTemplate ? randomInt(-25, 0) : 'NA';
+                    });
+                    
+                    // Final Score for this template
+                    if (hasTemplate) {
+                        let score = 0;
+                        template.qualitative.forEach((param, idx) => {
+                            score += row[`${templateKey}_q${idx + 1}`];
+                        });
+                        template.quantitative.forEach((param, idx) => {
+                            score += row[`${templateKey}_r${idx + 1}`];
+                        });
+                        template.miscellaneous.forEach((param, idx) => {
+                            score += row[`${templateKey}_m${idx + 1}`];
+                        });
+                        template.mandatory.forEach((param, idx) => {
+                            score += row[`${templateKey}_a${idx + 1}`];
+                        });
+                        row[`${templateKey}_finalScore`] = Math.round(score);
+                    } else {
+                        row[`${templateKey}_finalScore`] = 'NA';
+                    }
+                });
+                
+                return row;
+            });
+        }
+        
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        function randomDecimal(min, max) {
+            return parseFloat((Math.random() * (max - min) + min).toFixed(1));
+        }
+        
+        // ============================================
+        // GENERATE REPORT PREVIEW
+        // ============================================
+        function generateReport() {
+            showToast('Generating Report', 'Preparing comprehensive portfolio report...', 'info');
+            
+            const container = document.getElementById('reportPreview');
+            container.innerHTML = '<div class="loading-spinner"></div>';
+            
+            setTimeout(() => {
+                container.innerHTML = renderComprehensiveReportTable(appState.reportData);
+                showToast('Report Generated', 'Portfolio report ready for download', 'success');
+            }, 1500);
+        }
+        
+        function renderComprehensiveReportTable(data) {
+            // Calculate total columns needed
+            let totalCols = 2; // CIF + Name
+            
+            ['contracting', 'trading', 'realEstate', 'personal'].forEach(key => {
+                const template = TEMPLATE_COLUMNS[key];
+                totalCols += template.qualitative.length + template.quantitative.length + 
+                            template.miscellaneous.length + template.mandatory.length + 1; // +1 for final score
+            });
+            
+            return `
+                <table class="report-table" id="portfolioReportTable">
+                    <thead>
+                        ${generateHeaderRow1()}
+                        ${generateHeaderRow2()}
+                        ${generateHeaderRow3()}
+                    </thead>
+                    <tbody>
+                        ${data.map(row => generateDataRow(row)).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+        
+        function generateHeaderRow1() {
+            return `
+                <tr>
+                    <th colspan="2">Customer Info</th>
+                    ${generateTemplateHeader('contracting')}
+                    ${generateTemplateHeader('trading')}
+                    ${generateTemplateHeader('realEstate')}
+                    ${generateTemplateHeader('personal')}
+                </tr>
+            `;
+        }
+        
+        function generateTemplateHeader(templateKey) {
+            const template = TEMPLATE_COLUMNS[templateKey];
+            const totalCols = template.qualitative.length + template.quantitative.length + 
+                            template.miscellaneous.length + template.mandatory.length + 1;
+            return `<th colspan="${totalCols}">${template.name}</th>`;
+        }
+        
+        function generateHeaderRow2() {
+            return `
+                <tr>
+                    <th rowspan="2">CIF</th>
+                    <th rowspan="2">Name</th>
+                    ${generateTemplateSections('contracting')}
+                    ${generateTemplateSections('trading')}
+                    ${generateTemplateSections('realEstate')}
+                    ${generateTemplateSections('personal')}
+                </tr>
+            `;
+        }
+        
+        function generateTemplateSections(templateKey) {
+            const template = TEMPLATE_COLUMNS[templateKey];
+            return `
+                <th colspan="${template.qualitative.length}">Qualitative</th>
+                <th colspan="${template.quantitative.length}">Quantitative</th>
+                <th colspan="${template.miscellaneous.length}">Miscellaneous</th>
+                <th colspan="${template.mandatory.length}">Mandatory Adjustments</th>
+                <th rowspan="2">Final Score</th>
+            `;
+        }
+        
+        function generateHeaderRow3() {
+            return `
+                <tr>
+                    ${generateColumnHeaders('contracting')}
+                    ${generateColumnHeaders('trading')}
+                    ${generateColumnHeaders('realEstate')}
+                    ${generateColumnHeaders('personal')}
+                </tr>
+            `;
+        }
+        
+        function generateColumnHeaders(templateKey) {
+            const template = TEMPLATE_COLUMNS[templateKey];
+            let headers = '';
+            
+            template.qualitative.forEach(col => {
+                headers += `<th>${col}</th>`;
+            });
+            template.quantitative.forEach(col => {
+                headers += `<th>${col}</th>`;
+            });
+            template.miscellaneous.forEach(col => {
+                headers += `<th>${col}</th>`;
+            });
+            template.mandatory.forEach(col => {
+                headers += `<th>${col}</th>`;
+            });
+            
+            return headers;
+        }
+        
+        function generateDataRow(row) {
+            let html = `
+                <tr>
+                    <td>${row.cif}</td>
+                    <td>${row.name}</td>
+            `;
+            
+            ['contracting', 'trading', 'realEstate', 'personal'].forEach(templateKey => {
+                const template = TEMPLATE_COLUMNS[templateKey];
+                
+                // Qualitative
+                template.qualitative.forEach((param, idx) => {
+                    const value = row[`${templateKey}_q${idx + 1}`];
+                    html += value === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${value}</td>`;
+                });
+                
+                // Quantitative
+                template.quantitative.forEach((param, idx) => {
+                    const value = row[`${templateKey}_r${idx + 1}`];
+                    html += value === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${value}</td>`;
+                });
+                
+                // Miscellaneous
+                template.miscellaneous.forEach((param, idx) => {
+                    const value = row[`${templateKey}_m${idx + 1}`];
+                    html += value === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${value}</td>`;
+                });
+                
+                // Mandatory Adjustments
+                template.mandatory.forEach((param, idx) => {
+                    const value = row[`${templateKey}_a${idx + 1}`];
+                    html += value === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${value}</td>`;
+                });
+                
+                // Final Score
+                const finalScore = row[`${templateKey}_finalScore`];
+                html += finalScore === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${finalScore}</td>`;
+            });
+            
+            html += '</tr>';
+            return html;
+        }
+        
+        // ============================================
+        // DOWNLOAD EXCEL WITH ALL TEMPLATES
+        // ============================================
+        function downloadExcel() {
+            showToast('Preparing Download', 'Creating comprehensive Excel file...', 'info');
+            
+            const wb = XLSX.utils.book_new();
+            const excelData = prepareComprehensiveExcelData();
+            const ws = XLSX.utils.aoa_to_sheet(excelData);
+            
+            // Set column widths
+            const colWidths = [
+                { wch: 12 },  // CIF
+                { wch: 25 }   // Name
+            ];
+            
+            ['contracting', 'trading', 'realEstate', 'personal'].forEach(key => {
+                const template = TEMPLATE_COLUMNS[key];
+                const templateCols = template.qualitative.length + template.quantitative.length + 
+                                   template.miscellaneous.length + template.mandatory.length + 1;
+                for (let i = 0; i < templateCols; i++) {
+                    colWidths.push({ wch: 15 });
+                }
+            });
+            
+            ws['!cols'] = colWidths;
+            
+            // Merge cells for headers
+            const merges = generateMerges();
+            ws['!merges'] = merges;
+            
+            XLSX.utils.book_append_sheet(wb, ws, 'All Templates Report');
+            XLSX.writeFile(wb, `Portfolio_Report_All_Templates_${new Date().toISOString().split('T')[0]}.xlsx`);
+            
+            showToast('Download Complete', 'Excel file downloaded successfully', 'success');
+        }
+        
+        function prepareComprehensiveExcelData() {
+            const data = appState.reportData;
+            const rows = [];
+            
+            // Header Row 1
+            const row1 = ['Customer Info', ''];
+            ['contracting', 'trading', 'realEstate', 'personal'].forEach(key => {
+                const template = TEMPLATE_COLUMNS[key];
+                const cols = template.qualitative.length + template.quantitative.length + 
+                           template.miscellaneous.length + template.mandatory.length + 1;
+                row1.push(template.name);
+                for (let i = 1; i < cols; i++) row1.push('');
+            });
+            rows.push(row1);
+            
+            // Header Row 2
+            const row2 = ['CIF', 'Name'];
+            ['contracting', 'trading', 'realEstate', 'personal'].forEach(key => {
+                const template = TEMPLATE_COLUMNS[key];
+                row2.push('Qualitative');
+                for (let i = 1; i < template.qualitative.length; i++) row2.push('');
+                row2.push('Quantitative');
+                for (let i = 1; i < template.quantitative.length; i++) row2.push('');
+                row2.push('Miscellaneous');
+                for (let i = 1; i < template.miscellaneous.length; i++) row2.push('');
+                row2.push('Mandatory Adjustments');
+                for (let i = 1; i < template.mandatory.length; i++) row2.push('');
+                row2.push('Final Score');
+            });
+            rows.push(row2);
+            
+            // Header Row 3
+            const row3 = ['', ''];
+            ['contracting', 'trading', 'realEstate', 'personal'].forEach(key => {
+                const template = TEMPLATE_COLUMNS[key];
+                template.qualitative.forEach(col => row3.push(col));
+                template.quantitative.forEach(col => row3.push(col));
+                template.miscellaneous.forEach(col => row3.push(col));
+                template.mandatory.forEach(col => row3.push(col));
+                row3.push('');
+            });
+            rows.push(row3);
+            
+            // Data rows
+            data.forEach(row => {
+                const dataRow = [row.cif, row.name];
+                
+                ['contracting', 'trading', 'realEstate', 'personal'].forEach(key => {
+                    const template = TEMPLATE_COLUMNS[key];
+                    
+                    template.qualitative.forEach((param, idx) => {
+                        dataRow.push(row[`${key}_q${idx + 1}`]);
+                    });
+                    template.quantitative.forEach((param, idx) => {
+                        dataRow.push(row[`${key}_r${idx + 1}`]);
+                    });
+                    template.miscellaneous.forEach((param, idx) => {
+                        dataRow.push(row[`${key}_m${idx + 1}`]);
+                    });
+                    template.mandatory.forEach((param, idx) => {
+                        dataRow.push(row[`${key}_a${idx + 1}`]);
+                    });
+                    dataRow.push(row[`${key}_finalScore`]);
+                });
+                
+                rows.push(dataRow);
+            });
+            
+            return rows;
+        }
+        
+        function generateMerges() {
+            const merges = [];
+            let colIdx = 0;
+            
+            // Row 1 merges (Customer Info)
+            merges.push({ s: { r: 0, c: 0 }, e: { r: 0, c: 1 } });
+            colIdx = 2;
+            
+            ['contracting', 'trading', 'realEstate', 'personal'].forEach(key => {
+                const template = TEMPLATE_COLUMNS[key];
+                const span = template.qualitative.length + template.quantitative.length + 
+                           template.miscellaneous.length + template.mandatory.length + 1;
+                merges.push({ s: { r: 0, c: colIdx }, e: { r: 0, c: colIdx + span - 1 } });
+                colIdx += span;
+            });
+            
+            // Row 2 merges (CIF, Name span to row 3)
+            merges.push({ s: { r: 1, c: 0 }, e: { r: 2, c: 0 } });
+            merges.push({ s: { r: 1, c: 1 }, e: { r: 2, c: 1 } });
+            
+            colIdx = 2;
+            ['contracting', 'trading', 'realEstate', 'personal'].forEach(key => {
+                const template = TEMPLATE_COLUMNS[key];
+                
+                // Qualitative
+                merges.push({ s: { r: 1, c: colIdx }, e: { r: 1, c: colIdx + template.qualitative.length - 1 } });
+                colIdx += template.qualitative.length;
+                
+                // Quantitative
+                merges.push({ s: { r: 1, c: colIdx }, e: { r: 1, c: colIdx + template.quantitative.length - 1 } });
+                colIdx += template.quantitative.length;
+                
+                // Miscellaneous
+                merges.push({ s: { r: 1, c: colIdx }, e: { r: 1, c: colIdx + template.miscellaneous.length - 1 } });
+                colIdx += template.miscellaneous.length;
+                
+                // Mandatory Adjustments
+                merges.push({ s: { r: 1, c: colIdx }, e: { r: 1, c: colIdx + template.mandatory.length - 1 } });
+                colIdx += template.mandatory.length;
+                
+                // Final Score (spans to row 3)
+                merges.push({ s: { r: 1, c: colIdx }, e: { r: 2, c: colIdx } });
+                colIdx += 1;
+            });
+            
+            return merges;
+        }
+        
+        // ============================================
+        // THEME TOGGLE
+        // ============================================
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.querySelector('#themeToggle i');
+            
+            body.classList.toggle('dark-theme');
+            
+            if (body.classList.contains('dark-theme')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem(STORAGE_KEYS.theme, 'dark');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem(STORAGE_KEYS.theme, 'light');
+            }
+        }
+        
+        function loadTheme() {
+            const savedTheme = localStorage.getItem(STORAGE_KEYS.theme);
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.querySelector('#themeToggle i').classList.replace('fa-moon', 'fa-sun');
+            }
+        }
+        
+        // ============================================
+        // TOAST NOTIFICATIONS
+        // ============================================
+        function showToast(title, message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toastId = `toast-${Date.now()}`;
+            
+            const iconMap = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            
+            const colorMap = {
+                success: 'success',
+                error: 'danger',
+                warning: 'warning',
+                info: 'info'
+            };
+            
+            const toastHTML = `
+                <div class="toast align-items-center text-white bg-${colorMap[type]} border-0" role="alert" aria-live="assertive" aria-atomic="true" id="${toastId}">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas ${iconMap[type]} me-2"></i>
+                            <strong>${title}</strong><br>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+            
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+            
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { delay: 4000 });
+            toast.show();
+            
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
+            });
+        }
+        
+        // ============================================
+        // WINDOW RESIZE HANDLER
+        // ============================================
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 992 && appState.sidebarOpen) {
+                closeSidebar();
+            }
+        });
+    </script>
+</body>
+</html>

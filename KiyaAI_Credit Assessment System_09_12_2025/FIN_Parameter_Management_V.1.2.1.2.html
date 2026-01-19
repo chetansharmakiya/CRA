@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Parameter Management System</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-dark: #11224E;
+            --primary-orange: #F87B1B;
+            --accent-green: #CBD99B;
+            --background-light: #EEEEEE;
+            --text-dark: #1a1a1a;
+            --text-light: #6c757d;
+            --border-color: #dee2e6;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --header-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            padding-top: var(--header-height);
+        }
+
+        /* Header */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1040;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+
+        .header-brand {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .header-nav button {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .header-nav button:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Cards */
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        /* Tabs */
+        .nav-tabs {
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--text-dark);
+            font-weight: 600;
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 1rem 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-orange);
+            border-bottom-color: var(--primary-orange);
+            background: transparent;
+        }
+
+        .nav-tabs .nav-link:hover {
+            border-bottom-color: var(--primary-orange);
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+
+        .data-table thead {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .data-table th {
+            font-weight: 600;
+            padding: 1rem 0.75rem;
+            border: none;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 0.875rem 0.75rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tbody tr:hover {
+            background-color: rgba(17, 34, 78, 0.04);
+        }
+
+        /* Badges */
+        .badge-active {
+            background: rgba(40, 167, 69, 0.2);
+            color: #155724;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-inactive {
+            background: rgba(108, 117, 125, 0.2);
+            color: #495057;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .btn-primary-custom {
+            background: var(--primary-dark);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary-custom:hover {
+            background: #1a3570;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(17, 34, 78, 0.3);
+            color: white;
+        }
+
+        .btn-orange {
+            background: var(--primary-orange);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-orange:hover {
+            background: #e06a0a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(248, 123, 27, 0.3);
+            color: white;
+        }
+
+        .btn-action {
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0 0.25rem;
+            min-width: 36px;
+        }
+
+        /* Forms */
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-label-required::after {
+            content: ' *';
+            color: var(--danger);
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.2rem rgba(248, 123, 27, 0.25);
+        }
+
+        /* Range Configuration */
+        .range-config-section {
+            background: var(--background-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .range-row {
+            display: grid;
+            grid-template-columns: 2fr 2fr 2fr 2fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .range-row-header {
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 0.9rem;
+        }
+
+        /* Formula Builder */
+        .formula-builder {
+            background: #fff3cd;
+            border: 2px dashed #ffc107;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .formula-variables {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .formula-variable-chip {
+            background: white;
+            border: 2px solid var(--primary-dark);
+            color: var(--primary-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .formula-variable-chip:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        /* Modal */
+        .modal-header {
+            background: var(--primary-dark);
+            color: white;
+            border-bottom: none;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .modal-header .btn-close {
+            filter: invert(1);
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .modal-xl {
+            max-width: 1400px;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: calc(var(--header-height) + 1rem);
+            right: 1rem;
+            z-index: 1050;
+        }
+
+        /* Loading Spinner */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255,255,255,0.3);
+            border-top-color: var(--primary-orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Sub-section headers */
+        .sub-section-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: linear-gradient(90deg, rgba(248,123,27,0.1) 0%, rgba(255,255,255,0) 100%);
+            border-left: 4px solid var(--primary-orange);
+            border-radius: 4px;
+        }
+
+        /* Stats Cards */
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 4px solid var(--primary-orange);
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .stats-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-header {
+                padding: 0 1rem;
+            }
+
+            .header-brand {
+                font-size: 1.1rem;
+            }
+
+            .range-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .section-card {
+                padding: 1rem;
+            }
+
+            .nav-tabs .nav-link {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="top-header">
+        <div class="header-brand">
+            <i class="fas fa-cogs"></i>
+            Financial Parameter Management
+        </div>
+        <div class="header-nav">
+            <button onclick="exportAllData()">
+                <i class="fas fa-download me-2"></i>Export Data
+            </button>
+            <button onclick="resetAllData()">
+                <i class="fas fa-sync me-2"></i>Reset
+            </button>
+        </div>
+    </header>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Main Content -->
+    <main class="container-fluid px-4 py-4">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h1 class="h2 mb-2" style="color: var(--primary-dark); font-weight: 700;">
+                    <i class="fas fa-sliders-h me-2"></i>
+                    Financial Parameter Configuration
+                </h1>
+                <p class="text-muted">Configure Financial Ratio input fields and Formula Specifications. All changes stored in browser localStorage.</p>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="stats-card">
+                    <div class="stats-number" id="inputFieldsCount">0</div>
+                    <div class="stats-label">Input Fields Configured</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="stats-card">
+                    <div class="stats-number" id="formulasCount">0</div>
+                    <div class="stats-label">Formula Specifications</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Navigation Tabs -->
+        <div class="section-card">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" id="financialTab" data-bs-toggle="tab" data-bs-target="#financialView" type="button">
+                        <i class="fas fa-chart-line me-2"></i>Financial Ratio
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="formulaSpecsTab" data-bs-toggle="tab" data-bs-target="#formulaSpecsView" type="button">
+                        <i class="fas fa-calculator me-2"></i>Formula Specification
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content mt-4">
+                
+                <!-- ========================================= -->
+                <!-- TAB 1: FINANCIAL RATIO (INPUT FIELDS) -->
+                <!-- ========================================= -->
+                <div class="tab-pane fade show active" id="financialView">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-database me-2 text-primary"></i>
+                            Financial Input Parameters
+                        </h4>
+                        <button class="btn btn-primary-custom" onclick="addFinancialInputField()">
+                            <i class="fas fa-plus me-2"></i>Add Input Field
+                        </button>
+                    </div>
+
+                    <div class="alert alert-primary">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Purpose:</strong> Define all the financial data fields/inputs that will be collected from users during assessment. These fields will be used as variables in formula calculations.
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Field Name</th>
+                                    <th>Field Code (Variable)</th>
+                                    <th>Category</th>
+                                    <th>Data Type</th>
+                                    <th>Unit</th>
+                                    <th>Required</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="financialInputFieldsTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert alert-info mt-3">
+                        <strong><i class="fas fa-code me-2"></i>For Developers:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Each field generates a database column: <code>financial_data.{fieldCode}</code></li>
+                            <li>Each field exposes API: <code>POST /api/v1/assessments/{id}/financial/{fieldCode}</code></li>
+                            <li>All fields are available as variables in formula specifications</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- ========================================= -->
+                <!-- TAB 2: FORMULA SPECIFICATION -->
+                <!-- ========================================= -->
+                <div class="tab-pane fade" id="formulaSpecsView">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-calculator me-2 text-warning"></i>
+                            Formula Specification Configuration
+                        </h4>
+                        <button class="btn btn-orange" onclick="addFinancialRatio()">
+                            <i class="fas fa-plus me-2"></i>Add Formula Specification
+                        </button>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <i class="fas fa-flask me-2"></i>
+                        <strong>Purpose:</strong> Define financial ratios by creating formulas using the input fields. Each formula includes scoring ranges for credit assessment.
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Formula Name</th>
+                                    <th>Formula Expression</th>
+                                    <th>Template Group</th>
+                                    <th>Weight (%)</th>
+                                    <th>Scoring Ranges</th>
+                                    <th>DB Column</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="formulaSpecsTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="formula-builder mt-4">
+                        <h6><i class="fas fa-magic me-2"></i>Formula Builder Assistant</h6>
+                        <p class="small text-muted">Click on any variable below to see details and example usage:</p>
+                        
+                        <div class="formula-variables" id="formulaVariablesDisplay">
+                            <!-- Chips generated from input fields -->
+                        </div>
+
+                        <div class="mt-3 p-3" style="background: white; border-radius: 6px;" id="formulaExampleDisplay">
+                            <strong>Formula Examples:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li><strong>Current Ratio:</strong> <code>total_current_assets / total_current_liabilities</code></li>
+                                <li><strong>Debt-to-Equity:</strong> <code>total_debt / shareholders_equity</code></li>
+                                <li><strong>Return on Equity:</strong> <code>(net_profit / shareholders_equity) * 100</code></li>
+                                <li><strong>Debt Service Coverage:</strong> <code>(net_profit + depreciation + interest_expense) / total_debt</code></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ========================================= -->
+    <!-- MODAL: FINANCIAL INPUT FIELD -->
+    <!-- ========================================= -->
+    <div class="modal fade" id="financialInputFieldModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-database me-2"></i>
+                        <span id="inputFieldModalTitle">Add Financial Input Field</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editInputFieldId">
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label form-label-required">Field Name</label>
+                                <input type="text" class="form-control" id="inputFieldName" placeholder="e.g., Total Current Assets">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label form-label-required">Field Code (Variable Name)</label>
+                                <input type="text" class="form-control" id="inputFieldCode" placeholder="e.g., total_current_assets">
+                                <small class="text-muted">Use snake_case, no spaces</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label form-label-required">Category</label>
+                                <select class="form-select" id="inputFieldCategory">
+                                    <option value="">Select Category</option>
+                                    <option value="balance_sheet">Balance Sheet</option>
+                                    <option value="assets">Assets</option>
+                                    <option value="liabilities">Liabilities</option>
+                                    <option value="equity">Equity</option>
+                                    <option value="pl">Profit & Loss</option>
+                                    <option value="revenue">Revenue</option>
+                                    <option value="expenses">Expenses</option>
+                                    <option value="cashflow">Cash Flow</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Data Type</label>
+                                <select class="form-select" id="inputFieldDataType">
+                                    <option value="decimal">Decimal/Number</option>
+                                    <option value="integer">Integer</option>
+                                    <option value="percentage">Percentage</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Unit</label>
+                                <select class="form-select" id="inputFieldUnit">
+                                    <option value="currency">Currency</option>
+                                    <option value="percentage">Percentage (%)</option>
+                                    <option value="ratio">Ratio</option>
+                                    <option value="count">Count</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Required Field</label>
+                                <select class="form-select" id="inputFieldRequired">
+                                    <option value="true">Yes - Mandatory</option>
+                                    <option value="false">No - Optional</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Validation Rule</label>
+                                <select class="form-select" id="inputFieldValidation">
+                                    <option value="none">None</option>
+                                    <option value="positive">Positive Numbers Only</option>
+                                    <option value="non_negative">Non-Negative (>= 0)</option>
+                                    <option value="percentage">Percentage (0-100)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description / Help Text</label>
+                        <textarea class="form-control" id="inputFieldDescription" rows="2" placeholder="Optional description to guide users"></textarea>
+                    </div>
+
+                    <div class="alert alert-secondary">
+                        <strong><i class="fas fa-info-circle me-2"></i>Auto-Generated:</strong><br>
+                        <strong>Database Column:</strong> <code id="inputFieldDbPreview">financial_data.{field_code}</code><br>
+                        <strong>API Endpoint:</strong> <code id="inputFieldApiPreview">POST /api/v1/assessments/{id}/financial/{field_code}</code>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary-custom" onclick="saveInputField()">
+                        <i class="fas fa-save me-2"></i>Save Input Field
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- MODAL: FORMULA SPECIFICATION -->
+    <!-- ========================================= -->
+    <div class="modal fade" id="formulaSpecModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-calculator me-2"></i>
+                        <span id="formulaModalTitle">Add Formula Specification</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editFormulaId">
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label form-label-required">Select Financial Inputs for Formula</label>
+                                <select class="form-select" id="formulaInputsSelect" multiple size="8" onchange="updateFormulaDbColumnPreview()">
+                                    <optgroup label="Balance Sheet - Assets">
+                                        <option value="total_current_assets">Total Current Assets</option>
+                                        <option value="cash_and_equivalents">Cash and Cash Equivalents</option>
+                                        <option value="accounts_receivable">Accounts Receivable</option>
+                                        <option value="inventory">Inventory</option>
+                                        <option value="total_fixed_assets">Total Fixed Assets</option>
+                                        <option value="net_fixed_assets">Net Fixed Assets (After Depreciation)</option>
+                                        <option value="total_assets">Total Assets</option>
+                                        <option value="intangible_assets">Intangible Assets</option>
+                                    </optgroup>
+                                    <optgroup label="Balance Sheet - Liabilities">
+                                        <option value="total_current_liabilities">Total Current Liabilities</option>
+                                        <option value="accounts_payable">Accounts Payable</option>
+                                        <option value="short_term_debt">Short Term Debt</option>
+                                        <option value="long_term_debt">Long Term Debt</option>
+                                        <option value="total_debt">Total Debt (Short + Long Term)</option>
+                                        <option value="total_liabilities">Total Liabilities</option>
+                                    </optgroup>
+                                    <optgroup label="Balance Sheet - Equity">
+                                        <option value="shareholders_equity">Shareholders Equity</option>
+                                        <option value="retained_earnings">Retained Earnings</option>
+                                        <option value="paid_up_capital">Paid-up Capital</option>
+                                    </optgroup>
+                                    <optgroup label="Profit & Loss Statement">
+                                        <option value="total_revenue">Total Revenue / Sales</option>
+                                        <option value="gross_profit">Gross Profit</option>
+                                        <option value="ebitda">EBITDA</option>
+                                        <option value="operating_profit">Operating Profit (EBIT)</option>
+                                        <option value="net_profit">Net Profit After Tax</option>
+                                        <option value="interest_expense">Interest Expense</option>
+                                        <option value="depreciation">Depreciation & Amortization</option>
+                                        <option value="operating_expenses">Operating Expenses</option>
+                                        <option value="cost_of_goods_sold">Cost of Goods Sold (COGS)</option>
+                                    </optgroup>
+                                    <optgroup label="Cash Flow Statement">
+                                        <option value="operating_cash_flow">Operating Cash Flow</option>
+                                        <option value="free_cash_flow">Free Cash Flow</option>
+                                        <option value="capital_expenditure">Capital Expenditure (CapEx)</option>
+                                    </optgroup>
+                                </select>
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Hold <kbd>Ctrl</kbd> (Windows) or <kbd>Cmd</kbd> (Mac) to select multiple inputs
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label form-label-required">Formula Name / Label</label>
+                                <input type="text" class="form-control" id="formulaName" placeholder="e.g., Current Ratio">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Selected Inputs (DB Columns)</label>
+                                <input type="text" class="form-control" id="formulaDbColumn" readonly style="background-color: #f8f9fa;">
+                                <small class="text-muted">Auto-generated comma-separated</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-primary">
+                        <strong><i class="fas fa-lightbulb me-2"></i>Selected Variables:</strong>
+                        <div id="selectedVariablesPreview" class="mt-2">
+                            <span class="text-muted">Select inputs above to see available variables</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label form-label-required">Template Group</label>
+                                <select class="form-select" id="formulaTemplateGroup">
+                                    <option value="">Select Template</option>
+                                    <option value="corporate">Corporate</option>
+                                    <option value="msme">MSME</option>
+                                    <option value="retail">Retail</option>
+                                    <option value="agriculture">Agriculture</option>
+                                    <option value="all">All Templates</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label form-label-required">Weight (%)</label>
+                                <input type="number" class="form-control" id="formulaWeight" min="0" max="100" step="0.1" placeholder="e.g., 15">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label form-label-required">Formula Expression</label>
+                        <input type="text" class="form-control" id="formulaExpression" placeholder="e.g., total_current_assets / total_current_liabilities">
+                        <small class="text-muted">
+                            <i class="fas fa-calculator me-1"></i>
+                            Use variable names from selection. Supports: <kbd>+</kbd> <kbd>-</kbd> <kbd>*</kbd> <kbd>/</kbd> <kbd>()</kbd>
+                        </small>
+                    </div>
+
+                    <div class="alert alert-warning" style="font-size: 0.9rem;">
+                        <strong><i class="fas fa-magic me-2"></i>Quick Formula Templates:</strong>
+                        <div class="d-flex flex-wrap gap-2 mt-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertFormulaTemplate('division')">
+                                A / B (Ratio)
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertFormulaTemplate('percentage')">
+                                (A / B) * 100
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertFormulaTemplate('addition')">
+                                A + B + C
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertFormulaTemplate('complex')">
+                                (A + B) / (C + D)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Formula Description</label>
+                        <textarea class="form-control" id="formulaDescription" rows="2" placeholder="Explain what this formula calculates"></textarea>
+                    </div>
+
+                    <!-- Scoring Ranges -->
+                    <div class="range-config-section">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6><i class="fas fa-sliders-h me-2"></i>Scoring Ranges</h6>
+                            <button type="button" class="btn btn-primary-custom btn-sm" onclick="addFormulaRange()">
+                                <i class="fas fa-plus me-2"></i>Add Range
+                            </button>
+                        </div>
+
+                        <div class="range-row range-row-header">
+                            <div>Range Label</div>
+                            <div>Min Value</div>
+                            <div>Max Value</div>
+                            <div>Score Points</div>
+                            <div>Action</div>
+                        </div>
+
+                        <div id="formulaRangesContainer">
+                            <!-- Ranges added dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Required</label>
+                                <select class="form-select" id="formulaRequired">
+                                    <option value="true">Yes</option>
+                                    <option value="false">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="formulaActive">
+                                    <option value="true">Active</option>
+                                    <option value="false">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-orange" onclick="saveFormulaSpec()">
+                        <i class="fas fa-save me-2"></i>Save Formula Specification
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ========================================
+        // GLOBAL DATA STORAGE
+        // ========================================
+        const STORAGE_KEYS = {
+            inputFields: 'financialSystem_inputFields',
+            formulas: 'financialSystem_formulas'
+        };
+
+        const appData = {
+            inputFields: [],
+            formulas: []
+        };
+
+        // ========================================
+        // UTILITY FUNCTIONS
+        // ========================================
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        function showToast(title, message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toastId = 'toast-' + Date.now();
+            
+            const bgClass = type === 'success' ? 'bg-success' : 
+                           type === 'danger' ? 'bg-danger' : 
+                           type === 'warning' ? 'bg-warning' : 'bg-info';
+            
+            const toastHtml = `
+                <div id="${toastId}" class="toast align-items-center text-white ${bgClass} border-0" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <strong>${title}</strong><br>${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+            
+            toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+            toast.show();
+            
+            toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
+        }
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+        function initializeDefaultData() {
+            // Default Input Fields
+            const defaultInputFields = [
+                { id: 'IF-1', fieldName: 'Total Current Assets', fieldCode: 'total_current_assets', category: 'assets', dataType: 'decimal', unit: 'currency', required: true, validation: 'non_negative', description: 'Sum of all current assets' },
+                { id: 'IF-2', fieldName: 'Total Current Liabilities', fieldCode: 'total_current_liabilities', category: 'liabilities', dataType: 'decimal', unit: 'currency', required: true, validation: 'non_negative', description: 'Sum of all current liabilities' },
+                { id: 'IF-3', fieldName: 'Total Debt', fieldCode: 'total_debt', category: 'liabilities', dataType: 'decimal', unit: 'currency', required: true, validation: 'non_negative', description: 'Total outstanding debt' },
+                { id: 'IF-4', fieldName: 'Shareholders Equity', fieldCode: 'shareholders_equity', category: 'equity', dataType: 'decimal', unit: 'currency', required: true, validation: 'none', description: 'Total equity' },
+                { id: 'IF-5', fieldName: 'Total Revenue', fieldCode: 'total_revenue', category: 'revenue', dataType: 'decimal', unit: 'currency', required: true, validation: 'non_negative', description: 'Annual revenue' },
+                { id: 'IF-6', fieldName: 'Net Profit After Tax', fieldCode: 'net_profit', category: 'pl', dataType: 'decimal', unit: 'currency', required: true, validation: 'none', description: 'Annual net profit' }
+            ];
+
+            // Default Formulas
+            const defaultFormulas = [
+                { 
+                    id: 'FM-1', 
+                    name: 'Current Ratio', 
+                    expression: 'total_current_assets / total_current_liabilities',
+                    dbColumn: 'total_current_assets, total_current_liabilities',
+                    templateGroup: 'all', 
+                    weight: 20,
+                    description: 'Measures ability to pay short-term obligations',
+                    required: true,
+                    active: true,
+                    ranges: [
+                        { label: 'Excellent', min: 2.0, max: 999, score: 100 },
+                        { label: 'Good', min: 1.5, max: 2.0, score: 80 },
+                        { label: 'Average', min: 1.0, max: 1.5, score: 60 },
+                        { label: 'Poor', min: 0.5, max: 1.0, score: 40 },
+                        { label: 'Critical', min: 0, max: 0.5, score: 20 }
+                    ]
+                },
+                { 
+                    id: 'FM-2', 
+                    name: 'Debt-to-Equity Ratio', 
+                    expression: 'total_debt / shareholders_equity',
+                    dbColumn: 'total_debt, shareholders_equity',
+                    templateGroup: 'all', 
+                    weight: 25,
+                    description: 'Measures financial leverage',
+                    required: true,
+                    active: true,
+                    ranges: [
+                        { label: 'Excellent', min: 0, max: 0.5, score: 100 },
+                        { label: 'Good', min: 0.5, max: 1.0, score: 80 },
+                        { label: 'Average', min: 1.0, max: 2.0, score: 60 },
+                        { label: 'Poor', min: 2.0, max: 3.0, score: 40 },
+                        { label: 'Critical', min: 3.0, max: 999, score: 20 }
+                    ]
+                }
+            ];
+
+            if (!localStorage.getItem(STORAGE_KEYS.inputFields)) {
+                localStorage.setItem(STORAGE_KEYS.inputFields, JSON.stringify(defaultInputFields));
+            }
+            if (!localStorage.getItem(STORAGE_KEYS.formulas)) {
+                localStorage.setItem(STORAGE_KEYS.formulas, JSON.stringify(defaultFormulas));
+            }
+        }
+
+        function loadAllData() {
+            appData.inputFields = JSON.parse(localStorage.getItem(STORAGE_KEYS.inputFields) || '[]');
+            appData.formulas = JSON.parse(localStorage.getItem(STORAGE_KEYS.formulas) || '[]');
+        }
+
+        // ========================================
+        // INPUT FIELDS CRUD
+        // ========================================
+        function addFinancialInputField() {
+            const modal = new bootstrap.Modal(document.getElementById('financialInputFieldModal'));
+            
+            document.getElementById('editInputFieldId').value = '';
+            document.getElementById('inputFieldName').value = '';
+            document.getElementById('inputFieldCode').value = '';
+            document.getElementById('inputFieldCategory').value = '';
+            document.getElementById('inputFieldDataType').value = 'decimal';
+            document.getElementById('inputFieldUnit').value = 'currency';
+            document.getElementById('inputFieldRequired').value = 'true';
+            document.getElementById('inputFieldValidation').value = 'none';
+            document.getElementById('inputFieldDescription').value = '';
+            document.getElementById('inputFieldModalTitle').textContent = 'Add Financial Input Field';
+            
+            modal.show();
+        }
+
+        function saveInputField() {
+            const id = document.getElementById('editInputFieldId').value || ('IF-' + Date.now());
+            const fieldName = document.getElementById('inputFieldName').value.trim();
+            const fieldCode = document.getElementById('inputFieldCode').value.trim();
+            const category = document.getElementById('inputFieldCategory').value;
+            const dataType = document.getElementById('inputFieldDataType').value;
+            const unit = document.getElementById('inputFieldUnit').value;
+            const required = document.getElementById('inputFieldRequired').value === 'true';
+            const validation = document.getElementById('inputFieldValidation').value;
+            const description = document.getElementById('inputFieldDescription').value.trim();
+
+            if (!fieldName || !fieldCode || !category) {
+                showToast('Error', 'Please fill in all required fields', 'danger');
+                return;
+            }
+
+            const existingField = appData.inputFields.find(f => f.fieldCode === fieldCode && f.id !== id);
+            if (existingField) {
+                showToast('Error', 'Field code already exists', 'danger');
+                return;
+            }
+
+            showLoading();
+
+            const payload = {
+                id,
+                fieldName,
+                fieldCode,
+                category,
+                dataType,
+                unit,
+                required,
+                validation,
+                description
+            };
+
+            setTimeout(() => {
+                const existingIndex = appData.inputFields.findIndex(f => f.id === id);
+                if (existingIndex >= 0) {
+                    appData.inputFields[existingIndex] = payload;
+                } else {
+                    appData.inputFields.push(payload);
+                }
+
+                localStorage.setItem(STORAGE_KEYS.inputFields, JSON.stringify(appData.inputFields));
+
+                renderInputFieldsTable();
+                updateFormulaVariablesDisplay();
+                updateStats();
+
+                hideLoading();
+                bootstrap.Modal.getInstance(document.getElementById('financialInputFieldModal')).hide();
+                showToast('Success', 'Input field saved successfully', 'success');
+            }, 400);
+        }
+
+        function renderInputFieldsTable() {
+            const tbody = document.getElementById('financialInputFieldsTableBody');
+            if (!tbody) return;
+
+            if (appData.inputFields.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            No input fields defined yet. Click "Add Input Field" to create one.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = appData.inputFields.map((field, idx) => {
+                const requiredBadge = field.required ? '<span class="badge badge-active">Yes</span>' : '<span class="badge badge-inactive">No</span>';
+                
+                const categoryBadges = {
+                    'balance_sheet': 'bg-info',
+                    'assets': 'bg-primary',
+                    'liabilities': 'bg-warning',
+                    'equity': 'bg-success',
+                    'pl': 'bg-danger',
+                    'revenue': 'bg-info',
+                    'expenses': 'bg-secondary',
+                    'cashflow': 'bg-dark'
+                };
+                
+                const badgeClass = categoryBadges[field.category] || 'bg-secondary';
+
+                return `
+                    <tr>
+                        <td>${idx + 1}</td>
+                        <td><strong>${field.fieldName}</strong></td>
+                        <td><code>${field.fieldCode}</code></td>
+                        <td><span class="badge ${badgeClass}">${field.category}</span></td>
+                        <td>${field.dataType}</td>
+                        <td>${field.unit}</td>
+                        <td>${requiredBadge}</td>
+                        <td>
+                            <button class="btn btn-primary-custom btn-action" onclick="editInputField('${field.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-action" onclick="deleteInputField('${field.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function editInputField(id) {
+            const field = appData.inputFields.find(f => f.id === id);
+            if (!field) return;
+
+            document.getElementById('editInputFieldId').value = field.id;
+            document.getElementById('inputFieldName').value = field.fieldName;
+            document.getElementById('inputFieldCode').value = field.fieldCode;
+            document.getElementById('inputFieldCategory').value = field.category;
+            document.getElementById('inputFieldDataType').value = field.dataType;
+            document.getElementById('inputFieldUnit').value = field.unit;
+            document.getElementById('inputFieldRequired').value = field.required ? 'true' : 'false';
+            document.getElementById('inputFieldValidation').value = field.validation;
+            document.getElementById('inputFieldDescription').value = field.description || '';
+            document.getElementById('inputFieldModalTitle').textContent = 'Edit Financial Input Field';
+
+            const modal = new bootstrap.Modal(document.getElementById('financialInputFieldModal'));
+            modal.show();
+        }
+
+        function deleteInputField(id) {
+            const field = appData.inputFields.find(f => f.id === id);
+            if (!field) return;
+
+            const usedInFormulas = appData.formulas.filter(f => f.expression && f.expression.includes(field.fieldCode));
+            
+            if (usedInFormulas.length > 0) {
+                const formulaNames = usedInFormulas.map(f => f.name).join(', ');
+                if (!confirm(`This field is used in: ${formulaNames}\n\nDeleting may break formulas. Continue?`)) {
+                    return;
+                }
+            } else {
+                if (!confirm(`Delete "${field.fieldName}"?`)) return;
+            }
+
+            showLoading();
+
+            setTimeout(() => {
+                appData.inputFields = appData.inputFields.filter(f => f.id !== id);
+                localStorage.setItem(STORAGE_KEYS.inputFields, JSON.stringify(appData.inputFields));
+
+                renderInputFieldsTable();
+                updateFormulaVariablesDisplay();
+                updateStats();
+
+                hideLoading();
+                showToast('Success', 'Input field deleted', 'success');
+            }, 300);
+        }
+
+        // ========================================
+        // FORMULA SPECIFICATIONS CRUD
+        // ========================================
+        function addFinancialRatio() {
+            const modal = new bootstrap.Modal(document.getElementById('formulaSpecModal'));
+            
+            document.getElementById('editFormulaId').value = '';
+            document.getElementById('formulaName').value = '';
+            document.getElementById('formulaDbColumn').value = '';
+            document.getElementById('formulaTemplateGroup').value = '';
+            document.getElementById('formulaWeight').value = '';
+            document.getElementById('formulaExpression').value = '';
+            document.getElementById('formulaDescription').value = '';
+            document.getElementById('formulaRequired').value = 'true';
+            document.getElementById('formulaActive').value = 'true';
+            document.getElementById('formulaRangesContainer').innerHTML = '';
+            document.getElementById('formulaModalTitle').textContent = 'Add Formula Specification';
+            
+            const selectElement = document.getElementById('formulaInputsSelect');
+            if (selectElement) selectElement.selectedIndex = -1;
+            
+            const previewDiv = document.getElementById('selectedVariablesPreview');
+            if (previewDiv) previewDiv.innerHTML = '<span class="text-muted">Select inputs above to see available variables</span>';
+            
+            modal.show();
+        }
+
+        function updateFormulaDbColumnPreview() {
+            const selectElement = document.getElementById('formulaInputsSelect');
+            const dbColumnField = document.getElementById('formulaDbColumn');
+            const previewDiv = document.getElementById('selectedVariablesPreview');
+            
+            if (!selectElement || !dbColumnField || !previewDiv) return;
+            
+            const selectedOptions = Array.from(selectElement.selectedOptions);
+            
+            if (selectedOptions.length === 0) {
+                dbColumnField.value = '';
+                previewDiv.innerHTML = '<span class="text-muted">Select inputs above to see available variables</span>';
+                return;
+            }
+            
+            const columnNames = selectedOptions.map(opt => opt.value);
+            dbColumnField.value = columnNames.join(', ');
+            
+            const chips = selectedOptions.map(opt => {
+                return `
+                    <span class="badge bg-primary me-2 mb-2" style="font-size: 0.85rem; padding: 0.5rem 0.75rem;">
+                        <i class="fas fa-code me-1"></i>
+                        <strong>${opt.value}</strong> 
+                        <span style="opacity: 0.8;">→ ${opt.textContent}</span>
+                    </span>
+                `;
+            }).join('');
+            
+            previewDiv.innerHTML = `
+                <div class="mb-2"><strong>Available Variables:</strong></div>
+                ${chips}
+                <div class="mt-2 p-2" style="background: white; border-radius: 4px; border: 1px dashed #2196F3;">
+                    <small><strong>Example:</strong></small><br>
+                    <code>${columnNames[0]} / ${columnNames[1] || columnNames[0]}</code>
+                    ${columnNames.length > 2 ? `<br><code>(${columnNames[0]} + ${columnNames[1]}) / ${columnNames[2]}</code>` : ''}
+                </div>
+            `;
+        }
+
+        function insertFormulaTemplate(templateType) {
+            const selectElement = document.getElementById('formulaInputsSelect');
+            const formulaInput = document.getElementById('formulaExpression');
+            
+            if (!selectElement || !formulaInput) return;
+            
+            const selectedVars = Array.from(selectElement.selectedOptions).map(opt => opt.value);
+            
+            if (selectedVars.length === 0) {
+                showToast('Info', 'Please select at least one input variable first', 'info');
+                return;
+            }
+            
+            let formula = '';
+            const v1 = selectedVars[0] || 'variable1';
+            const v2 = selectedVars[1] || 'variable2';
+            const v3 = selectedVars[2] || 'variable3';
+            const v4 = selectedVars[3] || 'variable4';
+            
+            switch(templateType) {
+                case 'division':
+                    formula = `${v1} / ${v2}`;
+                    break;
+                case 'percentage':
+                    formula = `(${v1} / ${v2}) * 100`;
+                    break;
+                case 'addition':
+                    formula = selectedVars.join(' + ');
+                    break;
+                case 'complex':
+                    formula = `(${v1} + ${v2}) / (${v3} + ${v4})`;
+                    break;
+                default:
+                    formula = `${v1}`;
+            }
+            
+            formulaInput.value = formula;
+            formulaInput.focus();
+        }
+
+        function addFormulaRange(existing = null) {
+            const container = document.getElementById('formulaRangesContainer');
+            const rowId = 'range-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+
+            const label = existing ? existing.label : '';
+            const min = existing ? existing.min : '';
+            const max = existing ? existing.max : '';
+            const score = existing ? existing.score : '';
+
+            const html = `
+                <div class="range-row" data-id="${rowId}">
+                    <input type="text" class="form-control" placeholder="e.g., Excellent" value="${label}">
+                    <input type="number" step="0.01" class="form-control" placeholder="Min" value="${min}">
+                    <input type="number" step="0.01" class="form-control" placeholder="Max" value="${max}">
+                    <input type="number" step="0.1" class="form-control" placeholder="Score" value="${score}">
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeFormulaRange('${rowId}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeFormulaRange(rowId) {
+            const row = document.querySelector(`.range-row[data-id="${rowId}"]`);
+            if (row) row.remove();
+        }
+
+        function collectFormulaRanges() {
+            const rows = Array.from(document.querySelectorAll('#formulaRangesContainer .range-row'));
+            return rows.map(r => {
+                const inputs = r.querySelectorAll('input');
+                return {
+                    label: inputs[0].value.trim(),
+                    min: parseFloat(inputs[1].value || '0'),
+                    max: parseFloat(inputs[2].value || '0'),
+                    score: parseFloat(inputs[3].value || '0')
+                };
+            }).filter(r => r.label);
+        }
+
+        function saveFormulaSpec() {
+            const id = document.getElementById('editFormulaId').value || ('FM-' + Date.now());
+            const name = document.getElementById('formulaName').value.trim();
+            const dbColumn = document.getElementById('formulaDbColumn').value.trim();
+            const templateGroup = document.getElementById('formulaTemplateGroup').value;
+            const weight = parseFloat(document.getElementById('formulaWeight').value || '0');
+            const expression = document.getElementById('formulaExpression').value.trim();
+            const description = document.getElementById('formulaDescription').value.trim();
+            const required = document.getElementById('formulaRequired').value === 'true';
+            const active = document.getElementById('formulaActive').value === 'true';
+            const ranges = collectFormulaRanges();
+
+            if (!name || !expression || !templateGroup) {
+                showToast('Error', 'Please fill all required fields', 'danger');
+                return;
+            }
+
+            if (ranges.length === 0) {
+                showToast('Warning', 'Please add at least one scoring range', 'warning');
+                return;
+            }
+
+            showLoading();
+
+            const payload = {
+                id,
+                name,
+                expression,
+                dbColumn,
+                templateGroup,
+                weight,
+                description,
+                required,
+                active,
+                ranges
+            };
+
+            setTimeout(() => {
+                const existingIndex = appData.formulas.findIndex(f => f.id === id);
+                if (existingIndex >= 0) {
+                    appData.formulas[existingIndex] = payload;
+                } else {
+                    appData.formulas.push(payload);
+                }
+
+                localStorage.setItem(STORAGE_KEYS.formulas, JSON.stringify(appData.formulas));
+
+                renderFormulasTable();
+                updateStats();
+
+                hideLoading();
+                bootstrap.Modal.getInstance(document.getElementById('formulaSpecModal')).hide();
+                showToast('Success', 'Formula specification saved successfully', 'success');
+            }, 400);
+        }
+
+        function renderFormulasTable() {
+            const tbody = document.getElementById('formulaSpecsTableBody');
+            if (!tbody) return;
+
+            if (appData.formulas.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            No formula specifications configured yet. Click "Add Formula Specification" to start.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = appData.formulas.map((formula, idx) => {
+                const rangesDisplay = (formula.ranges || []).map(r => 
+                    `<span class="badge bg-secondary me-1" style="font-size: 0.75rem;">${r.label}: ${r.min}-${r.max} → ${r.score}pts</span>`
+                ).join('<br>');
+
+                return `
+                    <tr>
+                        <td>${idx + 1}</td>
+                        <td><strong>${formula.name}</strong></td>
+                        <td><code style="font-size: 0.85rem;">${formula.expression}</code></td>
+                        <td><span class="badge bg-info">${formula.templateGroup}</span></td>
+                        <td><strong>${formula.weight.toFixed(2)}%</strong></td>
+                        <td style="font-size: 0.8rem;">${rangesDisplay}</td>
+                        <td><code class="small">${formula.dbColumn || 'N/A'}</code></td>
+                        <td>
+                            <button class="btn btn-primary-custom btn-action" onclick="editFormula('${formula.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-action" onclick="deleteFormula('${formula.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function editFormula(id) {
+            const formula = appData.formulas.find(f => f.id === id);
+            if (!formula) return;
+
+            document.getElementById('editFormulaId').value = formula.id;
+            document.getElementById('formulaName').value = formula.name;
+            document.getElementById('formulaDbColumn').value = formula.dbColumn || '';
+            document.getElementById('formulaTemplateGroup').value = formula.templateGroup;
+            document.getElementById('formulaWeight').value = formula.weight;
+            document.getElementById('formulaExpression').value = formula.expression;
+            document.getElementById('formulaDescription').value = formula.description || '';
+            document.getElementById('formulaRequired').value = formula.required ? 'true' : 'false';
+            document.getElementById('formulaActive').value = formula.active ? 'true' : 'false';
+
+            document.getElementById('formulaRangesContainer').innerHTML = '';
+            (formula.ranges || []).forEach(r => addFormulaRange(r));
+
+            document.getElementById('formulaModalTitle').textContent = 'Edit Formula Specification';
+
+            const modal = new bootstrap.Modal(document.getElementById('formulaSpecModal'));
+            modal.show();
+        }
+
+        function deleteFormula(id) {
+            const formula = appData.formulas.find(f => f.id === id);
+            if (!formula) return;
+
+            if (!confirm(`Delete formula "${formula.name}"?`)) return;
+
+            showLoading();
+
+            setTimeout(() => {
+                appData.formulas = appData.formulas.filter(f => f.id !== id);
+                localStorage.setItem(STORAGE_KEYS.formulas, JSON.stringify(appData.formulas));
+
+                renderFormulasTable();
+                updateStats();
+
+                hideLoading();
+                showToast('Success', 'Formula specification deleted', 'success');
+            }, 300);
+        }
+
+        // ========================================
+        // FORMULA VARIABLES DISPLAY
+        // ========================================
+        function updateFormulaVariablesDisplay() {
+            const container = document.getElementById('formulaVariablesDisplay');
+            if (!container) return;
+
+            if (appData.inputFields.length === 0) {
+                container.innerHTML = '<span class="text-muted">No variables available. Add input fields first.</span>';
+                return;
+            }
+
+            container.innerHTML = appData.inputFields.map(field => `
+                <span class="formula-variable-chip" onclick="showVariableInfo('${field.fieldCode}')" title="${field.fieldName}">
+                    <i class="fas fa-code me-1"></i>${field.fieldCode}
+                </span>
+            `).join('');
+        }
+
+        function showVariableInfo(fieldCode) {
+            const field = appData.inputFields.find(f => f.fieldCode === fieldCode);
+            if (!field) return;
+
+            const display = document.getElementById('formulaExampleDisplay');
+            if (!display) return;
+
+            display.innerHTML = `
+                <strong>Variable: <code>${fieldCode}</code></strong><br>
+                <strong>Field Name:</strong> ${field.fieldName}<br>
+                <strong>Category:</strong> ${field.category}<br>
+                <strong>Type:</strong> ${field.dataType}<br>
+                <strong>Unit:</strong> ${field.unit}<br>
+                <div class="mt-2">
+                    <strong>Example Usage:</strong>
+                    <ul class="mb-0">
+                        <li><code>${fieldCode} / other_variable</code></li>
+                        <li><code>(${fieldCode} + variable2) * 100</code></li>
+                        <li><code>${fieldCode} >= 1.5</code></li>
+                    </ul>
+                </div>
+            `;
+        }
+
+        // ========================================
+        // STATS & UTILITIES
+        // ========================================
+        function updateStats() {
+            document.getElementById('inputFieldsCount').textContent = appData.inputFields.length;
+            document.getElementById('formulasCount').textContent = appData.formulas.length;
+        }
+
+        function renderAllTables() {
+            renderInputFieldsTable();
+            renderFormulasTable();
+        }
+
+        function exportAllData() {
+            const exportData = {
+                timestamp: new Date().toISOString(),
+                inputFields: appData.inputFields,
+                formulas: appData.formulas
+            };
+
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `financial_config_${Date.now()}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            showToast('Success', 'Configuration exported successfully', 'success');
+        }
+
+        function resetAllData() {
+            if (!confirm('Reset all data to defaults? This cannot be undone.')) return;
+
+            showLoading();
+
+            setTimeout(() => {
+                Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
+                initializeDefaultData();
+                loadAllData();
+                renderAllTables();
+                updateStats();
+                updateFormulaVariablesDisplay();
+
+                hideLoading();
+                showToast('Success', 'System reset to defaults', 'success');
+            }, 500);
+        }
+
+        // Auto-update preview on field code input
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDefaultData();
+            loadAllData();
+            renderAllTables();
+            updateStats();
+            updateFormulaVariablesDisplay();
+
+            const inputFieldCodeInput = document.getElementById('inputFieldCode');
+            if (inputFieldCodeInput) {
+                inputFieldCodeInput.addEventListener('input', function() {
+                    const code = this.value.trim();
+                    if (code) {
+                        document.getElementById('inputFieldDbPreview').textContent = `financial_data.${code}`;
+                        document.getElementById('inputFieldApiPreview').textContent = `/api/v1/assessments/{id}/financial/${code}`;
+                    }
+                });
+            }
+
+            showToast('Welcome!', 'Financial Parameter Management System ready. All sections fully functional.', 'success');
+        });
+    </script>
+</body>
+</html>

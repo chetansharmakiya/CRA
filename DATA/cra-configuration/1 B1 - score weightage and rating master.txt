@@ -1,0 +1,78 @@
+Score Weightage & Rating Master
+
+API : /score-weightage/create
+METHOD : POST
+REQUEST : 
+{
+    auditUserId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+
+    scoreRangeId : "SR-1",
+    grade : 1,
+    minScore : 0,
+    maxScore : 139,
+
+    riskLevel : "Low", // High , Low , Medium
+    description : "",
+    scoreRangeStatus : "Pending", // Pending, Approved, Rejected
+    version : "1"
+}
+
+API : /score-weightage/update/{scoreRangeId}
+METHOD : PUT
+REQUEST : 
+{
+    auditUserId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+    
+    grade : 1,
+    minScore : 0,
+    maxScore : 139,
+
+    riskLevel : "Low", // High , Low , Medium
+    description : "",
+    scoreRangeStatus : "Pending", // Pending, Approved, Rejected
+    version : "1"
+}
+
+API : /score-weightage/patch/status/{scoreRangeId}
+METHOD : PATCH
+REQUEST :
+{
+    auditUserId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+
+    scoreRangeStatus : "Approved",
+}
+
+API : /score-weightage/view/{scoreRangeId}
+METHOD : GET
+RESPONSE :
+{
+    scoreRangeId : "SR-1",
+    grade : 1,
+    minScore : 0,
+    maxScore : 139,
+
+    riskLevel : "Low", // High , Low , Medium
+    description : "",
+    scoreRangeStatus : "Pending", // Pending, Approved, Rejected
+    version : "1",
+
+    actionByUserId: 42,
+    actionDate: "2025-12-26T12:19:20.704553",
+    action: "CREATE",
+    actionByUserName: "Chetan Sharma",
+    actionByEmailId: "chetan.sharma@kiya.ai",
+    actionByRoleName: "SUPER ADMIN",
+    actionByWorkflow: "Super user"
+}
+
+API : /score-weightage/delete/{scoreRangeId}
+METHOD : DELETE
+
+API : /score-weightage/all
+METHOD : GET

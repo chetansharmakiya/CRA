@@ -1,0 +1,75 @@
+Non-Performing Entity Classification
+
+API : /non-performing-entity/create
+METHOD : POST
+REQUEST : 
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    nonPerformingEntityId : "NFE-1",
+    grade : 9,
+    assetClassification : "Sub-Standard", // Sub-Standard, Doubtful, Loss Asset
+    autoApplied : true,
+    description : "",
+    nonPerformingEntityStatus : "Pending",
+
+    version : "1"
+}
+
+API : /non-performing-entity/update/{nonPerformingEntityId}
+METHOD : PUT
+REQUEST : 
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    grade : 9,
+    assetClassification : "Sub-Standard", // Sub-Standard, Doubtful, Loss Asset
+    autoApplied : true,
+    description : "",
+    nonPerformingEntityStatus : "Pending",
+
+    version : "1"
+}
+
+API : /non-performing-entity/patch/status/{nonPerformingEntityId}
+METHOD : PATCH
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    nonPerformingEntityStatus : "Approved"
+}
+
+API : /non-performing-entity/view/{nonPerformingEntityId}
+METHOD : GET
+RESPONSE : 
+{
+    nonPerformingEntityId : "NFA-1",
+    assetClassification : "Sub-Standard",
+    grade : 9,
+    assetClassification : "Sub-Standard", // Sub-Standard, Doubtful, Loss Asset
+    autoApplied : true,
+    description : "",
+    nonPerformingEntityStatus : "Pending",
+    version : "1",
+
+    actionByUserId: 42,
+    actionDate: "2025-12-26T12:19:20.704553",
+    action: "CREATE",
+    actionByUserName: "Chetan Sharma",
+    actionByEmailId: "chetan.sharma@kiya.ai",
+    actionByRoleName: "SUPER ADMIN",
+    actionByWorkflow: "Super user"
+}
+
+API : /non-performing-entity/delete/{nonPerformingEntityId}
+METHOD : DELETE
+
+API : /non-performing-entity/all
+METHOD : GET

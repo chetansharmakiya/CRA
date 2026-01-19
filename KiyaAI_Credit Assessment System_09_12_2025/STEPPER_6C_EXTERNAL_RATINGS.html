@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 6C: External Rating Selection & Override</title>
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+--primary-dark: #11224E;
+--primary-orange: #F87B1B;
+--accent-green: #CBD99B;
+--background-light: #EEEEEE;
+--text-dark: #1a1a1a;
+--text-light: #6c757d;
+--border-color: #dee2e6;
+--success: #28a745;
+--warning: #ffc107;
+--danger: #dc3545;
+--info: #17a2b8;
+--investment-grade: #20c997;
+--below-investment: #ffc107;
+--transition-speed: 0.3s;
+}
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Inter', sans-serif;
+background-color: var(--background-light);
+color: var(--text-dark);
+padding: 2rem;
+}
+
+.stepper-container {
+background: white;
+border-radius: 1rem;
+padding: 2rem;
+box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+max-width: 1400px;
+margin: 0 auto;
+}
+
+.step-header {
+margin-bottom: 2rem;
+padding-bottom: 1.5rem;
+border-bottom: 3px solid var(--primary-orange);
+}
+
+.step-title {
+color: var(--primary-dark);
+font-weight: 700;
+font-size: 1.75rem;
+margin-bottom: 0.5rem;
+}
+
+.step-subtitle {
+color: var(--text-light);
+font-size: 1rem;
+}
+
+.alert-info-custom {
+background: rgba(23, 162, 184, 0.1);
+border-left: 4px solid var(--info);
+padding: 1.25rem;
+border-radius: 0.5rem;
+margin-bottom: 2rem;
+}
+
+.alert-info-custom h5 {
+color: var(--info);
+font-weight: 700;
+margin-bottom: 0.5rem;
+}
+
+.alert-warning-custom {
+background: rgba(255, 193, 7, 0.15);
+border-left: 4px solid var(--warning);
+padding: 1rem;
+border-radius: 0.5rem;
+margin: 1.5rem 0;
+}
+
+.alert-danger-custom {
+background: rgba(220, 53, 69, 0.15);
+border-left: 4px solid var(--danger);
+padding: 1rem;
+border-radius: 0.5rem;
+margin: 1.5rem 0;
+}
+
+.alert-success-custom {
+background: rgba(40, 167, 69, 0.15);
+border-left: 4px solid var(--success);
+padding: 1rem;
+border-radius: 0.5rem;
+margin: 1.5rem 0;
+}
+
+.override-section {
+background: var(--background-light);
+border-radius: 0.75rem;
+padding: 1.5rem;
+margin-bottom: 2rem;
+}
+
+.section-label {
+font-size: 1.125rem;
+font-weight: 700;
+color: var(--primary-dark);
+margin-bottom: 1.25rem;
+display: flex;
+align-items: center;
+gap: 0.5rem;
+}
+
+.info-card {
+background: white;
+border: 2px solid var(--border-color);
+border-radius: 0.75rem;
+padding: 1.5rem;
+margin-bottom: 1.5rem;
+transition: all var(--transition-speed);
+}
+
+.info-card:hover {
+border-color: var(--primary-orange);
+box-shadow: 0 4px 12px rgba(248, 123, 27, 0.15);
+}
+
+.info-card.active {
+border-color: var(--success);
+background: rgba(40, 167, 69, 0.05);
+}
+
+.info-row {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 0.75rem 0;
+border-bottom: 1px solid var(--border-color);
+}
+
+.info-row:last-child {
+border-bottom: none;
+}
+
+.info-label {
+font-weight: 600;
+color: var(--text-dark);
+font-size: 0.95rem;
+}
+
+.info-value {
+font-weight: 700;
+color: var(--primary-dark);
+font-size: 1.1rem;
+}
+
+.rating-mapping-table {
+width: 100%;
+border-collapse: collapse;
+margin: 1.5rem 0;
+font-size: 0.9rem;
+box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.rating-mapping-table thead {
+background: var(--primary-dark);
+color: white;
+}
+
+.rating-mapping-table th {
+padding: 1rem 0.75rem;
+font-weight: 600;
+text-align: center;
+border: 1px solid var(--border-color);
+font-size: 0.85rem;
+}
+
+.rating-mapping-table td {
+padding: 0.875rem 0.75rem;
+border: 1px solid var(--border-color);
+text-align: center;
+}
+
+.rating-mapping-table tbody tr:nth-child(even) {
+background: #f8f9fa;
+}
+
+.rating-mapping-table tbody tr.investment-grade {
+background: rgba(32, 201, 151, 0.08);
+}
+
+.rating-mapping-table tbody tr.below-investment {
+background: rgba(255, 193, 7, 0.08);
+}
+
+.rating-mapping-table tbody tr.highlight {
+background: rgba(248, 123, 27, 0.15);
+border-left: 4px solid var(--primary-orange);
+font-weight: 600;
+}
+
+.grade-badge {
+display: inline-block;
+padding: 0.4rem 1rem;
+border-radius: 2rem;
+font-weight: 700;
+font-size: 1rem;
+}
+
+.grade-badge.investment {
+background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+color: white;
+}
+
+.grade-badge.below-investment {
+background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+color: white;
+}
+
+.selection-section {
+background: white;
+border: 3px solid var(--primary-dark);
+border-radius: 1rem;
+padding: 2rem;
+margin: 2rem 0;
+}
+
+.selection-header {
+text-align: center;
+margin-bottom: 2rem;
+}
+
+.selection-title {
+font-size: 1.5rem;
+font-weight: 700;
+color: var(--primary-dark);
+margin-bottom: 0.5rem;
+}
+
+.selection-subtitle {
+color: var(--text-light);
+font-size: 0.95rem;
+}
+
+.rating-options {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 1.5rem;
+margin: 2rem 0;
+}
+
+.rating-option {
+background: var(--background-light);
+border: 3px solid var(--border-color);
+border-radius: 1rem;
+padding: 2rem;
+cursor: pointer;
+transition: all var(--transition-speed);
+position: relative;
+}
+
+.rating-option:hover {
+border-color: var(--primary-orange);
+transform: translateY(-4px);
+box-shadow: 0 8px 20px rgba(248, 123, 27, 0.2);
+}
+
+.rating-option.selected {
+border-color: var(--success);
+background: rgba(40, 167, 69, 0.08);
+box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+}
+
+.rating-option.disabled {
+opacity: 0.5;
+cursor: not-allowed;
+pointer-events: none;
+}
+
+.rating-option input[type="radio"] {
+position: absolute;
+top: 1rem;
+right: 1rem;
+width: 24px;
+height: 24px;
+cursor: pointer;
+}
+
+.option-label {
+font-size: 0.85rem;
+font-weight: 600;
+color: var(--text-light);
+text-transform: uppercase;
+letter-spacing: 0.5px;
+margin-bottom: 0.75rem;
+}
+
+.option-grade {
+font-size: 3rem;
+font-weight: 900;
+color: var(--primary-dark);
+margin: 1rem 0;
+text-align: center;
+}
+
+.option-description {
+font-size: 0.9rem;
+color: var(--text-dark);
+margin-top: 1rem;
+line-height: 1.5;
+}
+
+.option-badge {
+display: inline-block;
+padding: 0.35rem 0.875rem;
+border-radius: 2rem;
+font-size: 0.8rem;
+font-weight: 600;
+margin-top: 0.5rem;
+}
+
+.option-badge.recommended {
+background: rgba(40, 167, 69, 0.2);
+color: var(--success);
+}
+
+.option-badge.alternative {
+background: rgba(23, 162, 184, 0.2);
+color: var(--info);
+}
+
+.comparison-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 1.5rem;
+margin-top: 1.5rem;
+}
+
+.comparison-item {
+background: var(--background-light);
+border-radius: 0.75rem;
+padding: 1.25rem;
+text-align: center;
+}
+
+.comparison-label {
+font-size: 0.85rem;
+color: var(--text-light);
+margin-bottom: 0.5rem;
+text-transform: uppercase;
+font-weight: 600;
+letter-spacing: 0.5px;
+}
+
+.comparison-value {
+font-size: 2rem;
+font-weight: 700;
+color: var(--primary-dark);
+}
+
+.arrow-indicator {
+font-size: 2rem;
+color: var(--primary-orange);
+margin: 0 1rem;
+}
+
+.external-rating-display {
+background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+color: white;
+border-radius: 0.75rem;
+padding: 2rem;
+text-align: center;
+margin-bottom: 2rem;
+}
+
+.external-rating-title {
+font-size: 0.95rem;
+opacity: 0.9;
+margin-bottom: 0.5rem;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+.external-rating-value {
+font-size: 3.5rem;
+font-weight: 900;
+margin: 0.5rem 0;
+}
+
+.external-rating-subtitle {
+font-size: 1rem;
+opacity: 0.85;
+}
+
+.form-label {
+font-weight: 600;
+color: var(--primary-dark);
+margin-bottom: 0.5rem;
+display: block;
+}
+
+.form-control,
+.form-select {
+border: 2px solid var(--border-color);
+border-radius: 0.5rem;
+padding: 0.75rem;
+transition: all var(--transition-speed);
+}
+
+.form-control:focus,
+.form-select:focus {
+border-color: var(--primary-orange);
+box-shadow: 0 0 0 0.2rem rgba(248, 123, 27, 0.25);
+outline: none;
+}
+
+.remarks-section {
+background: white;
+border: 2px solid var(--border-color);
+border-radius: 0.75rem;
+padding: 1.5rem;
+margin-top: 2rem;
+}
+
+.validation-message {
+padding: 1rem;
+border-radius: 0.5rem;
+margin-top: 1rem;
+font-size: 0.9rem;
+font-weight: 600;
+display: none;
+}
+
+.validation-message.error {
+background: rgba(220, 53, 69, 0.15);
+color: var(--danger);
+border-left: 4px solid var(--danger);
+display: block;
+}
+
+.validation-message.success {
+background: rgba(40, 167, 69, 0.15);
+color: var(--success);
+border-left: 4px solid var(--success);
+display: block;
+}
+
+.stepper-actions {
+display: flex;
+justify-content: space-between;
+gap: 1rem;
+margin-top: 2rem;
+padding-top: 2rem;
+border-top: 2px solid var(--background-light);
+}
+
+.btn {
+padding: 0.875rem 2rem;
+font-size: 1rem;
+font-weight: 600;
+border-radius: 0.5rem;
+border: none;
+cursor: pointer;
+transition: all var(--transition-speed);
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+}
+
+.btn-primary-custom {
+background: var(--primary-dark);
+color: white;
+}
+
+.btn-primary-custom:hover {
+background: #1a3570;
+transform: translateY(-2px);
+box-shadow: 0 4px 12px rgba(17, 34, 78, 0.3);
+}
+
+.btn-orange {
+background: var(--primary-orange);
+color: white;
+}
+
+.btn-orange:hover {
+background: #e06a0a;
+transform: translateY(-2px);
+box-shadow: 0 4px 12px rgba(248, 123, 27, 0.3);
+}
+
+.btn-orange:disabled {
+background: #ccc;
+cursor: not-allowed;
+transform: none;
+box-shadow: none;
+}
+
+.btn-outline-custom {
+border: 2px solid var(--primary-dark);
+background: transparent;
+color: var(--primary-dark);
+}
+
+.btn-outline-custom:hover {
+background: var(--primary-dark);
+color: white;
+}
+
+.status-pill {
+display: inline-block;
+padding: 0.35rem 1rem;
+border-radius: 2rem;
+font-size: 0.85rem;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+.status-pill.available {
+background: rgba(40, 167, 69, 0.2);
+color: var(--success);
+}
+
+.status-pill.not-available {
+background: rgba(108, 117, 125, 0.2);
+color: #6c757d;
+}
+
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(10px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+.fade-in {
+animation: fadeIn 0.4s ease-in;
+}
+
+@media (max-width: 768px) {
+.comparison-grid {
+grid-template-columns: 1fr;
+}
+.rating-options {
+grid-template-columns: 1fr;
+}
+.stepper-actions {
+flex-direction: column;
+}
+.btn {
+width: 100%;
+justify-content: center;
+}
+}
+</style>
+</head>
+<body>
+
+<div class="stepper-container">
+<!-- Step Header -->
+<div class="step-header">
+<h3 class="step-title">
+<i class="fas fa-star"></i>
+Step 6C: External Rating Selection & Override
+</h3>
+<p class="step-subtitle">
+Select between system-calculated rating or externally mapped rating as per Credit Risk Management Policy V19
+</p>
+</div>
+
+<!-- Info Alert -->
+<div class="alert-info-custom">
+<h5><i class="fas fa-info-circle me-2"></i>External Rating Override Logic</h5>
+<p class="mb-0">
+When an entity has published credit ratings from recognized agencies (S&P, Moody's, Fitch), you can choose to override the system-calculated rating with the externally mapped grade. 
+<strong>The selected rating cannot exceed (be better than) the external rating grade.</strong> This ensures regulatory compliance and conservative risk assessment.
+</p>
+</div>
+
+<!-- External Rating Status Check -->
+<div class="override-section fade-in">
+<h4 class="section-label">
+<i class="fas fa-building"></i>
+Entity External Rating Status
+</h4>
+
+<div class="info-card active" id="externalRatingCard">
+<div class="info-row">
+<span class="info-label">External Rating Available:</span>
+<span class="info-value">
+<span class="status-pill available" id="externalRatingStatus">
+<i class="fas fa-check-circle"></i> YES
+</span>
+</span>
+</div>
+<div class="info-row">
+<span class="info-label">Entity Name:</span>
+<span class="info-value" id="entityNameDisplay">ABC Corporation Ltd.</span>
+</div>
+<div class="info-row">
+<span class="info-label">Rating Agency:</span>
+<span class="info-value" id="ratingAgencyDisplay">S&P Global Ratings</span>
+</div>
+<div class="info-row">
+<span class="info-label">External Rating:</span>
+<span class="info-value" id="externalRatingDisplay">BBB+</span>
+</div>
+<div class="info-row">
+<span class="info-label">Mapped Internal Grade:</span>
+<span class="info-value">
+<span class="grade-badge investment" id="mappedGradeBadge">Grade 3</span>
+</span>
+</div>
+<div class="info-row">
+<span class="info-label">Rating Classification:</span>
+<span class="info-value" id="ratingClassDisplay">Investment Grade</span>
+</div>
+<div class="info-row">
+<span class="info-label">Rating Date:</span>
+<span class="info-value" id="ratingDateDisplay">15-Nov-2024</span>
+</div>
+</div>
+</div>
+
+<!-- External Rating Visualization -->
+<div class="external-rating-display fade-in">
+<div class="external-rating-title">External Rating Mapped Grade</div>
+<div class="external-rating-value" id="externalGradeDisplay">3</div>
+<div class="external-rating-subtitle">Investment Grade (BBB+)</div>
+</div>
+
+<!-- Rating Mapping Master Table -->
+<div class="override-section fade-in">
+<h4 class="section-label">
+<i class="fas fa-table"></i>
+External Rating to Internal Grade Mapping Matrix
+</h4>
+
+<div class="alert-info-custom" style="margin-bottom: 1rem;">
+<p class="mb-0" style="font-size: 0.9rem;">
+<i class="fas fa-book me-2"></i>
+<strong>Reference:</strong> Credit Risk Management Policy V19, Page 79 - External Rating Mapping based on S&P Default Rate Analysis and PD Closest Mapping Methodology
+</p>
+</div>
+
+<table class="rating-mapping-table">
+<thead>
+<tr>
+<th style="width: 10%;">Internal<br>Grade</th>
+<th style="width: 22%;">S&P Ratings</th>
+<th style="width: 22%;">Moody's Ratings</th>
+<th style="width: 22%;">Fitch Ratings</th>
+<th style="width: 14%;">Grade<br>Classification</th>
+<th style="width: 10%;">Risk<br>Level</th>
+</tr>
+</thead>
+<tbody>
+<tr class="investment-grade">
+<td><strong>1</strong></td>
+<td>AAA, AA+, AA, AA-</td>
+<td>Aaa, Aa1, Aa2, Aa3</td>
+<td>AAA, AA+, AA, AA-</td>
+<td><span class="grade-badge investment">Investment</span></td>
+<td>Minimal</td>
+</tr>
+<tr class="investment-grade">
+<td><strong>2</strong></td>
+<td>A+, A, A-</td>
+<td>A1, A2, A3</td>
+<td>A+, A, A-</td>
+<td><span class="grade-badge investment">Investment</span></td>
+<td>Low</td>
+</tr>
+<tr class="investment-grade highlight" id="mappingRow3">
+<td><strong>3</strong></td>
+<td>BBB+, BBB</td>
+<td>Baa1, Baa2</td>
+<td>BBB+, BBB</td>
+<td><span class="grade-badge investment">Investment</span></td>
+<td>Moderate</td>
+</tr>
+<tr class="investment-grade">
+<td><strong>4</strong></td>
+<td>BBB-</td>
+<td>Baa3</td>
+<td>BBB-</td>
+<td><span class="grade-badge investment">Investment</span></td>
+<td>Adequate</td>
+</tr>
+<tr class="below-investment">
+<td><strong>5</strong></td>
+<td>BB+, BB, BB-</td>
+<td>Ba1, Ba2, Ba3</td>
+<td>BB+, BB, BB-</td>
+<td><span class="grade-badge below-investment">Below Inv.</span></td>
+<td>Elevated</td>
+</tr>
+<tr class="below-investment">
+<td><strong>6</strong></td>
+<td>B+</td>
+<td>B1</td>
+<td>B+</td>
+<td><span class="grade-badge below-investment">Below Inv.</span></td>
+<td>High</td>
+</tr>
+<tr class="below-investment">
+<td><strong>7</strong></td>
+<td>B, B-</td>
+<td>B2, B3</td>
+<td>B, B-</td>
+<td><span class="grade-badge below-investment">Below Inv.</span></td>
+<td>Very High</td>
+</tr>
+<tr class="below-investment">
+<td><strong>8</strong></td>
+<td>CCC+, CCC, CCC-, CC</td>
+<td>Caa1, Caa2, Caa3, Ca</td>
+<td>CCC+, CCC, CCC-, CC</td>
+<td><span class="grade-badge below-investment">Below Inv.</span></td>
+<td>Extreme</td>
+</tr>
+</tbody>
+</table>
+
+<div class="alert-warning-custom">
+<h6 style="font-weight: 700; margin-bottom: 0.5rem;">
+<i class="fas fa-exclamation-triangle me-2"></i>Important Notes
+</h6>
+<ul style="margin-bottom: 0; padding-left: 1.5rem; font-size: 0.9rem;">
+<li>Grades 1-4 represent <strong>Investment Grade</strong> ratings with lower credit risk</li>
+<li>Grades 5-8 represent <strong>Below Investment Grade</strong> (speculative) ratings with elevated default probability</li>
+<li>Mapping based on long-term issuer default rates and PD alignment</li>
+<li>For unrated entities, PD is calculated using grade averaging methodology</li>
+</ul>
+</div>
+</div>
+
+<!-- Rating Selection Section -->
+<div class="selection-section fade-in">
+<div class="selection-header">
+<h4 class="selection-title">
+<i class="fas fa-hand-pointer"></i>
+Select Final Rating Grade
+</h4>
+<p class="selection-subtitle">
+Choose between system-calculated rating or external rating. <strong>You cannot select a grade better (lower) than the external rating grade.</strong>
+</p>
+</div>
+
+<div class="rating-options">
+<!-- Option 1: System Rating -->
+<div class="rating-option" id="systemRatingOption">
+<input type="radio" name="ratingChoice" id="radioSystemRating" value="system">
+<div class="option-label">
+<i class="fas fa-calculator"></i> System Calculated Rating
+</div>
+<div class="option-grade" id="systemGradeValue">5</div>
+<div class="option-description">
+<strong>Source:</strong> Internal credit assessment model<br>
+<strong>Calculation:</strong> Based on financial ratios, qualitative factors, and risk parameters<br>
+<strong>Status:</strong> <span id="systemRatingValidation" class="text-danger"><i class="fas fa-exclamation-circle"></i> Cannot select - exceeds external rating</span>
+</div>
+<span class="option-badge alternative" id="systemBadge">System Assessment</span>
+</div>
+
+<!-- Option 2: External Rating -->
+<div class="rating-option selected" id="externalRatingOption">
+<input type="radio" name="ratingChoice" id="radioExternalRating" value="external" checked>
+<div class="option-label">
+<i class="fas fa-star"></i> External Rating (Mapped)
+</div>
+<div class="option-grade" id="externalGradeValue">3</div>
+<div class="option-description">
+<strong>Agency:</strong> <span id="agencyName">S&P Global Ratings</span><br>
+<strong>Rating:</strong> <span id="externalRating">BBB+</span><br>
+<strong>Classification:</strong> <span id="externalClass">Investment Grade</span>
+</div>
+<span class="option-badge recommended" id="externalBadge">
+<i class="fas fa-check-circle"></i> Recommended
+</span>
+</div>
+</div>
+
+<!-- Validation Message -->
+<div class="validation-message" id="validationMessage">
+</div>
+
+<!-- Comparison Display -->
+<div class="comparison-grid" style="margin-top: 2rem;">
+<div class="comparison-item">
+<div class="comparison-label">System Calculated</div>
+<div class="comparison-value" id="compareSystemGrade">5</div>
+<small class="text-muted">Internal Model</small>
+</div>
+
+<div class="comparison-item" style="display: flex; align-items: center; justify-content: center; background: transparent;">
+<i class="fas fa-arrows-left-right arrow-indicator"></i>
+</div>
+
+<div class="comparison-item" style="border: 3px solid var(--success);">
+<div class="comparison-label">Selected Grade</div>
+<div class="comparison-value" style="color: var(--success);" id="selectedGradeDisplay">3</div>
+<small style="color: var(--success); font-weight: 600;">
+<i class="fas fa-star"></i> <span id="selectedSourceDisplay">External Rating</span>
+</small>
+</div>
+</div>
+</div>
+
+<!-- Business Rules Display -->
+<div class="alert-success-custom fade-in">
+<h6 style="font-weight: 700; margin-bottom: 0.75rem;">
+<i class="fas fa-shield-alt me-2"></i>Rating Override Hierarchy & Business Rules
+</h6>
+<ol style="margin-bottom: 0; padding-left: 1.5rem; font-size: 0.9rem;">
+<li><strong>Mandatory Overrides (STEP 5)</strong> - Applied first based on regulatory requirements</li>
+<li><strong>Discretionary Overrides (STEP 5)</strong> - Applied for credit committee decisions</li>
+<li><strong>Qualitative Factors (STEP 6A)</strong> - Adjustments based on business fundamentals</li>
+<li><strong>Facility Grading (STEP 6B)</strong> - Cash security coverage overrides</li>
+<li><strong>External Rating Selection (STEP 6C - Current)</strong> - Cannot exceed external mapped grade</li>
+<li><strong>Conservative Principle:</strong> Selected grade must be equal to or lower quality than external rating</li>
+</ol>
+</div>
+
+<!-- Priority Alert -->
+<div class="alert-warning-custom" id="priorityAlert" style="display: none;">
+<h6 style="font-weight: 700; margin-bottom: 0.5rem;">
+<i class="fas fa-layer-group me-2"></i>
+Override Priority Notice
+</h6>
+<p class="mb-0" id="priorityMessage">
+</p>
+</div>
+
+<!-- User Remarks Section -->
+<div class="remarks-section fade-in">
+<h5 style="color: var(--primary-dark); font-weight: 700; margin-bottom: 1rem;">
+<i class="fas fa-comment-dots me-2"></i>
+Rating Selection Justification
+</h5>
+<div class="form-group">
+<label for="selectionRemarks" class="form-label">
+Provide justification for your rating selection:
+</label>
+<textarea
+class="form-control"
+id="selectionRemarks"
+rows="4"
+placeholder="Enter detailed justification for selecting this rating grade. Include reasons for choosing system or external rating, relevant risk factors, and any other considerations..."
+></textarea>
+<small class="form-text text-muted">
+<i class="fas fa-info-circle"></i>
+<strong>Required:</strong> Provide clear rationale for audit trail and regulatory compliance purposes
+</small>
+</div>
+</div>
+
+<!-- Action Buttons -->
+<div class="stepper-actions">
+<button type="button" class="btn btn-outline-custom" id="btnPrevious">
+<i class="fas fa-arrow-left"></i>
+Previous Step
+</button>
+<div style="display: flex; gap: 1rem;">
+<button type="button" class="btn btn-primary-custom" id="btnSaveDraft">
+<i class="fas fa-save"></i>
+Save as Draft
+</button>
+<button type="button" class="btn btn-orange" id="btnNext" disabled>
+Confirm & Continue
+<i class="fas fa-arrow-right"></i>
+</button>
+</div>
+</div>
+</div>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// =======================================================
+// EXTERNAL RATING SELECTION - JAVASCRIPT LOGIC
+// =======================================================
+
+// Sample assessment data from previous steps
+const assessmentData = {
+entityName: 'ABC Corporation Ltd.',
+externalRatingAvailable: 'yes',
+ratingAgency: 'S&P',  // Options: 'S&P', 'Moodys', 'Fitch'
+externalRating: 'BBB+',
+mappedInternalGrade: 3,  // Mapped from external rating
+ratingClassification: 'Investment Grade', // 'Investment Grade' or 'Below Investment Grade'
+ratingDate: '2024-11-15',
+systemCalculatedGrade: 5,  // From STEP 5 after all adjustments
+facilityGradeOverride: null,  // From STEP 6B (if applicable)
+mandatoryOverrideApplied: false,
+discretionaryOverrideApplied: false
+};
+
+// Rating mapping master data
+const ratingMappings = {
+1: {
+sp: ['AAA', 'AA+', 'AA', 'AA-'],
+moodys: ['Aaa', 'Aa1', 'Aa2', 'Aa3'],
+fitch: ['AAA', 'AA+', 'AA', 'AA-'],
+classification: 'Investment Grade',
+riskLevel: 'Minimal'
+},
+2: {
+sp: ['A+', 'A', 'A-'],
+moodys: ['A1', 'A2', 'A3'],
+fitch: ['A+', 'A', 'A-'],
+classification: 'Investment Grade',
+riskLevel: 'Low'
+},
+3: {
+sp: ['BBB+', 'BBB'],
+moodys: ['Baa1', 'Baa2'],
+fitch: ['BBB+', 'BBB'],
+classification: 'Investment Grade',
+riskLevel: 'Moderate'
+},
+4: {
+sp: ['BBB-'],
+moodys: ['Baa3'],
+fitch: ['BBB-'],
+classification: 'Investment Grade',
+riskLevel: 'Adequate'
+},
+5: {
+sp: ['BB+', 'BB', 'BB-'],
+moodys: ['Ba1', 'Ba2', 'Ba3'],
+fitch: ['BB+', 'BB', 'BB-'],
+classification: 'Below Investment Grade',
+riskLevel: 'Elevated'
+},
+6: {
+sp: ['B+'],
+moodys: ['B1'],
+fitch: ['B+'],
+classification: 'Below Investment Grade',
+riskLevel: 'High'
+},
+7: {
+sp: ['B', 'B-'],
+moodys: ['B2', 'B3'],
+fitch: ['B', 'B-'],
+classification: 'Below Investment Grade',
+riskLevel: 'Very High'
+},
+8: {
+sp: ['CCC+', 'CCC', 'CCC-', 'CC'],
+moodys: ['Caa1', 'Caa2', 'Caa3', 'Ca'],
+fitch: ['CCC+', 'CCC', 'CCC-', 'CC'],
+classification: 'Below Investment Grade',
+riskLevel: 'Extreme'
+}
+};
+
+// Function to validate rating selection
+function validateRatingSelection(selectedGrade, externalMappedGrade) {
+// Rule: Selected grade cannot be better (lower number) than external mapped grade
+if (selectedGrade < externalMappedGrade) {
+return {
+valid: false,
+message: `Cannot select Grade ${selectedGrade}. Selected grade cannot exceed (be better than) the external rating grade of ${externalMappedGrade}.`
+};
+}
+return {
+valid: true,
+message: 'Selection valid. Grade complies with external rating constraint.'
+};
+}
+
+// Function to update displays
+function updateDisplays() {
+// Update entity information
+document.getElementById('entityNameDisplay').textContent = assessmentData.entityName;
+document.getElementById('ratingAgencyDisplay').textContent = 
+assessmentData.ratingAgency === 'S&P' ? 'S&P Global Ratings' :
+assessmentData.ratingAgency === 'Moodys' ? "Moody's Investor Service" : 'Fitch Ratings';
+document.getElementById('externalRatingDisplay').textContent = assessmentData.externalRating;
+document.getElementById('mappedGradeBadge').textContent = `Grade ${assessmentData.mappedInternalGrade}`;
+document.getElementById('ratingClassDisplay').textContent = assessmentData.ratingClassification;
+document.getElementById('ratingDateDisplay').textContent = new Date(assessmentData.ratingDate).toLocaleDateString('en-GB', {
+day: '2-digit',
+month: 'short',
+year: 'numeric'
+});
+
+// Update external rating displays
+document.getElementById('externalGradeDisplay').textContent = assessmentData.mappedInternalGrade;
+document.getElementById('externalGradeValue').textContent = assessmentData.mappedInternalGrade;
+document.getElementById('systemGradeValue').textContent = assessmentData.systemCalculatedGrade;
+document.getElementById('compareSystemGrade').textContent = assessmentData.systemCalculatedGrade;
+document.getElementById('agencyName').textContent = document.getElementById('ratingAgencyDisplay').textContent;
+document.getElementById('externalRating').textContent = assessmentData.externalRating;
+document.getElementById('externalClass').textContent = assessmentData.ratingClassification;
+
+// Highlight appropriate mapping row
+document.querySelectorAll('.rating-mapping-table tbody tr').forEach(row => row.classList.remove('highlight'));
+const mappingRow = document.getElementById(`mappingRow${assessmentData.mappedInternalGrade}`);
+if (mappingRow) {
+mappingRow.classList.add('highlight');
+}
+
+// Validate system rating option
+const validation = validateRatingSelection(assessmentData.systemCalculatedGrade, assessmentData.mappedInternalGrade);
+const systemOption = document.getElementById('systemRatingOption');
+const systemValidation = document.getElementById('systemRatingValidation');
+
+if (validation.valid) {
+systemOption.classList.remove('disabled');
+systemValidation.innerHTML = '<i class="fas fa-check-circle"></i> Valid selection';
+systemValidation.className = 'text-success';
+} else {
+systemOption.classList.add('disabled');
+systemValidation.innerHTML = '<i class="fas fa-exclamation-circle"></i> Cannot select - exceeds external rating';
+systemValidation.className = 'text-danger';
+}
+
+// Check for facility grade override priority
+if (assessmentData.facilityGradeOverride && assessmentData.facilityGradeOverride < assessmentData.mappedInternalGrade) {
+document.getElementById('priorityAlert').style.display = 'block';
+document.getElementById('priorityMessage').textContent = 
+`Note: Facility Grade Override (Grade ${assessmentData.facilityGradeOverride}) from STEP 6B takes precedence over external rating selection. The system will apply the better (lower) grade.`;
+}
+}
+
+// Function to handle rating selection
+function handleRatingSelection() {
+const selectedRadio = document.querySelector('input[name="ratingChoice"]:checked');
+if (!selectedRadio) return;
+
+const selectedValue = selectedRadio.value;
+const systemOption = document.getElementById('systemRatingOption');
+const externalOption = document.getElementById('externalRatingOption');
+const validationMessage = document.getElementById('validationMessage');
+const selectedDisplay = document.getElementById('selectedGradeDisplay');
+const selectedSourceDisplay = document.getElementById('selectedSourceDisplay');
+const nextButton = document.getElementById('btnNext');
+
+// Remove selected class from both
+systemOption.classList.remove('selected');
+externalOption.classList.remove('selected');
+
+if (selectedValue === 'system') {
+// Validate selection
+const validation = validateRatingSelection(assessmentData.systemCalculatedGrade, assessmentData.mappedInternalGrade);
+if (!validation.valid) {
+validationMessage.className = 'validation-message error';
+validationMessage.innerHTML = `<i class="fas fa-times-circle"></i> ${validation.message}`;
+selectedRadio.checked = false;
+document.getElementById('radioExternalRating').checked = true;
+externalOption.classList.add('selected');
+nextButton.disabled = true;
+return;
+}
+systemOption.classList.add('selected');
+selectedDisplay.textContent = assessmentData.systemCalculatedGrade;
+selectedSourceDisplay.textContent = 'System Rating';
+validationMessage.className = 'validation-message success';
+validationMessage.innerHTML = '<i class="fas fa-check-circle"></i> System rating selected. Grade meets external rating requirements.';
+nextButton.disabled = false;
+} else {
+externalOption.classList.add('selected');
+selectedDisplay.textContent = assessmentData.mappedInternalGrade;
+selectedSourceDisplay.textContent = 'External Rating';
+validationMessage.className = 'validation-message success';
+validationMessage.innerHTML = '<i class="fas fa-check-circle"></i> External rating selected. Conservative approach applied.';
+nextButton.disabled = false;
+}
+}
+
+// Function to save rating selection
+function saveRatingSelection() {
+const selectedRadio = document.querySelector('input[name="ratingChoice"]:checked');
+const remarks = document.getElementById('selectionRemarks').value.trim();
+
+if (!remarks) {
+alert('Please provide justification for your rating selection before proceeding.');
+document.getElementById('selectionRemarks').focus();
+return false;
+}
+
+const selectionData = {
+entityName: assessmentData.entityName,
+externalRatingAvailable: assessmentData.externalRatingAvailable,
+ratingAgency: assessmentData.ratingAgency,
+externalRating: assessmentData.externalRating,
+mappedInternalGrade: assessmentData.mappedInternalGrade,
+systemCalculatedGrade: assessmentData.systemCalculatedGrade,
+selectedRatingSource: selectedRadio.value,
+finalSelectedGrade: selectedRadio.value === 'system' ? assessmentData.systemCalculatedGrade : assessmentData.mappedInternalGrade,
+justification: remarks,
+timestamp: new Date().toISOString(),
+selectedBy: 'John Doe'  // Replace with actual user from session
+};
+
+console.log('Rating Selection Saved:', selectionData);
+sessionStorage.setItem('externalRatingSelectionData', JSON.stringify(selectionData));
+return selectionData;
+}
+
+// Event Listeners
+document.querySelectorAll('input[name="ratingChoice"]').forEach(radio => {
+radio.addEventListener('change', handleRatingSelection);
+});
+
+document.getElementById('systemRatingOption').addEventListener('click', function() {
+if (!this.classList.contains('disabled')) {
+document.getElementById('radioSystemRating').checked = true;
+handleRatingSelection();
+}
+});
+
+document.getElementById('externalRatingOption').addEventListener('click', function() {
+document.getElementById('radioExternalRating').checked = true;
+handleRatingSelection();
+});
+
+document.getElementById('btnPrevious').addEventListener('click', function() {
+console.log('Navigate to STEP 6B');
+window.location.href = '#step6b';  // Replace with actual navigation
+});
+
+document.getElementById('btnSaveDraft').addEventListener('click', function() {
+const data = saveRatingSelection();
+if (data) {
+alert('External rating selection saved as draft!');
+console.log('Draft saved:', data);
+}
+});
+
+document.getElementById('btnNext').addEventListener('click', function() {
+const data = saveRatingSelection();
+if (data) {
+console.log('Proceeding to next step with data:', data);
+window.location.href = '#step7';  // Replace with actual navigation
+}
+});
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+updateDisplays();
+handleRatingSelection();
+});
+
+// =======================================================
+// SCENARIO SIMULATION (FOR TESTING DIFFERENT CASES)
+// =======================================================
+
+// SCENARIO 1: System rating worse than external (allowed)
+// assessmentData.systemCalculatedGrade = 5;  // Current default
+
+// SCENARIO 2: System rating better than external (NOT allowed)
+// assessmentData.systemCalculatedGrade = 2;
+
+// SCENARIO 3: System rating equal to external (allowed)
+// assessmentData.systemCalculatedGrade = 3;
+
+// SCENARIO 4: Different rating agency
+// assessmentData.ratingAgency = 'Moodys';
+// assessmentData.externalRating = 'Baa1';
+
+// SCENARIO 5: Below Investment Grade
+// assessmentData.externalRating = 'BB+';
+// assessmentData.mappedInternalGrade = 5;
+// assessmentData.ratingClassification = 'Below Investment Grade';
+// assessmentData.systemCalculatedGrade = 6;
+
+// SCENARIO 6: With facility grade override
+// assessmentData.facilityGradeOverride = 1;
+
+</script>
+
+</body>
+</html>

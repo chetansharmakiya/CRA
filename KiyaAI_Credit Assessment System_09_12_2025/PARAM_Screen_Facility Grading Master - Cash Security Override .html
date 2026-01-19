@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facility Grading Master - Credit Assessment</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS VARIABLES */
+        :root {
+            --primary-dark: #11224E;
+            --primary-orange: #F87B1B;
+            --accent-green: #CBD99B;
+            --background-light: #EEEEEE;
+            --text-dark: #1a1a1a;
+            --text-light: #6c757d;
+            --border-color: #dee2e6;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --header-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            padding-top: var(--header-height);
+        }
+
+        /* Header */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1040;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+
+        .header-brand {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .header-nav button {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .header-nav button:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Cards */
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 3px solid var(--primary-orange);
+            padding-bottom: 0.75rem;
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+
+        .data-table thead {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .data-table th {
+            font-weight: 600;
+            padding: 1.25rem 1rem;
+            border: none;
+            text-align: center;
+        }
+
+        .data-table td {
+            padding: 1.25rem 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: rgba(17, 34, 78, 0.04);
+        }
+
+        .data-table tbody tr.grade-1 {
+            border-left: 5px solid #28a745;
+        }
+
+        .data-table tbody tr.grade-2 {
+            border-left: 5px solid #17a2b8;
+        }
+
+        .data-table tbody tr.grade-na {
+            border-left: 5px solid #6c757d;
+        }
+
+        /* Buttons */
+        .btn-primary-custom {
+            background: var(--primary-dark);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary-custom:hover {
+            background: #1a3570;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(17, 34, 78, 0.3);
+            color: white;
+        }
+
+        .btn-orange {
+            background: var(--primary-orange);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-orange:hover {
+            background: #e06a0a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(248, 123, 27, 0.3);
+            color: white;
+        }
+
+        .btn-action {
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0 0.25rem;
+            min-width: 36px;
+        }
+
+        /* Forms */
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-label-required::after {
+            content: " *";
+            color: var(--danger);
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.2rem rgba(248, 123, 27, 0.25);
+        }
+
+        /* Modal */
+        .modal-header {
+            background: var(--primary-dark);
+            color: white;
+            border-bottom: none;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .modal-header .btn-close {
+            filter: invert(1);
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .modal-lg {
+            max-width: 900px;
+        }
+
+        /* Stats Cards */
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 4px solid var(--primary-orange);
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .stats-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: calc(var(--header-height) + 1rem);
+            right: 1rem;
+            z-index: 1050;
+        }
+
+        /* Loading Spinner */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255,255,255,0.3);
+            border-top-color: var(--primary-orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-header {
+                padding: 0 1rem;
+            }
+            .header-brand {
+                font-size: 1.1rem;
+            }
+            .header-nav {
+                display: none;
+            }
+            .section-card {
+                padding: 1rem;
+            }
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, var(--success) 0%, #20c997 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .info-box h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .info-box ul {
+            margin-bottom: 0;
+        }
+
+        .info-box li {
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-override {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="top-header">
+        <div class="header-brand">
+            <i class="fas fa-shield-alt"></i> Facility Grading Master
+        </div>
+        <div class="header-nav">
+            <button onclick="exportGradings()">
+                <i class="fas fa-download me-2"></i>Export
+            </button>
+            <button onclick="window.print()">
+                <i class="fas fa-print me-2"></i>Print
+            </button>
+        </div>
+    </header>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Main Content -->
+    <main class="container-fluid px-4 py-4">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h1 class="h2 mb-2" style="color: var(--primary-dark); font-weight: 700;">
+                    <i class="fas fa-shield-alt me-2"></i>
+                    Facility Grading Master - Cash Security Override
+                </h1>
+                <p class="text-muted">Configure cash collateral coverage thresholds for automatic rating overrides as per Credit Risk Management Policy V19, Page 55.</p>
+            </div>
+        </div>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <h4><i class="fas fa-info-circle me-2"></i>Cash Security Override Policy</h4>
+            <ul>
+                <li><strong>Purpose:</strong> When credit facilities are fully backed by cash collateral, the system forces specific grades regardless of calculated rating.</li>
+                <li><strong>Grade 1 (≥110%):</strong> Cash collateral at or above 110% forces ORR to Grade 1 (Highest Credit Quality).</li>
+                <li><strong>Grade 2 (100%-110%):</strong> Cash collateral between 100% and 110% forces ORR to Grade 2 (Strong Credit Quality).</li>
+                <li><strong>Below 100%:</strong> No override applied - system retains the calculated grade.</li>
+                <li><strong>Override Priority:</strong> Cash security override takes precedence over all other adjustments in STEP 6B.</li>
+            </ul>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <div class="stats-number" id="totalRulesCount">3</div>
+                    <div class="stats-label">Total Coverage Rules</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card" style="border-left-color: #28a745;">
+                    <div class="stats-number" id="activeRulesCount">2</div>
+                    <div class="stats-label">Active Override Rules</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card" style="border-left-color: #ffc107;">
+                    <div class="stats-number" id="lastUpdatedDate">N/A</div>
+                    <div class="stats-label">Last Updated</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Card -->
+        <div class="section-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">
+                    <i class="fas fa-table me-2 text-warning"></i> Facility Grading Coverage Matrix
+                </h4>
+                <button class="btn btn-orange" id="addNewRuleBtn">
+                    <i class="fas fa-plus me-2"></i>Add New Rule
+                </button>
+            </div>
+
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Administrator Only:</strong> Changes to this matrix affect all credit assessments in STEP 6B (Cash Security Override). All modifications are logged with timestamp and user information.
+            </div>
+
+            <!-- Coverage Matrix Table -->
+            <div class="table-responsive">
+                <table class="data-table table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Coverage Level</th>
+                            <th style="width: 20%;">Facility Grade</th>
+                            <th style="width: 20%;">Adjustment to ORR</th>
+                            <th style="width: 20%;">Outcome</th>
+                            <th style="width: 15%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="facilityGradingTableBody">
+                        <!-- Dynamic content populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Implementation Note -->
+        <div class="section-card">
+            <h4 class="mb-3">
+                <i class="fas fa-code-branch me-2 text-info"></i> Implementation Notes
+            </h4>
+            <div class="alert alert-success">
+                <h6 class="fw-bold"><i class="fas fa-check-circle me-2"></i>Active in Credit Assessment Workflow</h6>
+                <ul class="mb-0">
+                    <li>This matrix is implemented in <strong>STEP 6B: Facility Grading Override</strong></li>
+                    <li>Applies only when user selects "Cash Security = YES" in STEP 1 (Entity Details)</li>
+                    <li>Override takes final precedence over all mandatory and discretionary adjustments</li>
+                    <li>System automatically calculates coverage: (Cash Collateral Amount ÷ Total Credit Limit) × 100</li>
+                    <li>Exception: Non-Performing (NP) entities are excluded from override eligibility</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Rule Modal -->
+    <div class="modal fade" id="editRuleModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editRuleModalTitle">
+                        <i class="fas fa-edit me-2"></i>Edit Coverage Rule
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editRuleId">
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Configuration:</strong> Define the cash collateral coverage threshold, corresponding facility grade, and the system behavior when this rule is triggered.
+                    </div>
+
+                    <!-- Coverage Level -->
+                    <div class="mb-3">
+                        <label for="coverageLevel" class="form-label form-label-required">Coverage Level</label>
+                        <input type="text" class="form-control" id="coverageLevel" placeholder="e.g., ≥110%, 100% to <110%, <100%">
+                        <small class="text-muted">Specify the cash collateral coverage percentage or range</small>
+                    </div>
+
+                    <!-- Facility Grade -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="facilityGrade" class="form-label form-label-required">Facility Grade</label>
+                                <select class="form-select" id="facilityGrade">
+                                    <option value="">Select Grade</option>
+                                    <option value="Grade 1">Grade 1</option>
+                                    <option value="Grade 2">Grade 2</option>
+                                    <option value="Not Applicable">Not Applicable</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="orrAdjustment" class="form-label form-label-required">Adjustment to ORR</label>
+                                <input type="text" class="form-control" id="orrAdjustment" placeholder="e.g., Force ORR = 1, No override">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Outcome -->
+                    <div class="mb-3">
+                        <label for="outcome" class="form-label form-label-required">Outcome</label>
+                        <select class="form-select" id="outcome">
+                            <option value="">Select Outcome</option>
+                            <option value="Mandatory Override">Mandatory Override</option>
+                            <option value="System retains calculated grade">System retains calculated grade</option>
+                        </select>
+                        <small class="text-muted">Defines whether the system forces a grade or keeps the calculated rating</small>
+                    </div>
+
+                    <!-- Comments -->
+                    <div class="mb-3">
+                        <label for="ruleComments" class="form-label">Comments / Policy Notes</label>
+                        <textarea class="form-control" id="ruleComments" rows="3" placeholder="Add policy reference, implementation notes, or special conditions"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                    <button type="button" class="btn btn-orange" id="saveRuleBtn">
+                        <i class="fas fa-save me-2"></i>Save Rule
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Main Application JavaScript -->
+    <script>
+        // ============================================
+        // APPLICATION STATE & DATA STORAGE
+        // ============================================
+        
+        const STORAGE_KEY = 'facilityGradingCashRules';
+        
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFacilityRules();
+            renderFacilityTable();
+            updateStats();
+            
+            // Event Listeners
+            document.getElementById('addNewRuleBtn').addEventListener('click', function() {
+                openEditModal();
+            });
+            
+            document.getElementById('saveRuleBtn').addEventListener('click', function() {
+                saveRule();
+            });
+        });
+        
+        // ============================================
+        // DEFAULT DATA INITIALIZATION
+        // ============================================
+        
+        function initializeFacilityRules() {
+            const rules = [
+                {
+                    id: 1,
+                    coverageLevel: '≥110% Cash as per Policy',
+                    facilityGrade: 'Grade 1',
+                    orrAdjustment: 'Force ORR = 1',
+                    outcome: 'Mandatory Override',
+                    lastUpdated: new Date().toISOString(),
+                    updatedBy: 'System Admin',
+                    comments: 'Highest credit quality - cash collateral meets or exceeds policy requirement'
+                },
+                {
+                    id: 2,
+                    coverageLevel: '100% to <110%',
+                    facilityGrade: 'Grade 2',
+                    orrAdjustment: 'Force ORR = 2',
+                    outcome: 'Mandatory Override',
+                    lastUpdated: new Date().toISOString(),
+                    updatedBy: 'System Admin',
+                    comments: 'Strong credit quality - full cash coverage at facility level'
+                },
+                {
+                    id: 3,
+                    coverageLevel: '<100%',
+                    facilityGrade: 'Not Applicable',
+                    orrAdjustment: 'No override',
+                    outcome: 'System retains calculated grade',
+                    lastUpdated: new Date().toISOString(),
+                    updatedBy: 'System Admin',
+                    comments: 'Insufficient cash coverage - override not applicable'
+                }
+            ];
+
+            if (!localStorage.getItem(STORAGE_KEY)) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(rules));
+            }
+
+            return JSON.parse(localStorage.getItem(STORAGE_KEY));
+        }
+        
+        // ============================================
+        // RENDER FUNCTIONS
+        // ============================================
+        
+        function renderFacilityTable() {
+            const tbody = document.getElementById('facilityGradingTableBody');
+            const rules = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+            if (rules.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-4">No rules configured.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = rules.map(rule => {
+                let rowClass = 'grade-na';
+                let gradeBadgeColor = 'secondary';
+                
+                if (rule.facilityGrade === 'Grade 1') {
+                    rowClass = 'grade-1';
+                    gradeBadgeColor = 'success';
+                } else if (rule.facilityGrade === 'Grade 2') {
+                    rowClass = 'grade-2';
+                    gradeBadgeColor = 'info';
+                }
+
+                const outcomeBadgeColor = rule.outcome === 'Mandatory Override' ? 'danger' : 'secondary';
+                
+                return `
+                    <tr class="${rowClass}">
+                        <td><strong style="font-size: 1.05rem;">${rule.coverageLevel}</strong></td>
+                        <td>
+                            <span class="badge bg-${gradeBadgeColor} badge-override">
+                                ${rule.facilityGrade}
+                            </span>
+                        </td>
+                        <td><strong style="color: var(--primary-dark);">${rule.orrAdjustment}</strong></td>
+                        <td>
+                            <span class="badge bg-${outcomeBadgeColor} badge-override">
+                                ${rule.outcome}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary-custom btn-action" onclick="editRule(${rule.id})" title="Edit Rule">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-action" onclick="deleteRule(${rule.id})" title="Delete Rule">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // ============================================
+        // MODAL FUNCTIONS
+        // ============================================
+        
+        function openEditModal(ruleId = null) {
+            const modal = new bootstrap.Modal(document.getElementById('editRuleModal'));
+            
+            // Clear form
+            document.getElementById('editRuleId').value = '';
+            document.getElementById('coverageLevel').value = '';
+            document.getElementById('facilityGrade').value = '';
+            document.getElementById('orrAdjustment').value = '';
+            document.getElementById('outcome').value = '';
+            document.getElementById('ruleComments').value = '';
+
+            if (ruleId) {
+                // Edit mode
+                const rules = JSON.parse(localStorage.getItem(STORAGE_KEY));
+                const rule = rules.find(r => r.id === ruleId);
+                
+                if (rule) {
+                    document.getElementById('editRuleId').value = rule.id;
+                    document.getElementById('coverageLevel').value = rule.coverageLevel;
+                    document.getElementById('facilityGrade').value = rule.facilityGrade;
+                    document.getElementById('orrAdjustment').value = rule.orrAdjustment;
+                    document.getElementById('outcome').value = rule.outcome;
+                    document.getElementById('ruleComments').value = rule.comments || '';
+                    document.getElementById('editRuleModalTitle').innerHTML = '<i class="fas fa-edit me-2"></i>Edit Coverage Rule';
+                }
+            } else {
+                document.getElementById('editRuleModalTitle').innerHTML = '<i class="fas fa-plus me-2"></i>Add New Coverage Rule';
+            }
+
+            modal.show();
+        }
+        
+        function editRule(ruleId) {
+            openEditModal(ruleId);
+        }
+        
+        function saveRule() {
+            const ruleId = document.getElementById('editRuleId').value;
+            const coverageLevel = document.getElementById('coverageLevel').value;
+            const facilityGrade = document.getElementById('facilityGrade').value;
+            const orrAdjustment = document.getElementById('orrAdjustment').value;
+            const outcome = document.getElementById('outcome').value;
+            const comments = document.getElementById('ruleComments').value;
+
+            // Validation
+            if (!coverageLevel || !facilityGrade || !orrAdjustment || !outcome) {
+                showToast('Validation Error', 'Please fill in all required fields', 'danger');
+                return;
+            }
+
+            // Confirmation
+            if (!confirm('Save this coverage rule? Changes will affect all credit assessments in STEP 6B.')) {
+                return;
+            }
+
+            showLoading();
+
+            setTimeout(() => {
+                const rules = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                
+                const ruleData = {
+                    id: ruleId ? parseInt(ruleId) : Date.now(),
+                    coverageLevel,
+                    facilityGrade,
+                    orrAdjustment,
+                    outcome,
+                    lastUpdated: new Date().toISOString(),
+                    updatedBy: 'Admin User',
+                    comments
+                };
+
+                if (ruleId) {
+                    const index = rules.findIndex(r => r.id === parseInt(ruleId));
+                    if (index !== -1) {
+                        rules[index] = ruleData;
+                    }
+                } else {
+                    rules.push(ruleData);
+                }
+
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(rules));
+                
+                renderFacilityTable();
+                updateStats();
+                hideLoading();
+                bootstrap.Modal.getInstance(document.getElementById('editRuleModal')).hide();
+                showToast('Success', 'Coverage rule saved successfully!', 'success');
+            }, 800);
+        }
+        
+        function deleteRule(ruleId) {
+            if (!confirm('Delete this coverage rule? This action cannot be undone.')) {
+                return;
+            }
+            
+            showLoading();
+            
+            setTimeout(() => {
+                let rules = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                rules = rules.filter(r => r.id !== ruleId);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(rules));
+                
+                renderFacilityTable();
+                updateStats();
+                hideLoading();
+                showToast('Deleted', 'Coverage rule deleted successfully', 'success');
+            }, 500);
+        }
+        
+        // ============================================
+        // STATS UPDATE
+        // ============================================
+        
+        function updateStats() {
+            const rules = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            
+            const totalCount = rules.length;
+            const activeRules = rules.filter(r => r.outcome === 'Mandatory Override').length;
+            
+            let lastUpdated = 'N/A';
+            if (rules.length > 0) {
+                const dates = rules.map(r => new Date(r.lastUpdated));
+                const latestDate = new Date(Math.max(...dates));
+                lastUpdated = latestDate.toLocaleDateString();
+            }
+            
+            document.getElementById('totalRulesCount').textContent = totalCount;
+            document.getElementById('activeRulesCount').textContent = activeRules;
+            document.getElementById('lastUpdatedDate').textContent = lastUpdated;
+        }
+        
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+        
+        function showToast(title, message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toastId = 'toast-' + Date.now();
+            
+            const bgColors = {
+                success: 'bg-success',
+                danger: 'bg-danger',
+                warning: 'bg-warning',
+                info: 'bg-info'
+            };
+            
+            const toastHTML = `
+                <div class="toast align-items-center text-white ${bgColors[type]} border-0" role="alert" id="${toastId}">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <strong>${title}</strong><br>${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', toastHTML);
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+            toast.show();
+            
+            toastElement.addEventListener('hidden.bs.toast', function() {
+                toastElement.remove();
+            });
+        }
+        
+        function exportGradings() {
+            const rules = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            const dataStr = JSON.stringify(rules, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'facility-grading-cash-rules-' + new Date().toISOString().split('T')[0] + '.json';
+            link.click();
+            URL.revokeObjectURL(url);
+            showToast('Export Success', 'Coverage rules exported successfully', 'success');
+        }
+        
+    </script>
+</body>
+</html>

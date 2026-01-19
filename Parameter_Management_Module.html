@@ -1,0 +1,2211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Credit Rating Parameters Management System">
+    <title>Parameters Management | Credit Assessment System</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Multiselect CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+    
+    <style>
+        /* ============================================
+           CSS VARIABLES (Theme Colors)
+           ============================================ */
+        :root {
+            --primary-dark: #11224E;
+            --primary-orange: #F87B1B;
+            --accent-green: #CBD99B;
+            --background-light: #EEEEEE;
+            --text-dark: #1a1a1a;
+            --text-light: #6c757d;
+            --border-color: #dee2e6;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --sidebar-width: 280px;
+            --header-height: 60px;
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+        
+        /* ============================================
+           HEADER / TOP BAR
+           ============================================ */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 1040;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+        }
+        
+        .hamburger-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-right: 1rem;
+            transition: transform var(--transition-speed);
+        }
+        
+        .hamburger-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .header-brand {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .theme-toggle {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* ============================================
+           LEFT SIDEBAR NAVIGATION
+           ============================================ */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: white;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            z-index: 1030;
+            transform: translateX(-100%);
+            transition: transform var(--transition-speed) ease-in-out;
+            overflow-y: auto;
+        }
+        
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: 100%;
+            height: calc(100vh - var(--header-height));
+            background: rgba(0,0,0,0.5);
+            z-index: 1020;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed), visibility var(--transition-speed);
+        }
+        
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 1rem 0;
+        }
+        
+        .sidebar-nav-item {
+            margin: 0.25rem 0.75rem;
+        }
+        
+        .sidebar-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all var(--transition-speed);
+            font-weight: 500;
+        }
+        
+        .sidebar-nav-link:hover,
+        .sidebar-nav-link.active {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            color: white;
+        }
+        
+        .sidebar-nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+        
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 1rem 0.75rem;
+        }
+        
+        /* ============================================
+           MAIN CONTENT AREA
+           ============================================ */
+        .main-content {
+            margin-top: var(--header-height);
+            padding: 2rem 1rem;
+            min-height: calc(100vh - var(--header-height));
+        }
+        
+        @media (min-width: 992px) {
+            .main-content {
+                padding: 2rem 3rem;
+            }
+        }
+        
+        /* ============================================
+           SECTION CARDS
+           ============================================ */
+        .section-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--background-light);
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* ============================================
+           PARAMETERS TABLE
+           ============================================ */
+        .parameters-table {
+            width: 100%;
+            margin-bottom: 0;
+            font-size: 0.875rem;
+        }
+        
+        .parameters-table thead {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .parameters-table th {
+            font-weight: 600;
+            padding: 1rem 0.75rem;
+            border: none;
+        }
+        
+        .parameters-table td {
+            padding: 0.75rem;
+            vertical-align: middle;
+        }
+        
+        .parameters-table tbody tr {
+            transition: background-color var(--transition-speed);
+        }
+        
+        .parameters-table tbody tr:hover {
+            background-color: rgba(17, 34, 78, 0.03);
+        }
+        
+        /* ============================================
+           BADGES
+           ============================================ */
+        .section-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .section-badge.financial {
+            background: rgba(23, 162, 184, 0.2);
+            color: #0c5460;
+        }
+        
+        .section-badge.business {
+            background: rgba(248, 123, 27, 0.2);
+            color: #e06a0a;
+        }
+        
+        .section-badge.risk {
+            background: rgba(220, 53, 69, 0.2);
+            color: #721c24;
+        }
+        
+        .section-badge.adjustments {
+            background: rgba(255, 193, 7, 0.2);
+            color: #856404;
+        }
+        
+        .type-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: rgba(203, 217, 155, 0.3);
+            color: var(--primary-dark);
+        }
+        
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        .btn-action {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            margin: 0 0.25rem;
+        }
+        
+        .btn-primary-custom {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .btn-primary-custom:hover {
+            background: #1a3570;
+            transform: translateY(-2px);
+        }
+        
+        .btn-orange {
+            background: var(--primary-orange);
+            color: white;
+        }
+        
+        .btn-orange:hover {
+            background: #e06a0a;
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        .btn-outline-custom {
+            border: 1px solid var(--primary-dark);
+            background: transparent;
+            color: var(--primary-dark);
+        }
+        
+        .btn-outline-custom:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        /* ============================================
+           FORM ELEMENTS
+           ============================================ */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .form-label-required::after {
+            content: ' *';
+            color: var(--danger);
+        }
+        
+        .form-control,
+        .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            transition: all var(--transition-speed);
+        }
+        
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.2rem rgba(248, 123, 27, 0.25);
+        }
+        
+        /* ============================================
+           TABS
+           ============================================ */
+        .nav-tabs {
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--text-dark);
+            font-weight: 500;
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-orange);
+            border-bottom-color: var(--primary-orange);
+            background: transparent;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            border-bottom-color: var(--primary-orange);
+        }
+        
+        /* ============================================
+           SCORING RANGES GRID
+           ============================================ */
+        .scoring-ranges {
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            background: var(--background-light);
+            margin-top: 1rem;
+        }
+        
+        .range-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            align-items: center;
+        }
+        
+        .range-row input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+        }
+        
+        .range-row button {
+            padding: 0.5rem;
+            border: none;
+            background: var(--danger);
+            color: white;
+            border-radius: 0.375rem;
+            cursor: pointer;
+        }
+        
+        /* ============================================
+           MODAL CUSTOMIZATION
+           ============================================ */
+        .modal-header {
+            background: var(--primary-dark);
+            color: white;
+            border-bottom: none;
+        }
+        
+        .modal-header .btn-close {
+            filter: invert(1);
+        }
+        
+        .modal-title {
+            font-weight: 700;
+        }
+        
+        .modal-xl {
+            max-width: 1200px;
+        }
+        
+        /* ============================================
+           WEIGHT VALIDATION
+           ============================================ */
+        .weight-summary {
+            background: var(--background-light);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .weight-progress {
+            height: 30px;
+            border-radius: 0.5rem;
+            background: #e9ecef;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .weight-progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            transition: width var(--transition-speed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .weight-progress-bar.warning {
+            background: var(--warning);
+            color: var(--text-dark);
+        }
+        
+        .weight-progress-bar.danger {
+            background: var(--danger);
+        }
+        
+        .weight-progress-bar.success {
+            background: var(--success);
+        }
+        
+        /* ============================================
+           SEARCH & FILTER BAR
+           ============================================ */
+        .search-filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        /* ============================================
+           TOAST NOTIFICATIONS
+           ============================================ */
+        .toast-container {
+            position: fixed;
+            top: calc(var(--header-height) + 1rem);
+            right: 1rem;
+            z-index: 1050;
+        }
+        
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            .search-filter-bar {
+                flex-direction: column;
+            }
+            
+            .search-input {
+                width: 100%;
+            }
+            
+            .header-brand {
+                font-size: 1rem;
+            }
+            
+            .user-profile .user-name {
+                display: none;
+            }
+        }
+        
+        /* ============================================
+           ACCESSIBILITY
+           ============================================ */
+        *:focus {
+            outline: 2px solid var(--primary-orange);
+            outline-offset: 2px;
+        }
+        
+        button:focus,
+        a:focus {
+            outline-width: 3px;
+        }
+        
+        /* ============================================
+           SMOOTH SCROLLING
+           ============================================ */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* ============================================
+           ADJUSTMENTS & OVERRIDES TABLE
+           ============================================ */
+        .adjustments-table {
+            width: 100%;
+            font-size: 0.875rem;
+        }
+        
+        .adjustments-table th {
+            background: var(--primary-dark);
+            color: white;
+            padding: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .adjustments-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .adjustments-table input,
+        .adjustments-table select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+        }
+        
+        /* ============================================
+           EMPTY STATE
+           ============================================ */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-state-text {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================
+         TOP HEADER
+         ============================================ -->
+    <header class="top-header" role="banner">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <a href="#" class="header-brand">
+            <i class="fas fa-sliders-h"></i>
+            Parameters Management
+        </a>
+        
+        <div class="header-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+            
+            <div class="user-profile" role="button" tabindex="0" aria-label="User profile menu">
+                <div class="user-avatar">AD</div>
+                <span class="user-name d-none d-md-inline">Admin</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </header>
+    
+    <!-- ============================================
+         SIDEBAR OVERLAY
+         ============================================ -->
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+    
+    <!-- ============================================
+         LEFT SIDEBAR NAVIGATION
+         ============================================ -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+        <nav>
+            <ul class="sidebar-nav">
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link" onclick="returnToDashboard()"> -->
+                        <!-- <i class="fas fa-home"></i> -->
+                        <!-- <span>Dashboard</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-file-alt"></i> -->
+                        <!-- <span>Rating Templates</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <li class="sidebar-nav-item">
+                    <a href="#parameters" class="sidebar-nav-link active" data-page="parameters">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Parameters</span>
+                    </a>
+                </li>
+                
+                <!-- <div class="sidebar-divider"></div> -->
+                
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-users"></i> -->
+                        <!-- <span>User Management</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-history"></i> -->
+                        <!-- <span>Audit Trail</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-database"></i> -->
+                        <!-- <span>Data Management</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                
+                <!-- <div class="sidebar-divider"></div> -->
+                
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-book"></i> -->
+                        <!-- <span>Documentation</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-question-circle"></i> -->
+                        <!-- <span>Help & Support</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- ============================================
+         MAIN CONTENT AREA
+         ============================================ -->
+    <main class="main-content" id="mainContent" role="main">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h2 mb-1" style="color: var(--primary-dark); font-weight: 700;">Rating Parameters Management</h1>
+                <p class="text-muted mb-0">Configure scoring parameters, weights, and validation rules</p>
+            </div>
+            <button class="btn btn-orange btn-lg" id="newParameterBtn" aria-label="Create new parameter">
+                <i class="fas fa-plus me-2"></i>New Parameter
+            </button>
+        </div>
+        
+        <!-- Weight Validation Summary -->
+        <div class="section-card">
+            <h5 style="color: var(--primary-dark); margin-bottom: 1rem;">
+                <i class="fas fa-balance-scale me-2"></i>Weight Distribution Summary
+            </h5>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="weight-summary">
+                        <small class="text-muted">Selected Template</small>
+                        <h6 id="selectedTemplateName">Contracting & Services</h6>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="weight-summary">
+                        <div class="d-flex justify-content-between mb-2">
+                            <small class="text-muted">Total Weight Allocated</small>
+                            <strong id="totalWeightDisplay">100%</strong>
+                        </div>
+                        <div class="weight-progress">
+                            <div class="weight-progress-bar success" id="weightProgressBar" style="width: 100%;">
+                                100% Allocated
+                            </div>
+                        </div>
+                        <small class="text-muted mt-2 d-block">Template weights must total exactly 100%</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Parameters Tabs -->
+        <div class="section-card">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="parametersTab" data-bs-toggle="tab" data-bs-target="#parametersView" type="button" role="tab">
+                        <i class="fas fa-list me-2"></i>All Parameters
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="adjustmentsTab" data-bs-toggle="tab" data-bs-target="#adjustmentsView" type="button" role="tab">
+                        <i class="fas fa-adjust me-2"></i>Mandatory Adjustments
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="overridesTab" data-bs-toggle="tab" data-bs-target="#overridesView" type="button" role="tab">
+                        <i class="fas fa-shield-alt me-2"></i>Discretionary Overrides
+                    </button>
+                </li>
+            </ul>
+            
+            <div class="tab-content mt-3">
+                <!-- PARAMETERS VIEW TAB -->
+                <div class="tab-pane fade show active" id="parametersView" role="tabpanel">
+                    <!-- Search & Filter Bar -->
+                    <div class="search-filter-bar">
+                        <div class="search-input">
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input type="text" class="form-control" id="parameterSearchInput" placeholder="Search by parameter name..." aria-label="Search parameters">
+                            </div>
+                        </div>
+                        <select class="form-select" id="templateFilter" style="max-width: 250px;" aria-label="Filter by template">
+                            <option value="">All Templates</option>
+                            <option value="TPL-001" selected>Contracting & Services</option>
+                            <option value="TPL-002">Investment Real Estate</option>
+                            <option value="TPL-003">Personal Net Worth</option>
+                            <option value="TPL-004">Trading & Manufacturing</option>
+                        </select>
+                        <select class="form-select" id="sectionFilter" style="max-width: 200px;" aria-label="Filter by section">
+                            <option value="">All Sections</option>
+                            <option value="financial">Financial</option>
+                            <option value="business">Business/Qualitative</option>
+                            <option value="risk">Risk</option>
+                            <option value="adjustments">Adjustments</option>
+                        </select>
+                        <select class="form-select" id="typeFilter" style="max-width: 180px;" aria-label="Filter by type">
+                            <option value="">All Types</option>
+                            <option value="ratio">Ratio</option>
+                            <option value="qualitative">Qualitative</option>
+                            <option value="percentage">Percentage</option>
+                            <option value="number">Number</option>
+                        </select>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="parameters-table table" role="table" aria-label="Rating parameters">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Template</th>
+                                    <th scope="col">Section</th>
+                                    <th scope="col">Parameter Name</th>
+                                    <th scope="col">Weight (%)</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="parametersTableBody">
+                                <!-- Dynamic content will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- MANDATORY ADJUSTMENTS VIEW TAB -->
+                <div class="tab-pane fade" id="adjustmentsView" role="tabpanel">
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Mandatory Adjustments</strong> are system-enforced penalties based on data quality. These parameters deduct points from the total score.
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="adjustments-table table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Parameter Name</th>
+                                    <th>Option Label</th>
+                                    <th>Score Deduction</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mandatoryAdjustmentsBody">
+                                <!-- Will be populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <button class="btn btn-outline-custom mt-3" onclick="addMandatoryAdjustment()">
+                        <i class="fas fa-plus me-2"></i>Add Adjustment Parameter
+                    </button>
+                </div>
+                
+                <!-- DISCRETIONARY OVERRIDES VIEW TAB -->
+                <div class="tab-pane fade" id="overridesView" role="tabpanel">
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Discretionary Overrides</strong> allow Senior Officers to manually adjust the final rating grade (notches). These do not change the raw score.
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="adjustments-table table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Reason for Override</th>
+                                    <th>Max Upgrade (Notches)</th>
+                                    <th>Max Downgrade (Notches)</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="discretionaryOverridesBody">
+                                <!-- Will be populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <button class="btn btn-outline-custom mt-3" onclick="addDiscretionaryOverride()">
+                        <i class="fas fa-plus me-2"></i>Add Override Reason
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+    
+    <!-- ============================================
+         ADD/EDIT PARAMETER MODAL
+         ============================================ -->
+    <div class="modal fade" id="parameterModal" tabindex="-1" aria-labelledby="parameterModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="parameterModalLabel">Add New Parameter</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="paramTemplate" class="form-label form-label-required">Template</label>
+                                <select class="form-select" id="paramTemplate" aria-label="Select template" required>
+                                    <option value="">Select template</option>
+                                    <option value="TPL-001">Contracting & Services</option>
+                                    <option value="TPL-002">Investment Real Estate</option>
+                                    <option value="TPL-003">Personal Net Worth</option>
+                                    <option value="TPL-004">Trading & Manufacturing</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="paramSection" class="form-label form-label-required">Section</label>
+                                <select class="form-select" id="paramSection" aria-label="Select section" required>
+                                    <option value="">Select section</option>
+                                    <option value="financial">Financial</option>
+                                    <option value="business">Business/Qualitative</option>
+                                    <option value="risk">Risk</option>
+                                    <option value="adjustments">Adjustments</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="paramName" class="form-label form-label-required">Parameter Name</label>
+                                <input type="text" class="form-control" id="paramName" placeholder="e.g., Current Ratio" aria-label="Parameter name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="paramWeight" class="form-label form-label-required">Weight (%)</label>
+                                <input type="number" class="form-control" id="paramWeight" placeholder="0.00" step="0.01" min="0" max="100" aria-label="Parameter weight" required>
+                                <small class="form-text text-muted">Total must equal 100%</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="paramDataType" class="form-label form-label-required">Data Type</label>
+                                <select class="form-select" id="paramDataType" aria-label="Data type" required onchange="handleDataTypeChange()">
+                                    <option value="">Select data type</option>
+                                    <option value="ratio">Ratio</option>
+                                    <option value="percentage">Percentage</option>
+                                    <option value="number">Number</option>
+                                    <option value="qualitative">Qualitative</option>
+                                    <option value="score">Score</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="paramScoreType" class="form-label form-label-required">Score Type</label>
+                                <select class="form-select" id="paramScoreType" aria-label="Score type" required onchange="handleScoreTypeChange()">
+                                    <option value="">Select score type</option>
+                                    <option value="auto">Auto-Calculated</option>
+                                    <option value="manual">Manual</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Formula Field (visible for ratio/auto) -->
+                    <div class="form-group" id="formulaField" style="display: none;">
+                        <label for="paramFormula" class="form-label">Formula</label>
+                        <textarea class="form-control" id="paramFormula" rows="2" placeholder="e.g., currentAssets / currentLiabilities" aria-label="Parameter formula"></textarea>
+                        <small class="form-text text-muted">Use field variables like currentAssets, totalDebt, netWorth, etc.</small>
+                    </div>
+                    
+                    <!-- Scoring Ranges (visible for ratio/auto) -->
+                    <div id="scoringRangesSection" style="display: none;">
+                        <h6 class="mt-3 mb-2" style="color: var(--primary-dark);">Scoring Ranges Configuration</h6>
+                        <div class="scoring-ranges" id="scoringRangesContainer">
+                            <!-- Dynamic range rows will be added here -->
+                        </div>
+                        <button type="button" class="btn btn-outline-custom btn-sm mt-2" onclick="addScoringRange()">
+                            <i class="fas fa-plus me-1"></i>Add Range
+                        </button>
+                    </div>
+                    
+                    <!-- Qualitative Options (visible for qualitative/manual) -->
+                    <div id="qualitativeOptionsSection" style="display: none;">
+                        <h6 class="mt-3 mb-2" style="color: var(--primary-dark);">Qualitative Options & Scores</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Option Label</th>
+                                        <th>Score</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="qualitativeOptionsBody">
+                                    <!-- Dynamic rows will be added here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" class="btn btn-outline-custom btn-sm" onclick="addQualitativeOption()">
+                            <i class="fas fa-plus me-1"></i>Add Option
+                        </button>
+                    </div>
+                    
+                    <!-- Grouped Questions Configuration -->
+                    <div class="form-group mt-3">
+                        <label for="paramGroup" class="form-label">Question Group (Optional)</label>
+                        <select class="form-select" id="paramGroup" aria-label="Question group">
+                            <option value="">No grouping</option>
+                            <option value="management">Management Quality</option>
+                            <option value="market">Market Position</option>
+                            <option value="operations">Operations</option>
+                            <option value="financial">Financial Strength</option>
+                            <option value="miscellaneous">Miscellaneous</option>
+                        </select>
+                        <small class="form-text text-muted">Group related qualitative questions together</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-orange" onclick="saveParameter()">
+                        <i class="fas fa-save me-2"></i>Save Parameter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- VIEW PARAMETER DETAILS MODAL -->
+    <div class="modal fade" id="viewParameterModal" tabindex="-1" aria-labelledby="viewParameterModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewParameterModalLabel">Parameter Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="viewParameterContent">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-orange" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- jQuery (required for Bootstrap Select) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Bootstrap Select -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+    
+    <!-- Main Application JavaScript -->
+    <script>
+        // ============================================
+        // APPLICATION STATE & STORAGE
+        // ============================================
+        const STORAGE_KEYS = {
+            parameters: 'ratingParameters',
+            mandatoryAdjustments: 'mandatoryAdjustments',
+            discretionaryOverrides: 'discretionaryOverrides',
+            theme: 'appTheme'
+        };
+        
+        let appState = {
+            sidebarOpen: false,
+            parameters: [],
+            mandatoryAdjustments: [],
+            discretionaryOverrides: [],
+            currentParameterId: null,
+            editMode: false,
+            selectedTemplate: 'TPL-001'
+        };
+        
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            initializeEventListeners();
+            loadAllData();
+            renderParameters();
+            renderMandatoryAdjustments();
+            renderDiscretionaryOverrides();
+            updateWeightSummary();
+            loadTheme();
+        });
+        
+        function initializeApp() {
+            console.log('Parameters Management System Initialized');
+            
+            // Load data from localStorage or initialize with defaults
+            const savedParams = localStorage.getItem(STORAGE_KEYS.parameters);
+            const savedAdjustments = localStorage.getItem(STORAGE_KEYS.mandatoryAdjustments);
+            const savedOverrides = localStorage.getItem(STORAGE_KEYS.discretionaryOverrides);
+            
+            if (savedParams) {
+                appState.parameters = JSON.parse(savedParams);
+            } else {
+                appState.parameters = getDefaultParameters();
+                saveParameters();
+            }
+            
+            if (savedAdjustments) {
+                appState.mandatoryAdjustments = JSON.parse(savedAdjustments);
+            } else {
+                appState.mandatoryAdjustments = getDefaultMandatoryAdjustments();
+                saveMandatoryAdjustments();
+            }
+            
+            if (savedOverrides) {
+                appState.discretionaryOverrides = JSON.parse(savedOverrides);
+            } else {
+                appState.discretionaryOverrides = getDefaultDiscretionaryOverrides();
+                saveDiscretionaryOverrides();
+            }
+        }
+        
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        function initializeEventListeners() {
+            // Hamburger menu toggle
+            document.getElementById('hamburgerBtn').addEventListener('click', toggleSidebar);
+            document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+            
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // New Parameter button
+            document.getElementById('newParameterBtn').addEventListener('click', openNewParameterModal);
+            
+            // Search and filter
+            document.getElementById('parameterSearchInput').addEventListener('input', filterParameters);
+            document.getElementById('templateFilter').addEventListener('change', function() {
+                appState.selectedTemplate = this.value;
+                filterParameters();
+                updateWeightSummary();
+            });
+            document.getElementById('sectionFilter').addEventListener('change', filterParameters);
+            document.getElementById('typeFilter').addEventListener('change', filterParameters);
+        }
+        
+        // ============================================
+        // SIDEBAR NAVIGATION
+        // ============================================
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const hamburger = document.getElementById('hamburgerBtn');
+            
+            appState.sidebarOpen = !appState.sidebarOpen;
+            
+            if (appState.sidebarOpen) {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                hamburger.setAttribute('aria-expanded', 'true');
+            } else {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+            }
+        }
+        
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarOverlay').classList.remove('active');
+            document.getElementById('hamburgerBtn').setAttribute('aria-expanded', 'false');
+            appState.sidebarOpen = false;
+        }
+        
+        function returnToDashboard() {
+            window.location.href = 'credit-assessment-system.html';
+        }
+        
+        // ============================================
+        // RENDER PARAMETERS TABLE
+        // ============================================
+        function renderParameters(parameters = null) {
+            const tbody = document.getElementById('parametersTableBody');
+            const paramsToRender = parameters || appState.parameters;
+            
+            if (paramsToRender.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <div class="empty-state-icon"><i class="fas fa-sliders-h"></i></div>
+                                <div class="empty-state-title">No Parameters Found</div>
+                                <div class="empty-state-text">Create a new rating parameter to get started</div>
+                                <button class="btn btn-orange" onclick="openNewParameterModal()">
+                                    <i class="fas fa-plus me-2"></i>New Parameter
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = paramsToRender.map(param => `
+                <tr>
+                    <td><strong>${param.id}</strong></td>
+                    <td><small>${getTemplateName(param.template)}</small></td>
+                    <td><span class="section-badge ${param.section}">${capitalizeFirst(param.section)}</span></td>
+                    <td>${param.name}</td>
+                    <td><strong>${param.weight.toFixed(2)}%</strong></td>
+                    <td><span class="type-badge">${capitalizeFirst(param.dataType)}</span></td>
+                    <td>
+                        <button class="btn-action btn-primary-custom" onclick="viewParameter('${param.id}')" aria-label="View parameter ${param.id}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-action btn-outline-custom" onclick="editParameter('${param.id}')" aria-label="Edit parameter ${param.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-action btn-outline-custom" onclick="deleteParameter('${param.id}')" aria-label="Delete parameter ${param.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // ============================================
+        // WEIGHT VALIDATION & SUMMARY
+        // ============================================
+        function updateWeightSummary() {
+            const templateId = appState.selectedTemplate || 'TPL-001';
+            const templateParams = appState.parameters.filter(p => p.template === templateId);
+            const totalWeight = templateParams.reduce((sum, p) => sum + p.weight, 0);
+            
+            // Update template name
+            document.getElementById('selectedTemplateName').textContent = getTemplateName(templateId);
+            
+            // Update total weight display
+            document.getElementById('totalWeightDisplay').textContent = `${totalWeight.toFixed(2)}%`;
+            
+            // Update progress bar
+            const progressBar = document.getElementById('weightProgressBar');
+            const percentage = Math.min(totalWeight, 100);
+            progressBar.style.width = `${percentage}%`;
+            progressBar.textContent = `${totalWeight.toFixed(2)}% Allocated`;
+            
+            // Update color based on validation
+            progressBar.classList.remove('success', 'warning', 'danger');
+            if (Math.abs(totalWeight - 100) < 0.01) {
+                progressBar.classList.add('success');
+            } else if (totalWeight > 100) {
+                progressBar.classList.add('danger');
+            } else {
+                progressBar.classList.add('warning');
+            }
+        }
+        
+        // ============================================
+        // SEARCH & FILTER
+        // ============================================
+        function filterParameters() {
+            const searchTerm = document.getElementById('parameterSearchInput').value.toLowerCase();
+            const templateFilter = document.getElementById('templateFilter').value;
+            const sectionFilter = document.getElementById('sectionFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            
+            let filtered = appState.parameters.filter(param => {
+                const matchesSearch = param.name.toLowerCase().includes(searchTerm) ||
+                                    param.id.toLowerCase().includes(searchTerm);
+                const matchesTemplate = !templateFilter || param.template === templateFilter;
+                const matchesSection = !sectionFilter || param.section === sectionFilter;
+                const matchesType = !typeFilter || param.dataType === typeFilter;
+                
+                return matchesSearch && matchesTemplate && matchesSection && matchesType;
+            });
+            
+            renderParameters(filtered);
+        }
+        
+        // ============================================
+        // OPEN NEW PARAMETER MODAL
+        // ============================================
+        function openNewParameterModal() {
+            appState.editMode = false;
+            appState.currentParameterId = null;
+            
+            // Reset form
+            document.getElementById('paramTemplate').value = appState.selectedTemplate || '';
+            document.getElementById('paramSection').value = '';
+            document.getElementById('paramName').value = '';
+            document.getElementById('paramWeight').value = '';
+            document.getElementById('paramDataType').value = '';
+            document.getElementById('paramScoreType').value = '';
+            document.getElementById('paramFormula').value = '';
+            document.getElementById('paramGroup').value = '';
+            
+            // Hide conditional sections
+            document.getElementById('formulaField').style.display = 'none';
+            document.getElementById('scoringRangesSection').style.display = 'none';
+            document.getElementById('qualitativeOptionsSection').style.display = 'none';
+            
+            // Clear dynamic content
+            document.getElementById('scoringRangesContainer').innerHTML = '';
+            document.getElementById('qualitativeOptionsBody').innerHTML = '';
+            
+            // Change modal title
+            document.getElementById('parameterModalLabel').textContent = 'Add New Parameter';
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('parameterModal'));
+            modal.show();
+        }
+        
+        // ============================================
+        // HANDLE DATA TYPE & SCORE TYPE CHANGES
+        // ============================================
+        function handleDataTypeChange() {
+            const dataType = document.getElementById('paramDataType').value;
+            handleScoreTypeChange(); // Trigger score type logic as well
+        }
+        
+        function handleScoreTypeChange() {
+            const dataType = document.getElementById('paramDataType').value;
+            const scoreType = document.getElementById('paramScoreType').value;
+            
+            // Show/hide formula field
+            if ((dataType === 'ratio' || dataType === 'percentage') && scoreType === 'auto') {
+                document.getElementById('formulaField').style.display = 'block';
+                document.getElementById('scoringRangesSection').style.display = 'block';
+                document.getElementById('qualitativeOptionsSection').style.display = 'none';
+            } else if (dataType === 'qualitative' || scoreType === 'manual') {
+                document.getElementById('formulaField').style.display = 'none';
+                document.getElementById('scoringRangesSection').style.display = 'none';
+                document.getElementById('qualitativeOptionsSection').style.display = 'block';
+            } else {
+                document.getElementById('formulaField').style.display = 'none';
+                document.getElementById('scoringRangesSection').style.display = 'none';
+                document.getElementById('qualitativeOptionsSection').style.display = 'none';
+            }
+        }
+        
+        // ============================================
+        // SCORING RANGES MANAGEMENT
+        // ============================================
+        function addScoringRange() {
+            const container = document.getElementById('scoringRangesContainer');
+            const rangeId = `range-${Date.now()}`;
+            
+            const rangeRow = document.createElement('div');
+            rangeRow.className = 'range-row';
+            rangeRow.id = rangeId;
+            rangeRow.innerHTML = `
+                <input type="number" placeholder="Min Value" step="0.01" aria-label="Minimum value">
+                <input type="number" placeholder="Max Value" step="0.01" aria-label="Maximum value">
+                <input type="number" placeholder="Score" step="0.1" aria-label="Score">
+                <button type="button" onclick="removeRange('${rangeId}')">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            
+            container.appendChild(rangeRow);
+        }
+        
+        function removeRange(rangeId) {
+            document.getElementById(rangeId).remove();
+        }
+        
+        // ============================================
+        // QUALITATIVE OPTIONS MANAGEMENT
+        // ============================================
+        function addQualitativeOption() {
+            const tbody = document.getElementById('qualitativeOptionsBody');
+            const optionId = `option-${Date.now()}`;
+            
+            const row = document.createElement('tr');
+            row.id = optionId;
+            row.innerHTML = `
+                <td><input type="text" class="form-control" placeholder="Option label" aria-label="Option label"></td>
+                <td><input type="number" class="form-control" placeholder="Score" step="0.1" aria-label="Score"></td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-custom" onclick="removeOption('${optionId}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            
+            tbody.appendChild(row);
+        }
+        
+        function removeOption(optionId) {
+            document.getElementById(optionId).remove();
+        }
+        
+        // ============================================
+        // SAVE PARAMETER
+        // ============================================
+        function saveParameter() {
+            const template = document.getElementById('paramTemplate').value;
+            const section = document.getElementById('paramSection').value;
+            const name = document.getElementById('paramName').value.trim();
+            const weight = parseFloat(document.getElementById('paramWeight').value);
+            const dataType = document.getElementById('paramDataType').value;
+            const scoreType = document.getElementById('paramScoreType').value;
+            const formula = document.getElementById('paramFormula').value.trim();
+            const group = document.getElementById('paramGroup').value;
+            
+            // Validation
+            if (!template || !section || !name || isNaN(weight) || !dataType || !scoreType) {
+                showToast('Validation Error', 'Please fill in all required fields', 'warning');
+                return;
+            }
+            
+            // Check weight doesn't exceed 100%
+            const templateParams = appState.parameters.filter(p => p.template === template && p.id !== appState.currentParameterId);
+            const currentTotal = templateParams.reduce((sum, p) => sum + p.weight, 0);
+            
+            if (currentTotal + weight > 100.01) {
+                showToast('Weight Exceeded', `Adding this parameter would exceed 100% weight allocation for this template (Current: ${currentTotal.toFixed(2)}%)`, 'error');
+                return;
+            }
+            
+            // Collect scoring ranges or qualitative options
+            let scoringConfig = {};
+            
+            if ((dataType === 'ratio' || dataType === 'percentage') && scoreType === 'auto') {
+                const ranges = [];
+                const rangeRows = document.querySelectorAll('#scoringRangesContainer .range-row');
+                rangeRows.forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    ranges.push({
+                        min: parseFloat(inputs[0].value),
+                        max: parseFloat(inputs[1].value),
+                        score: parseFloat(inputs[2].value)
+                    });
+                });
+                scoringConfig.type = 'ranges';
+                scoringConfig.ranges = ranges;
+                scoringConfig.formula = formula;
+            } else if (dataType === 'qualitative' || scoreType === 'manual') {
+                const options = [];
+                const optionRows = document.querySelectorAll('#qualitativeOptionsBody tr');
+                optionRows.forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    options.push({
+                        label: inputs[0].value,
+                        score: parseFloat(inputs[1].value)
+                    });
+                });
+                scoringConfig.type = 'options';
+                scoringConfig.options = options;
+            }
+            
+            if (appState.editMode && appState.currentParameterId) {
+                // Update existing parameter
+                const param = appState.parameters.find(p => p.id === appState.currentParameterId);
+                if (param) {
+                    param.template = template;
+                    param.section = section;
+                    param.name = name;
+                    param.weight = weight;
+                    param.dataType = dataType;
+                    param.scoreType = scoreType;
+                    param.group = group;
+                    param.scoringConfig = scoringConfig;
+                    param.lastModified = new Date().toISOString();
+                    
+                    showToast('Parameter Updated', `${name} has been updated successfully`, 'success');
+                }
+            } else {
+                // Create new parameter
+                const newParam = {
+                    id: `PRM-${Date.now().toString().slice(-6)}`,
+                    template: template,
+                    section: section,
+                    name: name,
+                    weight: weight,
+                    dataType: dataType,
+                    scoreType: scoreType,
+                    group: group,
+                    scoringConfig: scoringConfig,
+                    created: new Date().toISOString(),
+                    lastModified: new Date().toISOString()
+                };
+                
+                appState.parameters.unshift(newParam);
+                showToast('Parameter Created', `${name} has been created successfully`, 'success');
+            }
+            
+            saveParameters();
+            renderParameters();
+            updateWeightSummary();
+            
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('parameterModal'));
+            modal.hide();
+        }
+        
+        // ============================================
+        // VIEW PARAMETER DETAILS
+        // ============================================
+        function viewParameter(parameterId) {
+            const param = appState.parameters.find(p => p.id === parameterId);
+            
+            if (!param) {
+                showToast('Error', 'Parameter not found', 'error');
+                return;
+            }
+            
+            let scoringDetails = '';
+            
+            if (param.scoringConfig) {
+                if (param.scoringConfig.type === 'ranges') {
+                    scoringDetails = `
+                        <h6 class="mt-3">Formula</h6>
+                        <code>${param.scoringConfig.formula || 'N/A'}</code>
+                        
+                        <h6 class="mt-3">Scoring Ranges</h6>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Min Value</th>
+                                    <th>Max Value</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${param.scoringConfig.ranges.map(range => `
+                                    <tr>
+                                        <td>${range.min}</td>
+                                        <td>${range.max}</td>
+                                        <td><strong>${range.score}</strong></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                } else if (param.scoringConfig.type === 'options') {
+                    scoringDetails = `
+                        <h6 class="mt-3">Qualitative Options & Scores</h6>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${param.scoringConfig.options.map(option => `
+                                    <tr>
+                                        <td>${option.label}</td>
+                                        <td><strong>${option.score}</strong></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                }
+            }
+            
+            const content = document.getElementById('viewParameterContent');
+            content.innerHTML = `
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <h6 class="text-muted">Parameter ID</h6>
+                        <p class="fw-bold">${param.id}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted">Parameter Name</h6>
+                        <p class="fw-bold">${param.name}</p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <h6 class="text-muted">Template</h6>
+                        <p>${getTemplateName(param.template)}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-muted">Section</h6>
+                        <p><span class="section-badge ${param.section}">${capitalizeFirst(param.section)}</span></p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-muted">Weight</h6>
+                        <p class="fw-bold">${param.weight.toFixed(2)}%</p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <h6 class="text-muted">Data Type</h6>
+                        <p><span class="type-badge">${capitalizeFirst(param.dataType)}</span></p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-muted">Score Type</h6>
+                        <p>${capitalizeFirst(param.scoreType)}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-muted">Question Group</h6>
+                        <p>${param.group ? capitalizeFirst(param.group) : 'None'}</p>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                ${scoringDetails}
+            `;
+            
+            const modal = new bootstrap.Modal(document.getElementById('viewParameterModal'));
+            modal.show();
+        }
+        
+        // ============================================
+        // EDIT PARAMETER
+        // ============================================
+        function editParameter(parameterId) {
+            const param = appState.parameters.find(p => p.id === parameterId);
+            
+            if (!param) {
+                showToast('Error', 'Parameter not found', 'error');
+                return;
+            }
+            
+            appState.editMode = true;
+            appState.currentParameterId = parameterId;
+            
+            // Populate form
+            document.getElementById('paramTemplate').value = param.template;
+            document.getElementById('paramSection').value = param.section;
+            document.getElementById('paramName').value = param.name;
+            document.getElementById('paramWeight').value = param.weight;
+            document.getElementById('paramDataType').value = param.dataType;
+            document.getElementById('paramScoreType').value = param.scoreType;
+            document.getElementById('paramGroup').value = param.group || '';
+            
+            // Handle scoring configuration
+            if (param.scoringConfig) {
+                if (param.scoringConfig.type === 'ranges') {
+                    document.getElementById('paramFormula').value = param.scoringConfig.formula || '';
+                    document.getElementById('formulaField').style.display = 'block';
+                    document.getElementById('scoringRangesSection').style.display = 'block';
+                    document.getElementById('qualitativeOptionsSection').style.display = 'none';
+                    
+                    // Populate ranges
+                    const container = document.getElementById('scoringRangesContainer');
+                    container.innerHTML = '';
+                    param.scoringConfig.ranges.forEach(range => {
+                        const rangeId = `range-${Date.now()}-${Math.random()}`;
+                        const rangeRow = document.createElement('div');
+                        rangeRow.className = 'range-row';
+                        rangeRow.id = rangeId;
+                        rangeRow.innerHTML = `
+                            <input type="number" value="${range.min}" step="0.01" aria-label="Minimum value">
+                            <input type="number" value="${range.max}" step="0.01" aria-label="Maximum value">
+                            <input type="number" value="${range.score}" step="0.1" aria-label="Score">
+                            <button type="button" onclick="removeRange('${rangeId}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        `;
+                        container.appendChild(rangeRow);
+                    });
+                } else if (param.scoringConfig.type === 'options') {
+                    document.getElementById('formulaField').style.display = 'none';
+                    document.getElementById('scoringRangesSection').style.display = 'none';
+                    document.getElementById('qualitativeOptionsSection').style.display = 'block';
+                    
+                    // Populate options
+                    const tbody = document.getElementById('qualitativeOptionsBody');
+                    tbody.innerHTML = '';
+                    param.scoringConfig.options.forEach(option => {
+                        const optionId = `option-${Date.now()}-${Math.random()}`;
+                        const row = document.createElement('tr');
+                        row.id = optionId;
+                        row.innerHTML = `
+                            <td><input type="text" class="form-control" value="${option.label}" aria-label="Option label"></td>
+                            <td><input type="number" class="form-control" value="${option.score}" step="0.1" aria-label="Score"></td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-outline-custom" onclick="removeOption('${optionId}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+            }
+            
+            // Change modal title
+            document.getElementById('parameterModalLabel').textContent = 'Edit Parameter';
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('parameterModal'));
+            modal.show();
+        }
+        
+        // ============================================
+        // DELETE PARAMETER
+        // ============================================
+        function deleteParameter(parameterId) {
+            if (!confirm('Are you sure you want to delete this parameter? This action cannot be undone.')) {
+                return;
+            }
+            
+            appState.parameters = appState.parameters.filter(p => p.id !== parameterId);
+            saveParameters();
+            renderParameters();
+            updateWeightSummary();
+            showToast('Parameter Deleted', 'Parameter has been removed successfully', 'success');
+        }
+        
+        // ============================================
+        // MANDATORY ADJUSTMENTS
+        // ============================================
+        function renderMandatoryAdjustments() {
+            const tbody = document.getElementById('mandatoryAdjustmentsBody');
+            
+            if (appState.mandatoryAdjustments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No mandatory adjustments configured</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = appState.mandatoryAdjustments.map(adj => `
+                <tr>
+                    <td><strong>${adj.parameterName}</strong></td>
+                    <td>${adj.optionLabel}</td>
+                    <td><span class="text-danger">${adj.scoreDeduction}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-custom" onclick="editMandatoryAdjustment('${adj.id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-custom" onclick="deleteMandatoryAdjustment('${adj.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function addMandatoryAdjustment() {
+            const parameterName = prompt('Enter parameter name (e.g., "Age of Financial Information"):');
+            if (!parameterName) return;
+            
+            const optionLabel = prompt('Enter option label (e.g., "12-15 Months"):');
+            if (!optionLabel) return;
+            
+            const scoreDeduction = prompt('Enter score deduction (negative number, e.g., "-5"):');
+            if (!scoreDeduction) return;
+            
+            const newAdjustment = {
+                id: `ADJ-${Date.now().toString().slice(-6)}`,
+                parameterName: parameterName,
+                optionLabel: optionLabel,
+                scoreDeduction: parseFloat(scoreDeduction)
+            };
+            
+            appState.mandatoryAdjustments.push(newAdjustment);
+            saveMandatoryAdjustments();
+            renderMandatoryAdjustments();
+            showToast('Adjustment Added', 'Mandatory adjustment created successfully', 'success');
+        }
+        
+        function editMandatoryAdjustment(id) {
+            const adj = appState.mandatoryAdjustments.find(a => a.id === id);
+            if (!adj) return;
+            
+            const newLabel = prompt('Edit option label:', adj.optionLabel);
+            if (newLabel) adj.optionLabel = newLabel;
+            
+            const newDeduction = prompt('Edit score deduction:', adj.scoreDeduction);
+            if (newDeduction) adj.scoreDeduction = parseFloat(newDeduction);
+            
+            saveMandatoryAdjustments();
+            renderMandatoryAdjustments();
+            showToast('Adjustment Updated', 'Changes saved successfully', 'success');
+        }
+        
+        function deleteMandatoryAdjustment(id) {
+            if (!confirm('Delete this adjustment?')) return;
+            
+            appState.mandatoryAdjustments = appState.mandatoryAdjustments.filter(a => a.id !== id);
+            saveMandatoryAdjustments();
+            renderMandatoryAdjustments();
+            showToast('Adjustment Deleted', 'Adjustment removed successfully', 'success');
+        }
+        
+        // ============================================
+        // DISCRETIONARY OVERRIDES
+        // ============================================
+        function renderDiscretionaryOverrides() {
+            const tbody = document.getElementById('discretionaryOverridesBody');
+            
+            if (appState.discretionaryOverrides.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No discretionary overrides configured</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = appState.discretionaryOverrides.map(override => `
+                <tr>
+                    <td><span class="section-badge ${override.category.toLowerCase()}">${override.category}</span></td>
+                    <td>${override.reason}</td>
+                    <td><span class="text-success">+${override.maxUpgrade}</span></td>
+                    <td><span class="text-danger">-${override.maxDowngrade}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-custom" onclick="editDiscretionaryOverride('${override.id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-custom" onclick="deleteDiscretionaryOverride('${override.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function addDiscretionaryOverride() {
+            const category = prompt('Enter category (e.g., "GEN", "FIN", "BUSS. PERF"):');
+            if (!category) return;
+            
+            const reason = prompt('Enter reason for override:');
+            if (!reason) return;
+            
+            const maxUpgrade = prompt('Enter max upgrade (notches):');
+            if (maxUpgrade === null) return;
+            
+            const maxDowngrade = prompt('Enter max downgrade (notches):');
+            if (maxDowngrade === null) return;
+            
+            const newOverride = {
+                id: `OVR-${Date.now().toString().slice(-6)}`,
+                category: category,
+                reason: reason,
+                maxUpgrade: parseInt(maxUpgrade),
+                maxDowngrade: parseInt(maxDowngrade)
+            };
+            
+            appState.discretionaryOverrides.push(newOverride);
+            saveDiscretionaryOverrides();
+            renderDiscretionaryOverrides();
+            showToast('Override Added', 'Discretionary override created successfully', 'success');
+        }
+        
+        function editDiscretionaryOverride(id) {
+            const override = appState.discretionaryOverrides.find(o => o.id === id);
+            if (!override) return;
+            
+            const newReason = prompt('Edit reason:', override.reason);
+            if (newReason) override.reason = newReason;
+            
+            const newUpgrade = prompt('Edit max upgrade (notches):', override.maxUpgrade);
+            if (newUpgrade !== null) override.maxUpgrade = parseInt(newUpgrade);
+            
+            const newDowngrade = prompt('Edit max downgrade (notches):', override.maxDowngrade);
+            if (newDowngrade !== null) override.maxDowngrade = parseInt(newDowngrade);
+            
+            saveDiscretionaryOverrides();
+            renderDiscretionaryOverrides();
+            showToast('Override Updated', 'Changes saved successfully', 'success');
+        }
+        
+        function deleteDiscretionaryOverride(id) {
+            if (!confirm('Delete this override?')) return;
+            
+            appState.discretionaryOverrides = appState.discretionaryOverrides.filter(o => o.id !== id);
+            saveDiscretionaryOverrides();
+            renderDiscretionaryOverrides();
+            showToast('Override Deleted', 'Override removed successfully', 'success');
+        }
+        
+        // ============================================
+        // DEFAULT DATA (Complete Configuration)
+        // ============================================
+        function getDefaultParameters() {
+            // This is a sample - in production, this would contain ALL parameters from all 4 templates
+            // Including exact scoring ranges as specified in the BRD
+            return [
+                // TEMPLATE 1: Contracting & Services - Qualitative
+                {
+                    id: 'PRM-000001',
+                    template: 'TPL-001',
+                    section: 'business',
+                    name: 'F1 Constitution & Establishment',
+                    weight: 2.9,
+                    dataType: 'qualitative',
+                    scoreType: 'manual',
+                    group: 'management',
+                    scoringConfig: {
+                        type: 'options',
+                        options: [
+                            { label: 'Govt/Semi-govt', score: 29 },
+                            { label: 'Public Shareholding', score: 22 },
+                            { label: 'Closed Shareholding', score: 15 },
+                            { label: 'Partnership >50%', score: 7 },
+                            { label: 'Other', score: 0 }
+                        ]
+                    },
+                    created: '2025-01-15T10:00:00Z',
+                    lastModified: '2025-01-15T10:00:00Z'
+                },
+                {
+                    id: 'PRM-000002',
+                    template: 'TPL-001',
+                    section: 'business',
+                    name: 'F2 Years in Business',
+                    weight: 2.9,
+                    dataType: 'qualitative',
+                    scoreType: 'manual',
+                    group: 'management',
+                    scoringConfig: {
+                        type: 'options',
+                        options: [
+                            { label: '>20 years', score: 29 },
+                            { label: '10-20 years', score: 22 },
+                            { label: '2-10 years', score: 11 },
+                            { label: '<2 years', score: 0 }
+                        ]
+                    },
+                    created: '2025-01-15T10:00:00Z',
+                    lastModified: '2025-01-15T10:00:00Z'
+                },
+                // TEMPLATE 1: Contracting & Services - Financial Ratios
+                {
+                    id: 'PRM-000003',
+                    template: 'TPL-001',
+                    section: 'financial',
+                    name: 'Affiliates Due to Net Worth',
+                    weight: 3.3,
+                    dataType: 'ratio',
+                    scoreType: 'auto',
+                    group: '',
+                    scoringConfig: {
+                        type: 'ranges',
+                        formula: 'affiliatesDue / netWorth',
+                        ranges: [
+                            { min: -999, max: 0.01, score: 33 },
+                            { min: 0.01, max: 0.1, score: 25.6 },
+                            { min: 0.1, max: 0.2, score: 21 },
+                            { min: 0.2, max: 0.66, score: 15.5 },
+                            { min: 0.66, max: 999, score: 13.6 }
+                        ]
+                    },
+                    created: '2025-01-15T10:00:00Z',
+                    lastModified: '2025-01-15T10:00:00Z'
+                },
+                {
+                    id: 'PRM-000004',
+                    template: 'TPL-001',
+                    section: 'financial',
+                    name: 'Current Ratio',
+                    weight: 4.12,
+                    dataType: 'ratio',
+                    scoreType: 'auto',
+                    group: '',
+                    scoringConfig: {
+                        type: 'ranges',
+                        formula: 'currentAssets / currentLiabilities',
+                        ranges: [
+                            { min: -999, max: 0.78, score: 7.1 },
+                            { min: 0.78, max: 0.96, score: 9.5 },
+                            { min: 0.96, max: 1.1, score: 11.9 },
+                            { min: 1.1, max: 1.47, score: 15.7 },
+                            { min: 1.47, max: 2.96, score: 27.1 },
+                            { min: 5.38, max: 999, score: 41.2 }
+                        ]
+                    },
+                    created: '2025-01-15T10:00:00Z',
+                    lastModified: '2025-01-15T10:00:00Z'
+                },
+                {
+                    id: 'PRM-000005',
+                    template: 'TPL-001',
+                    section: 'financial',
+                    name: 'Debt Equity Ratio',
+                    weight: 4.1,
+                    dataType: 'ratio',
+                    scoreType: 'auto',
+                    group: '',
+                    scoringConfig: {
+                        type: 'ranges',
+                        formula: 'totalDebt / totalEquity',
+                        ranges: [
+                            { min: -999, max: 0.16, score: 41 },
+                            { min: 0.16, max: 0.42, score: 33.9 },
+                            { min: 0.42, max: 1.06, score: 21.5 },
+                            { min: 1.06, max: 1.48, score: 18.9 },
+                            { min: 1.48, max: 1.93, score: 14.5 },
+                            { min: 4, max: 999, score: 7.4 }
+                        ]
+                    },
+                    created: '2025-01-15T10:00:00Z',
+                    lastModified: '2025-01-15T10:00:00Z'
+                },
+                // Add more parameters here (this is a representative sample)
+                // In production, include all parameters from all 4 templates with exact values from BRD
+            ];
+        }
+        
+        function getDefaultMandatoryAdjustments() {
+            return [
+                { id: 'ADJ-001', parameterName: 'Age of Financial Information', optionLabel: '< 12 Months (Audited & Recent)', scoreDeduction: 0 },
+                { id: 'ADJ-002', parameterName: 'Age of Financial Information', optionLabel: '12-15 Months', scoreDeduction: -5 },
+                { id: 'ADJ-003', parameterName: 'Age of Financial Information', optionLabel: '15-18 Months', scoreDeduction: -10 },
+                { id: 'ADJ-004', parameterName: 'Age of Financial Information', optionLabel: '> 18 Months', scoreDeduction: -20 },
+                { id: 'ADJ-005', parameterName: 'Quality of Financial Information', optionLabel: 'Big 4 Auditors / Top Tier', scoreDeduction: 0 },
+                { id: 'ADJ-006', parameterName: 'Quality of Financial Information', optionLabel: 'Second Tier / Approved Auditors', scoreDeduction: -5 },
+                { id: 'ADJ-007', parameterName: 'Quality of Financial Information', optionLabel: 'Unapproved Auditors / Management Accounts', scoreDeduction: -15 },
+                { id: 'ADJ-008', parameterName: 'Historical Account Performance', optionLabel: 'Clean Repayment History', scoreDeduction: 0 },
+                { id: 'ADJ-009', parameterName: 'Historical Account Performance', optionLabel: 'Occasional Delays (< 30 days)', scoreDeduction: -10 },
+                { id: 'ADJ-010', parameterName: 'Historical Account Performance', optionLabel: 'Frequent Delays / Restructured Account', scoreDeduction: -20 },
+                { id: 'ADJ-011', parameterName: 'Qualification of Audit Report', optionLabel: 'Clean Report (Unqualified)', scoreDeduction: 0 },
+                { id: 'ADJ-012', parameterName: 'Qualification of Audit Report', optionLabel: 'Qualified (Minor Issues)', scoreDeduction: -10 },
+                { id: 'ADJ-013', parameterName: 'Qualification of Audit Report', optionLabel: 'Qualified (Material Issues / Going Concern)', scoreDeduction: -25 }
+            ];
+        }
+        
+        function getDefaultDiscretionaryOverrides() {
+            return [
+                { id: 'OVR-001', category: 'GEN', reason: 'Management changes', maxUpgrade: 2, maxDowngrade: 2 },
+                { id: 'OVR-002', category: 'GEN', reason: 'Change in Regulation', maxUpgrade: 1, maxDowngrade: 1 },
+                { id: 'OVR-003', category: 'GEN', reason: 'Length of relationship - Strong / Weak', maxUpgrade: 1, maxDowngrade: 1 },
+                { id: 'OVR-004', category: 'GEN', reason: 'External Relationship (Part or subsidiary of a strong Group / Troubled, defaulted group)', maxUpgrade: 1, maxDowngrade: 1 },
+                { id: 'OVR-005', category: 'GEN', reason: 'Deposit availability from borrowers or group / Ancillary business from borrower', maxUpgrade: 1, maxDowngrade: 0 },
+                { id: 'OVR-006', category: 'GEN', reason: 'Bankruptcy, Liquidation', maxUpgrade: 0, maxDowngrade: 3 },
+                { id: 'OVR-007', category: 'GEN', reason: 'Deterioration of other group accounts exposure', maxUpgrade: 0, maxDowngrade: 2 },
+                { id: 'OVR-008', category: 'GEN', reason: 'Unresolved conflict between owners', maxUpgrade: 0, maxDowngrade: 2 },
+                { id: 'OVR-009', category: 'GEN', reason: 'Death of a key person', maxUpgrade: 0, maxDowngrade: 2 },
+                { id: 'OVR-010', category: 'GEN', reason: 'Non existence of succession plan', maxUpgrade: 0, maxDowngrade: 1 },
+                { id: 'OVR-011', category: 'FIN', reason: 'Diversification (INCOME DIVERSIFICATION - ie, income from different sources)', maxUpgrade: 1, maxDowngrade: 1 },
+                { id: 'OVR-012', category: 'BUSS. PERF', reason: 'Signing of significant & strategic contracts / Loss of significant contract', maxUpgrade: 2, maxDowngrade: 2 },
+                { id: 'OVR-013', category: 'BUSS. PERF', reason: 'Change in Market Position', maxUpgrade: 2, maxDowngrade: 2 },
+                { id: 'OVR-014', category: 'BUSS. PERF', reason: 'Performance better than planned and budgeted / less than planned and budgeted', maxUpgrade: 1, maxDowngrade: 1 },
+                { id: 'OVR-015', category: 'BUSS. PERF', reason: 'Reputation (Beyond Doubt / Poor)', maxUpgrade: 1, maxDowngrade: 1 },
+                { id: 'OVR-016', category: 'LEGAL', reason: 'Ongoing Legal dispute / Court order', maxUpgrade: 0, maxDowngrade: 2 },
+                { id: 'OVR-017', category: 'ECONOMIC', reason: 'Drastic fall in Capital markets', maxUpgrade: 0, maxDowngrade: 1 },
+                { id: 'OVR-018', category: 'ECONOMIC', reason: 'Drastic fall in Oil prices', maxUpgrade: 0, maxDowngrade: 1 },
+                { id: 'OVR-019', category: 'ECONOMIC', reason: 'Deteriorating Global Economic sentiments (eg. 2008 Credit Crisis kind of scenario)', maxUpgrade: 0, maxDowngrade: 2 },
+                { id: 'OVR-020', category: 'POLITICAL', reason: 'Social disturbances (eg., uprisings)', maxUpgrade: 0, maxDowngrade: 1 },
+                { id: 'OVR-021', category: 'ASSIGNMENT', reason: 'All the contracts financed (100%) are from Govt / Public sector entities and fully and legally assigned in favour of the Bank', maxUpgrade: 2, maxDowngrade: 0 },
+                { id: 'OVR-022', category: 'ASSIGNMENT', reason: 'Majority of the contracts (>75%) financed have strong and clear legal assignment including atleast 50% from Govt / Public Sector Entities', maxUpgrade: 1, maxDowngrade: 0 },
+                { id: 'OVR-023', category: 'ASSIGNMENT', reason: 'More than 50% of the contracts do not have credible legal assignments', maxUpgrade: 0, maxDowngrade: 1 },
+                { id: 'OVR-024', category: 'ACCOUNT CONDUCT', reason: 'Persistent ever-greening (> 2 years) of revolving loans without any repayment', maxUpgrade: 0, maxDowngrade: 1 }
+            ];
+        }
+        
+        // ============================================
+        // THEME TOGGLE
+        // ============================================
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.querySelector('#themeToggle i');
+            
+            body.classList.toggle('dark-theme');
+            
+            if (body.classList.contains('dark-theme')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem(STORAGE_KEYS.theme, 'dark');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem(STORAGE_KEYS.theme, 'light');
+            }
+        }
+        
+        function loadTheme() {
+            const savedTheme = localStorage.getItem(STORAGE_KEYS.theme);
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.querySelector('#themeToggle i').classList.replace('fa-moon', 'fa-sun');
+            }
+        }
+        
+        // ============================================
+        // TOAST NOTIFICATIONS
+        // ============================================
+        function showToast(title, message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toastId = `toast-${Date.now()}`;
+            
+            const iconMap = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            
+            const colorMap = {
+                success: 'success',
+                error: 'danger',
+                warning: 'warning',
+                info: 'info'
+            };
+            
+            const toastHTML = `
+                <div class="toast align-items-center text-white bg-${colorMap[type]} border-0" role="alert" aria-live="assertive" aria-atomic="true" id="${toastId}">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas ${iconMap[type]} me-2"></i>
+                            <strong>${title}</strong><br>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+            
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+            
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { delay: 4000 });
+            toast.show();
+            
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
+            });
+        }
+        
+        // ============================================
+        // DATA PERSISTENCE
+        // ============================================
+        function saveParameters() {
+            localStorage.setItem(STORAGE_KEYS.parameters, JSON.stringify(appState.parameters));
+        }
+        
+        function saveMandatoryAdjustments() {
+            localStorage.setItem(STORAGE_KEYS.mandatoryAdjustments, JSON.stringify(appState.mandatoryAdjustments));
+        }
+        
+        function saveDiscretionaryOverrides() {
+            localStorage.setItem(STORAGE_KEYS.discretionaryOverrides, JSON.stringify(appState.discretionaryOverrides));
+        }
+        
+        function loadAllData() {
+            const saved = localStorage.getItem(STORAGE_KEYS.parameters);
+            if (saved) {
+                appState.parameters = JSON.parse(saved);
+            }
+        }
+        
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1).replace(/-/g, ' ').replace(/_/g, ' ');
+        }
+        
+        function getTemplateName(templateId) {
+            const templateNames = {
+                'TPL-001': 'Contracting & Services',
+                'TPL-002': 'Investment Real Estate',
+                'TPL-003': 'Personal Net Worth',
+                'TPL-004': 'Trading & Manufacturing'
+            };
+            return templateNames[templateId] || templateId;
+        }
+        
+        // ============================================
+        // WINDOW RESIZE HANDLER
+        // ============================================
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 992 && appState.sidebarOpen) {
+                closeSidebar();
+            }
+        });
+    </script>
+</body>
+</html>

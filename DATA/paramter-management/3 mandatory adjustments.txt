@@ -1,0 +1,133 @@
+Mandatory Adjustments
+
+************************************************************************************
+
+API : /mandatory-adjustments/create
+METHOD : POST
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    mandatoryAdjustmentId : "MA-1",
+    mandatoryAdjustmentName : "Missing Audited Financials",
+    description : "Missing Audited Financials",
+    controlName : "missingAuditedFinancials",
+    mandatoryAdjustmentStatus : "Pending",
+    category : "GEN",
+    isRequired : true,
+    activeInStepper : true,
+    options : [
+        {
+            label : "Partial Audit / Management Accounts",
+            value : -5
+        },
+        {
+            label : "Unaudited Financials Only",
+            value : -10
+        },
+        {
+            label : "No Financial Statements",
+            value : -15
+        }
+    ],
+    version : 1,
+}
+
+************************************************************************************
+
+API : /mandatory-adjustments/update/{mandatoryAdjustmentId}
+METHOD : PUT
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    mandatoryAdjustmentName : "Missing Audited Financials",
+    description : "Missing Audited Financials",
+    controlName : "missingAuditedFinancials",
+    mandatoryAdjustmentStatus : "Pending",
+    category : "GEN",
+    isRequired : true,
+    activeInStepper : true,
+    options : [
+        {
+            label : "Partial Audit / Management Accounts",
+            value : -5
+        },
+        {
+            label : "Unaudited Financials Only",
+            value : -10
+        },
+        {
+            label : "No Financial Statements",
+            value : -15
+        }
+    ],
+    version : 1,
+}
+
+************************************************************************************
+
+API : /mandatory-adjustments/patch/status/{mandatoryAdjustmentId}
+METHOD : PATCH
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+    mandatoryAdjustmentStatus : "Approved"
+}
+
+************************************************************************************
+
+API : /mandatory-adjustments/view/{mandatoryAdjustmentId}
+METHOD : GET
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    mandatoryAdjustmentName : "Missing Audited Financials",
+    description : "Missing Audited Financials",
+    controlName : "missingAuditedFinancials",
+    mandatoryAdjustmentStatus : "Pending",
+    category : "GEN",
+    isRequired : true,
+    activeInStepper : true,
+    options : [
+        {
+            label : "Partial Audit / Management Accounts",
+            value : -5
+        },
+        {
+            label : "Unaudited Financials Only",
+            value : -10
+        },
+        {
+            label : "No Financial Statements",
+            value : -15
+        }
+    ],
+    version : 1,
+    actionByUserId: 42,
+    actionDate: "2025-12-31T10:13:59.919Z",
+    action: "CREATE",
+    actionByUserName: "Chetan Sharma",
+    actionByEmailId: "chetan@gmail.com",
+    actionByRoleName: "Super Admin",
+    actionByWorkflow: "Maker"
+}
+
+************************************************************************************
+
+API : /mandatory-adjustments/delete/{mandatoryAdjustmentId}
+METHOD : DELETE
+
+************************************************************************************
+
+API : /mandatory-adjustments/all
+METHOD : GET

@@ -1,0 +1,3842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Parameter Management System - Credit Assessment</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-dark: #11224E;
+            --primary-orange: #F87B1B;
+            --accent-green: #CBD99B;
+            --background-light: #EEEEEE;
+            --text-dark: #1a1a1a;
+            --text-light: #6c757d;
+            --border-color: #dee2e6;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --header-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            padding-top: var(--header-height);
+        }
+
+        /* Header */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1040;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+
+        .header-brand {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .header-nav button {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .header-nav button:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Cards */
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 3px solid var(--primary-orange);
+            padding-bottom: 0.75rem;
+        }
+
+        /* Tabs */
+        .nav-tabs {
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--text-dark);
+            font-weight: 600;
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 1rem 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-orange);
+            border-bottom-color: var(--primary-orange);
+            background: transparent;
+        }
+
+        .nav-tabs .nav-link:hover {
+            border-bottom-color: var(--primary-orange);
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+
+        .data-table thead {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .data-table th {
+            font-weight: 600;
+            padding: 1rem 0.75rem;
+            border: none;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 0.875rem 0.75rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tbody tr:hover {
+            background-color: rgba(17, 34, 78, 0.04);
+        }
+
+        /* Badges */
+        .badge-custom {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-financial {
+            background: rgba(23, 162, 184, 0.2);
+            color: #0c5460;
+        }
+
+        .badge-qualitative {
+            background: rgba(248, 123, 27, 0.2);
+            color: #e06a0a;
+        }
+
+        .badge-adjustment {
+            background: rgba(220, 53, 69, 0.2);
+            color: #721c24;
+        }
+
+        .badge-override {
+            background: rgba(40, 167, 69, 0.2);
+            color: #155724;
+        }
+
+        .badge-active {
+            background: rgba(40, 167, 69, 0.2);
+            color: #155724;
+        }
+
+        .badge-inactive {
+            background: rgba(108, 117, 125, 0.2);
+            color: #495057;
+        }
+
+        /* Buttons */
+        .btn-primary-custom {
+            background: var(--primary-dark);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary-custom:hover {
+            background: #1a3570;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(17, 34, 78, 0.3);
+            color: white;
+        }
+
+        .btn-orange {
+            background: var(--primary-orange);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-orange:hover {
+            background: #e06a0a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(248, 123, 27, 0.3);
+            color: white;
+        }
+
+        .btn-action {
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0 0.25rem;
+            min-width: 36px;
+        }
+
+        /* Forms */
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-label-required::after {
+            content: ' *';
+            color: var(--danger);
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.2rem rgba(248, 123, 27, 0.25);
+        }
+
+        /* Range Configuration */
+        .range-config-section {
+            background: var(--background-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .range-row {
+            display: grid;
+            grid-template-columns: 2fr 2fr 2fr 2fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .range-row-header {
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal-header {
+            background: var(--primary-dark);
+            color: white;
+            border-bottom: none;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .modal-header .btn-close {
+            filter: invert(1);
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .modal-xl {
+            max-width: 1400px;
+        }
+
+        /* Stats Cards */
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 4px solid var(--primary-orange);
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .stats-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Database Schema Display */
+        .schema-display {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            max-height: 400px;
+            margin-top: 1rem;
+        }
+
+        .schema-display .keyword {
+            color: #569cd6;
+        }
+
+        .schema-display .datatype {
+            color: #4ec9b0;
+        }
+
+        .schema-display .comment {
+            color: #6a9955;
+        }
+
+        /* API Endpoint Display */
+        .api-endpoint {
+            background: #f8f9fa;
+            border-left: 4px solid var(--info);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 4px;
+        }
+
+        .api-method {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .api-method-post {
+            background: #49cc90;
+            color: white;
+        }
+
+        .api-method-get {
+            background: #61affe;
+            color: white;
+        }
+
+        .api-method-put {
+            background: #fca130;
+            color: white;
+        }
+
+        .api-method-delete {
+            background: #f93e3e;
+            color: white;
+        }
+
+        /* Credit Assessment Stepper Preview */
+        .stepper-preview {
+            background: white;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+
+        .stepper-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .stepper-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .stepper-step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--border-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 700;
+        }
+
+        .stepper-step.active .stepper-step-circle {
+            background: var(--primary-orange);
+        }
+
+        .stepper-step.completed .stepper-step-circle {
+            background: var(--success);
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: calc(var(--header-height) + 1rem);
+            right: 1rem;
+            z-index: 1050;
+        }
+
+        /* Loading Spinner */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255,255,255,0.3);
+            border-top-color: var(--primary-orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-header {
+                padding: 0 1rem;
+            }
+
+            .header-brand {
+                font-size: 1.1rem;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
+            .range-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .section-card {
+                padding: 1rem;
+            }
+
+            .nav-tabs .nav-link {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .info-box h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .info-box ul {
+            margin-bottom: 0;
+        }
+
+        .info-box li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="top-header">
+        <div class="header-brand">
+            <i class="fas fa-cogs"></i>
+            Parameter Management
+        </div>
+        <div class="header-nav">
+            <button onclick="viewAssessmentStepper()">
+                <i class="fas fa-shoe-prints me-2"></i>Assessment Form
+            </button>
+            <button onclick="viewDatabaseSchema()">
+                <i class="fas fa-database me-2"></i>Database Schema
+            </button>
+            <button onclick="viewAPIDocumentation()">
+                <i class="fas fa-code me-2"></i>API Docs
+            </button>
+        </div>
+    </header>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Main Content -->
+    <main class="container-fluid px-4 py-4">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h1 class="h2 mb-2" style="color: var(--primary-dark); font-weight: 700;">
+                    <i class="fas fa-sliders-h me-2"></i>
+                    Credit Assessment - Parameter Configuration
+                </h1>
+                <p class="text-muted">Configure all parameter types: Financial Ratios, Qualitative Factors, Mandatory Adjustments, and Discretionary Overrides. All changes auto-deploy to database and API.</p>
+            </div>
+        </div>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <h4><i class="fas fa-info-circle me-2"></i>How This System Works</h4>
+            <ul>
+                <li><strong>Add Parameter:</strong> When you add a parameter, the system automatically creates a database column, generates API endpoints, and adds an input field to the credit assessment stepper.</li>
+                <li><strong>Financial Parameters:</strong> Define formulas and scoring ranges. Backend calculation engine applies these during assessment.</li>
+                <li><strong>Qualitative Parameters:</strong> Define dropdown/radio options with scores. User selections are stored and scored.</li>
+                <li><strong>Mandatory Adjustments:</strong> System-enforced score penalties/bonuses based on data quality, audit reports, etc.</li>
+                <li><strong>Discretionary Overrides:</strong> Allow senior officers to manually adjust final ratings with justification.</li>
+            </ul>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number" id="totalParametersCount">0</div>
+                    <div class="stats-label">Total Parameters</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number" id="financialParamsCount">0</div>
+                    <div class="stats-label">Financial Parameters</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number" id="qualitativeParamsCount">0</div>
+                    <div class="stats-label">Qualitative Parameters</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number" id="adjustmentOverrideCount">0</div>
+                    <div class="stats-label">Adjustments & Overrides</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Navigation Tabs -->
+        <div class="section-card">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" id="allParametersTab" data-bs-toggle="tab" data-bs-target="#allParametersView" type="button">
+                        <i class="fas fa-list-alt me-2"></i>All Parameters
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="financialTab" data-bs-toggle="tab" data-bs-target="#financialView" type="button">
+                        <i class="fas fa-chart-line me-2"></i>Financial Ratios
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="qualitativeTab" data-bs-toggle="tab" data-bs-target="#qualitativeView" type="button">
+                        <i class="fas fa-list-check me-2"></i>Qualitative Factors
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="adjustmentsTab" data-bs-toggle="tab" data-bs-target="#adjustmentsView" type="button">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Mandatory Adjustments
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="overridesTab" data-bs-toggle="tab" data-bs-target="#overridesView" type="button">
+                        <i class="fas fa-shield-alt me-2"></i>Discretionary Overrides
+                    </button>
+                </li>
+				<li class="nav-item">
+					<button class="nav-link" id="scoreWeightageTab" data-bs-toggle="tab" data-bs-target="#scoreWeightageView" type="button">
+						<i class="fas fa-award me-2"></i>Score Weightage
+					</button>
+				</li>
+            </ul>
+
+            <div class="tab-content mt-4">
+                <!-- All Parameters Tab -->
+                <div class="tab-pane fade show active" id="allParametersView">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-list me-2 text-primary"></i>
+                            All System Parameters
+                        </h4>
+                        <div>
+                            <button class="btn btn-orange me-2" onclick="openParameterModal('financial')">
+                                <i class="fas fa-plus me-2"></i>Add Financial
+                            </button>
+                            <button class="btn btn-orange" onclick="openParameterModal('qualitative')">
+                                <i class="fas fa-plus me-2"></i>Add Qualitative
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Dynamic System:</strong> When you add a parameter, it automatically creates database columns, API endpoints, and assessment form fields.
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Parameter Name</th>
+                                    <th>Type</th>
+                                    <th>Template Group</th>
+                                    <th>Database Column</th>
+                                    <th>Weight (%)</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allParametersTableBody">
+                                <tr><td colspan="8" class="text-center text-muted py-4">No parameters configured yet. Click "Add Financial" or "Add Qualitative" to start.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Financial Parameters Tab -->
+                <div class="tab-pane fade" id="financialView">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-calculator me-2 text-primary"></i>
+                            Financial Ratio Parameters
+                        </h4>
+                        <button class="btn btn-orange" onclick="openParameterModal('financial')">
+                            <i class="fas fa-plus me-2"></i>Add Financial Parameter
+                        </button>
+                    </div>
+
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>Financial Parameters:</strong> Define calculation formulas and scoring ranges. Backend automatically calculates and scores during assessment.
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Sr. No</th>
+                                    <th>Parameter Name</th>
+                                    <th>Formula</th>
+                                    <th>Template Group</th>
+                                    <th>Weight (%)</th>
+                                    <th>Ranges</th>
+                                    <th>DB Column</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="financialTableBody">
+                                <tr><td colspan="8" class="text-center text-muted py-4">No financial parameters configured</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Qualitative Parameters Tab -->
+                <div class="tab-pane fade" id="qualitativeView">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-clipboard-list me-2 text-warning"></i>
+                            Qualitative Factor Parameters
+                        </h4>
+                        <button class="btn btn-orange" onclick="openParameterModal('qualitative')">
+                            <i class="fas fa-plus me-2"></i>Add Qualitative Parameter
+                        </button>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <strong>Qualitative Parameters:</strong> Define dropdown/radio options with associated scores. User selections are scored automatically.
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Factor ID</th>
+                                    <th>Parameter Name</th>
+                                    <th>Template Group</th>
+                                    <th>Weight (%)</th>
+                                    <th>Options</th>
+                                    <th>Score Range</th>
+                                    <th>DB Column</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="qualitativeTableBody">
+                                <tr><td colspan="8" class="text-center text-muted py-4">No qualitative parameters configured</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Mandatory Adjustments Tab -->
+                <div class="tab-pane fade" id="adjustmentsView">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-exclamation-triangle me-2 text-danger"></i>
+                            Mandatory Adjustments
+                        </h4>
+                        <button class="btn btn-orange" onclick="openAdjustmentModal()">
+                            <i class="fas fa-plus me-2"></i>Add Adjustment Rule
+                        </button>
+                    </div>
+
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Mandatory Adjustments:</strong> System-enforced score modifications based on:
+                        <ul class="mb-0 mt-2">
+                            <li>Age of financial information (older data = penalty)</li>
+                            <li>Audit report qualifications (qualified reports = penalty)</li>
+                            <li>Account conduct issues (defaults, delays = penalty)</li>
+                            <li>Data quality and completeness</li>
+                        </ul>
+                        These adjustments are <strong>automatically applied</strong> and cannot be bypassed.
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Adjustment ID</th>
+                                    <th>Category</th>
+                                    <th>Condition / Option</th>
+                                    <th>Score Adjustment</th>
+                                    <th>Impact</th>
+                                    <th>DB Column</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adjustmentsTableBody">
+                                <tr><td colspan="7" class="text-center text-muted py-4">No mandatory adjustments configured</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Discretionary Overrides Tab -->
+                <div class="tab-pane fade" id="overridesView">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-user-shield me-2 text-success"></i>
+                            Discretionary Overrides
+                        </h4>
+                        <button class="btn btn-orange" onclick="openOverrideModal()">
+                            <i class="fas fa-plus me-2"></i>Add Override Rule
+                        </button>
+                    </div>
+
+                    <div class="alert alert-success">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        <strong>Discretionary Overrides:</strong> Allow senior credit officers to manually adjust final rating grades:
+                        <ul class="mb-0 mt-2">
+                            <li>Upgrade or downgrade rating by specified notches (e.g., BBB+ to A-)</li>
+                            <li>Requires justification and approval workflow</li>
+                            <li>Based on qualitative judgment, forward-looking view, or exceptional circumstances</li>
+                            <li>Fully auditable with timestamp and officer ID</li>
+                        </ul>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Override ID</th>
+                                    <th>Category</th>
+                                    <th>Reason</th>
+                                    <th>Max Upgrade (Notches)</th>
+                                    <th>Max Downgrade (Notches)</th>
+                                    <th>Requires Approval</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="overridesTableBody">
+                                <tr><td colspan="7" class="text-center text-muted py-4">No discretionary overrides configured</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+				
+				<!-- Score Weightage Tab -->
+				<div class="tab-pane fade" id="scoreWeightageView">
+					<div class="d-flex justify-content-between align-items-center mb-3">
+						<h4 class="mb-0">
+							<i class="fas fa-award me-2 text-primary"></i>
+							Score Weightage & Rating Master
+						</h4>
+						<div>
+							<button class="btn btn-orange me-2" onclick="openRatingModal()">
+								<i class="fas fa-plus me-2"></i>Add Rating Range
+							</button>
+							<button class="btn btn-primary-custom" onclick="openNPAModal()">
+								<i class="fas fa-ban me-2"></i>Configure NPA
+							</button>
+						</div>
+					</div>
+
+					<!-- Final Rating Master Table Section -->
+					<div class="section-card mt-3">
+						<div class="section-title">
+							<i class="fas fa-table"></i>
+							Final Rating Master Table
+						</div>
+						
+						<div class="alert alert-info">
+							<i class="fas fa-info-circle me-2"></i>
+							<strong>Rating Scale:</strong> This table maps final calculated scores to credit rating grades. Lower grades indicate better creditworthiness.
+						</div>
+
+						<div class="table-responsive">
+							<table class="data-table table table-hover">
+								<thead>
+									<tr>
+										<th>Score Range</th>
+										<th>Grade</th>
+										<th>Rating Description</th>
+										<th>Risk Category</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tbody id="ratingMasterTableBody">
+									<!-- Dynamic content populated by JavaScript -->
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<!-- Non-Performing Entity Classification Section -->
+					<div class="section-card mt-4">
+						<div class="section-title">
+							<i class="fas fa-exclamation-circle"></i>
+							Non-Performing Entity Classification
+						</div>
+
+						<div class="alert alert-danger">
+							<i class="fas fa-shield-alt me-2"></i>
+							<strong>Special Classification:</strong> Entities marked as Non-Performing override standard scoring and are assigned grades based on Asset Classification.
+							<ul class="mb-0 mt-2">
+								<li><strong>Sub-Standard:</strong> Grade 9</li>
+								<li><strong>Doubtful:</strong> Grade 10</li>
+								<li><strong>Loss Asset:</strong> Grade 11</li>
+							</ul>
+							<p class="mt-2 mb-0"><em>Only users with special authorization can perform this classification.</em></p>
+						</div>
+
+						<div class="table-responsive">
+							<table class="data-table table table-hover">
+								<thead>
+									<tr>
+										<th>Asset Classification</th>
+										<th>Assigned Grade</th>
+										<th>Description</th>
+										<th>Auto-Applied</th>
+									</tr>
+								</thead>
+								<tbody id="npaClassificationTableBody">
+									<!-- Dynamic content populated by JavaScript -->
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Parameter Modal (Financial & Qualitative) -->
+    <div class="modal fade" id="parameterModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="parameterModalTitle">
+                        <i class="fas fa-plus-circle me-2"></i>Add New Parameter
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editParameterId">
+                    <input type="hidden" id="parameterType">
+
+                    <!-- Basic Information -->
+                    <div class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Basic Information
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="parameterName" class="form-label form-label-required">Parameter Name</label>
+                                <input type="text" class="form-control" id="parameterName" placeholder="e.g., Current Ratio">
+                                <small class="text-muted">This will be the field label in the assessment form</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="parameterTypeSelect" class="form-label form-label-required">Parameter Type</label>
+                                <select class="form-select" id="parameterTypeSelect" onchange="toggleParameterSections()">
+                                    <option value="">Select Type</option>
+                                    <option value="financial">Financial Ratio</option>
+                                    <option value="qualitative">Qualitative Factor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="parameterWeight" class="form-label form-label-required">Weight (%)</label>
+                                <input type="number" class="form-control" id="parameterWeight" placeholder="0.00" step="0.01" min="0" max="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="templateGroup" class="form-label form-label-required">Template Group</label>
+                                <select class="form-select" id="templateGroup" onchange="updatePreview()">
+                                    <option value="">Select Template Group</option>
+                                    <option value="contracting_service">Contracting & Service Template</option>
+                                    <option value="trading_manufacturing">Trading & Manufacturing Template</option>
+                                    <option value="investment_realestate">Investment Real Estate & Finance</option>
+                                    <option value="personal_networth">Personal Net Worth Declaration</option>
+                                </select>
+                                <small class="text-muted">Determines which database table this parameter belongs to</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="fieldType" class="form-label form-label-required">Input Field Type</label>
+                                <select class="form-select" id="fieldType" onchange="updatePreview()">
+                                    <option value="number">Number Input</option>
+                                    <option value="text">Text Input</option>
+                                    <option value="select">Dropdown Select</option>
+                                    <option value="radio">Radio Buttons</option>
+                                    <option value="date">Date Picker</option>
+                                    <option value="currency">Currency Input</option>
+                                    <option value="percentage">Percentage Input</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="dbColumnName" class="form-label form-label-required">Database Column Name</label>
+                                <input type="text" class="form-control" id="dbColumnName" placeholder="e.g., current_ratio">
+                                <small class="text-muted">Auto-generated from parameter name, but you can customize</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="isRequired" class="form-label">Required Field?</label>
+                                <select class="form-select" id="isRequired" onchange="updatePreview()">
+                                    <option value="true">Yes (Required)</option>
+                                    <option value="false">No (Optional)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="isActive" class="form-label">Active in Stepper?</label>
+                                <select class="form-select" id="isActive">
+                                    <option value="true">Yes (Active)</option>
+                                    <option value="false">No (Inactive)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Ratio Specific -->
+                    <div id="financialSection" style="display: none;">
+                        <div class="section-title">
+                            <i class="fas fa-calculator"></i>
+                            Financial Configuration
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="parameterFormula" class="form-label form-label-required">Calculation Formula</label>
+                            <input type="text" class="form-control" id="parameterFormula" placeholder="e.g., currentAssets / currentLiabilities">
+                            <small class="text-muted">Use field variables or enter calculation logic. Backend will process this formula.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="formulaDescription" class="form-label">Formula Description</label>
+                            <textarea class="form-control" id="formulaDescription" rows="2" placeholder="Explain what this formula calculates"></textarea>
+                        </div>
+
+                        <div class="range-config-section">
+                            <h6 class="mb-3">
+                                <i class="fas fa-sliders-h me-2"></i>
+                                Scoring Ranges Configuration
+                            </h6>
+                            <p class="text-muted small mb-3">Define score ranges based on calculated values. Backend automatically applies these during assessment.</p>
+
+                            <div class="range-row range-row-header">
+                                <div>Label / Description</div>
+                                <div>Min Value (From)</div>
+                                <div>Max Value (To)</div>
+                                <div>Score (Points)</div>
+                                <div>Action</div>
+                            </div>
+
+                            <div id="rangesContainer">
+                                <!-- Dynamic ranges -->
+                            </div>
+
+                            <button type="button" class="btn btn-primary-custom btn-sm mt-2" onclick="addRangeRow()">
+                                <i class="fas fa-plus me-2"></i>Add Range
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Qualitative Specific -->
+                    <div id="qualitativeSection" style="display: none;">
+                        <div class="section-title">
+                            <i class="fas fa-list-check"></i>
+                            Qualitative Configuration
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="parameterDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="parameterDescription" rows="2" placeholder="Brief description of what this factor measures"></textarea>
+                        </div>
+
+                        <div class="range-config-section">
+                            <h6 class="mb-3">
+                                <i class="fas fa-list-ol me-2"></i>
+                                Qualitative Options & Scores
+                            </h6>
+                            <p class="text-muted small mb-3">Define dropdown/radio options that appear in assessment form. Each option has an associated score.</p>
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 15%">Display Order</th>
+                                            <th style="width: 45%">Option Label</th>
+                                            <th style="width: 25%">Score</th>
+                                            <th style="width: 15%">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="qualitativeOptionsContainer">
+                                        <!-- Dynamic options -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <button type="button" class="btn btn-primary-custom btn-sm" onclick="addQualitativeOption()">
+                                <i class="fas fa-plus me-2"></i>Add Option
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- API & Database Preview -->
+                    <div class="section-title mt-4">
+                        <i class="fas fa-database"></i>
+                        Database & API Preview
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Generated Database Column:</h6>
+                            <div class="schema-display" id="dbColumnPreview">
+                                <span class="comment">-- Fill in the form above to see preview</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Generated API Endpoint:</h6>
+                            <div class="api-endpoint">
+                                <span class="api-method api-method-post">POST</span>
+                                <code id="apiEndpointPreview">/api/v1/assessment/{template}/{paramId}</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                    <button type="button" class="btn btn-orange" onclick="saveParameter()">
+                        <i class="fas fa-save me-2"></i>Save & Deploy Parameter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adjustment Modal -->
+    <div class="modal fade" id="adjustmentModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adjustmentModalTitle">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Add Mandatory Adjustment
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editAdjustmentId">
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Mandatory adjustments are automatically applied based on system data. They cannot be bypassed by users.
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="adjustmentCategory" class="form-label form-label-required">Adjustment Category</label>
+                        <select class="form-select" id="adjustmentCategory" onchange="updateAdjustmentPreview()">
+                            <option value="">Select Category</option>
+                            <option value="age_of_info">Age of Financial Information</option>
+                            <option value="audit_qualification">Audit Report Qualification</option>
+                            <option value="account_conduct">Account Conduct</option>
+                            <option value="data_quality">Data Quality & Completeness</option>
+                            <option value="regulatory">Regulatory Issues</option>
+                            <option value="custom">Custom Category</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3" id="customCategoryField" style="display: none;">
+                        <label for="adjustmentCategoryCustom" class="form-label form-label-required">Custom Category Name</label>
+                        <input type="text" class="form-control" id="adjustmentCategoryCustom" placeholder="Enter category name">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="adjustmentOption" class="form-label form-label-required">Condition / Option Label</label>
+                        <input type="text" class="form-control" id="adjustmentOption" placeholder="e.g., Financial statements older than 12 months" onchange="updateAdjustmentPreview()">
+                        <small class="text-muted">Describe the condition that triggers this adjustment</small>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="adjustmentScore" class="form-label form-label-required">Score Adjustment</label>
+                                <input type="number" class="form-control" id="adjustmentScore" placeholder="0 or negative value" step="0.1" onchange="updateAdjustmentPreview()">
+                                <small class="text-muted">Enter 0 for no adjustment, or negative value for penalty (e.g., -5, -10)</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="adjustmentImpact" class="form-label form-label-required">Impact Level</label>
+                                <select class="form-select" id="adjustmentImpact">
+                                    <option value="low">Low Impact</option>
+                                    <option value="medium">Medium Impact</option>
+                                    <option value="high">High Impact</option>
+                                    <option value="critical">Critical Impact</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="adjustmentDbColumn" class="form-label form-label-required">Database Column Name</label>
+                        <input type="text" class="form-control" id="adjustmentDbColumn" placeholder="e.g., adj_age_of_info">
+                        <small class="text-muted">Auto-generated but can be customized</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="adjustmentDescription" class="form-label">Description / Notes</label>
+                        <textarea class="form-control" id="adjustmentDescription" rows="2" placeholder="Additional notes about this adjustment"></textarea>
+                    </div>
+
+                    <!-- Preview -->
+                    <div class="section-title mt-3">
+                        <i class="fas fa-eye"></i>
+                        Preview
+                    </div>
+
+                    <div class="alert alert-secondary">
+                        <strong>Database Storage:</strong> <code id="adjustmentDbPreview">adjustment_table.{column_name}</code><br>
+                        <strong>API Endpoint:</strong> <code id="adjustmentApiPreview">POST /api/v1/assessment/adjustments/{id}</code>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                    <button type="button" class="btn btn-orange" onclick="saveAdjustment()">
+                        <i class="fas fa-save me-2"></i>Save Adjustment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+				<!-- Override Modal -->
+				<div class="modal fade" id="overrideModal" tabindex="-1" data-bs-backdrop="static">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="overrideModalTitle">
+									<i class="fas fa-shield-alt me-2"></i>Add Discretionary Override Rule
+								</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+							</div>
+							<div class="modal-body">
+								<input type="hidden" id="editOverrideId">
+
+								<div class="alert alert-warning">
+									<i class="fas fa-exclamation-triangle me-2"></i>
+									Discretionary overrides allow senior officers to manually adjust final ratings. All overrides require justification and are fully auditable.
+								</div>
+
+								<div class="mb-3">
+									<label for="overrideCategory" class="form-label form-label-required">Override Category</label>
+									<select class="form-select" id="overrideCategory" onchange="updateOverridePreview()">
+										<option value="">Select Category</option>
+										<option value="GEN">GEN - General / Overall Assessment</option>
+										<option value="FIN">FIN - Financial Performance</option>
+										<option value="BUSS_PERF">BUSS. PERF - Business Performance</option>
+										<option value="LEGAL">LEGAL - Legal Issues</option>
+										<option value="ECONOMIC">ECONOMIC - Economic Environment</option>
+										<option value="POLITICAL">POLITICAL - Political Risk</option>
+										<option value="INDUSTRY">INDUSTRY - Industry Outlook</option>
+										<option value="MANAGEMENT">MANAGEMENT - Management Quality</option>
+										<option value="ACCOUNT_CONDUCT">ACCOUNT CONDUCT - Banking Relationship</option>
+									</select>
+								</div>
+
+								<div class="mb-3">
+									<label for="overrideReason" class="form-label form-label-required">Override Reason Template</label>
+									<textarea class="form-control" id="overrideReason" rows="3" placeholder="e.g., Strong management team with proven track record in adverse conditions" onchange="updateOverridePreview()"></textarea>
+									<small class="text-muted">This is a template. Officers will provide specific justification during assessment.</small>
+								</div>
+
+								<div class="row">
+									<div class="col-md-6">
+										<div class="mb-3">
+											<label for="maxUpgrade" class="form-label form-label-required">Max Upgrade (Notches)</label>
+											<input type="number" class="form-control" id="maxUpgrade" placeholder="0" min="0" max="5" value="0" onchange="updateOverridePreview()">
+											<small class="text-muted">How many rating notches can be upgraded (e.g., BBB to BBB+)</small>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="mb-3">
+											<label for="maxDowngrade" class="form-label form-label-required">Max Downgrade (Notches)</label>
+											<input type="number" class="form-control" id="maxDowngrade" placeholder="0" min="0" max="5" value="0" onchange="updateOverridePreview()">
+											<small class="text-muted">How many rating notches can be downgraded</small>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-6">
+										<div class="mb-3">
+											<label for="requiresApproval" class="form-label">Requires Approval?</label>
+											<select class="form-select" id="requiresApproval">
+												<option value="true">Yes - Requires Manager Approval</option>
+												<option value="false">No - Officer Can Apply Directly</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="mb-3">
+											<label for="overrideDbColumn" class="form-label">Database Column</label>
+											<input type="text" class="form-control" id="overrideDbColumn" placeholder="e.g., override_gen">
+											<small class="text-muted">Auto-generated</small>
+										</div>
+									</div>
+								</div>
+
+								<!-- Preview -->
+								<div class="section-title mt-3">
+									<i class="fas fa-eye"></i>
+									Override Preview
+								</div>
+
+								<div class="alert alert-secondary">
+									<strong>Category:</strong> <span id="overrideCategoryPreview">-</span><br>
+									<strong>Allowed Adjustment:</strong> 
+									<span class="badge bg-success" id="overrideUpgradePreview">↑ 0 notches</span>
+									<span class="badge bg-danger" id="overrideDowngradePreview">↓ 0 notches</span><br>
+									<strong>Database:</strong> <code id="overrideDbPreview">override_table.{column}</code><br>
+									<strong>API:</strong> <code id="overrideApiPreview">POST /api/v1/assessment/overrides/{id}</code>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+									<i class="fas fa-times me-2"></i>Cancel
+								</button>
+								<button type="button" class="btn btn-orange" onclick="saveOverride()">
+									<i class="fas fa-save me-2"></i>Save Override Rule
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Rating Range Modal -->
+			<div class="modal fade" id="ratingModal" tabindex="-1" data-bs-backdrop="static">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="ratingModalTitle">
+								<i class="fas fa-award me-2"></i>Add Rating Range
+							</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+						</div>
+						<div class="modal-body">
+							<input type="hidden" id="editRatingId">
+
+							<div class="alert alert-info">
+								<i class="fas fa-info-circle me-2"></i>
+								Define score ranges that map to specific credit rating grades.
+							</div>
+
+							<div class="row">
+								<div class="col-md-3">
+									<div class="mb-3">
+										<label for="ratingScoreMin" class="form-label form-label-required">Min Score</label>
+										<input type="number" class="form-control" id="ratingScoreMin" placeholder="0" min="0" step="1">
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="mb-3">
+										<label for="ratingScoreMax" class="form-label form-label-required">Max Score</label>
+										<input type="number" class="form-control" id="ratingScoreMax" placeholder="139" min="0" step="1">
+										<small class="text-muted">Use 9999 for "and above"</small>
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="mb-3">
+										<label for="ratingGrade" class="form-label form-label-required">Grade</label>
+										<input type="number" class="form-control" id="ratingGrade" placeholder="1-11" min="1" max="11" step="1">
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="mb-3">
+										<label for="ratingRisk" class="form-label form-label-required">Risk Category</label>
+										<select class="form-select" id="ratingRisk">
+											<option value="">Select Risk</option>
+											<option value="Low">Low Risk</option>
+											<option value="Medium">Medium Risk</option>
+											<option value="High">High Risk</option>
+											<option value="Critical">Critical Risk</option>
+											<option value="NPA">Non-Performing</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div class="mb-3">
+								<label for="ratingDescription" class="form-label">Rating Description</label>
+								<textarea class="form-control" id="ratingDescription" rows="2" placeholder="Brief description of this rating grade"></textarea>
+							</div>
+
+							<!-- Preview -->
+							<div class="alert alert-secondary mt-3">
+								<strong>Range Preview:</strong> 
+								<span id="ratingRangePreview">Score 0 - 139 → Grade 8</span>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+								<i class="fas fa-times me-2"></i>Cancel
+							</button>
+							<button type="button" class="btn btn-orange" onclick="saveRating()">
+								<i class="fas fa-save me-2"></i>Save Rating Range
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- NPA Configuration Modal -->
+			<div class="modal fade" id="npaModal" tabindex="-1" data-bs-backdrop="static">
+				<div class="modal-dialog modal-md">
+					<div class="modal-content">
+						<div class="modal-header bg-danger text-white">
+							<h5 class="modal-title">
+								<i class="fas fa-ban me-2"></i>Non-Performing Asset Configuration
+							</h5>
+							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+						</div>
+						<div class="modal-body">
+							<div class="alert alert-warning">
+								<i class="fas fa-exclamation-triangle me-2"></i>
+								<strong>Warning:</strong> NPA classifications are permanent and override all scoring mechanisms.
+							</div>
+
+							<p><strong>Current NPA Grade Mappings:</strong></p>
+							
+							<table class="table table-sm table-bordered">
+								<thead>
+									<tr>
+										<th>Asset Classification</th>
+										<th>Grade</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Sub-Standard</td>
+										<td><span class="badge bg-warning">Grade 9</span></td>
+									</tr>
+									<tr>
+										<td>Doubtful</td>
+										<td><span class="badge bg-danger">Grade 10</span></td>
+									</tr>
+									<tr>
+										<td>Loss Asset</td>
+										<td><span class="badge bg-dark">Grade 11</span></td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p class="text-muted small">These mappings are system-defined and cannot be modified for compliance reasons.</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+								Close
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+    <!-- Database Schema Modal -->
+    <div class="modal fade" id="databaseSchemaModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-database me-2"></i>Complete Database Schema
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        This schema is automatically generated based on configured parameters. Changes deploy immediately.
+                    </div>
+
+                    <div class="section-title">
+                        <i class="fas fa-table"></i>
+                        Generated Tables & Columns
+                    </div>
+
+                    <div id="schemaDisplay" class="schema-display">
+                        <!-- Dynamic SQL schema -->
+                    </div>
+
+                    <div class="mt-3">
+                        <button class="btn btn-primary-custom" onclick="downloadSchema()">
+                            <i class="fas fa-download me-2"></i>Download SQL Script
+                        </button>
+                        <button class="btn btn-secondary" onclick="copySchemaToClipboard()">
+                            <i class="fas fa-copy me-2"></i>Copy to Clipboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Documentation Modal -->
+    <div class="modal fade" id="apiDocModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-code me-2"></i>Complete API Documentation
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" style="max-height: 600px; overflow-y: auto;">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        These REST APIs are automatically generated for each parameter, adjustment, and override.
+                    </div>
+
+                    <div id="apiDocumentation">
+                        <!-- Dynamic API docs -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assessment Stepper Preview Modal -->
+    <div class="modal fade" id="stepperPreviewModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-shoe-prints me-2"></i>Credit Assessment Form - Live Preview
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-eye me-2"></i>
+                        <strong>Live Preview:</strong> This shows exactly how parameters appear in the actual credit assessment stepper.
+                    </div>
+
+                    <div class="stepper-preview">
+                        <div class="stepper-steps">
+                            <div class="stepper-step completed">
+                                <div class="stepper-step-circle">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div>Basic Info</div>
+                            </div>
+                            <div class="stepper-step active">
+                                <div class="stepper-step-circle">2</div>
+                                <div>Financial Data</div>
+                            </div>
+                            <div class="stepper-step">
+                                <div class="stepper-step-circle">3</div>
+                                <div>Qualitative</div>
+                            </div>
+                            <div class="stepper-step">
+                                <div class="stepper-step-circle">4</div>
+                                <div>Adjustments</div>
+                            </div>
+                            <div class="stepper-step">
+                                <div class="stepper-step-circle">5</div>
+                                <div>Review</div>
+                            </div>
+                        </div>
+
+                        <div id="stepperFormPreview">
+                            <!-- Dynamic form fields -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Main Application JavaScript -->
+    <script>
+        // ===================================
+        // APPLICATION STATE & DATA STORAGE
+        // ===================================
+        const STORAGE_KEYS = {
+            financial: 'dynamicFinancialParameters',
+            qualitative: 'dynamicQualitativeParameters',
+            adjustments: 'dynamicMandatoryAdjustments',
+            overrides: 'dynamicDiscretionaryOverrides',
+            allParameters: 'dynamicAllParameters'
+        };
+
+        let appData = {
+            financial: [],
+            qualitative: [],
+            adjustments: [],
+            overrides: [],
+            allParameters: []
+        };
+
+        // Database field type mapping
+        const DB_TYPE_MAP = {
+            'number': 'DECIMAL(18,4)',
+            'text': 'VARCHAR(500)',
+            'select': 'VARCHAR(100)',
+            'radio': 'VARCHAR(100)',
+            'date': 'DATE',
+            'currency': 'DECIMAL(18,2)',
+            'percentage': 'DECIMAL(5,2)'
+        };
+
+        // ===================================
+        // INITIALIZATION
+        // ===================================
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDefaultData();
+            loadAllData();
+            renderAllTables();
+            updateStats();
+			
+			// ADD THESE TWO LINES:
+			renderRatingMasterTable();
+			renderNPAClassificationTable();
+
+            // Auto-generate column name from parameter name
+            document.getElementById('parameterName').addEventListener('input', function() {
+                const columnName = this.value.toLowerCase()
+                    .replace(/[^a-z0-9\s]/g, '')
+                    .replace(/\s+/g, '_');
+                document.getElementById('dbColumnName').value = columnName;
+                updatePreview();
+            });
+
+            // Auto-generate adjustment column
+            document.getElementById('adjustmentCategory').addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    document.getElementById('customCategoryField').style.display = 'block';
+                } else {
+                    document.getElementById('customCategoryField').style.display = 'none';
+                    const columnName = 'adj_' + this.value;
+                    document.getElementById('adjustmentDbColumn').value = columnName;
+                }
+            });
+
+            document.getElementById('adjustmentOption').addEventListener('input', function() {
+                const category = document.getElementById('adjustmentCategory').value;
+                if (category && category !== 'custom') {
+                    updateAdjustmentPreview();
+                }
+            });
+
+            // Auto-generate override column
+            document.getElementById('overrideCategory').addEventListener('change', function() {
+                const columnName = 'override_' + this.value.toLowerCase();
+                document.getElementById('overrideDbColumn').value = columnName;
+            });
+        });
+
+        function initializeDefaultData() {
+            // Initialize with sample data if empty
+            if (!localStorage.getItem(STORAGE_KEYS.financial)) {
+                appData.financial = getSampleFinancialParameters();
+                saveData('financial');
+            }
+
+            if (!localStorage.getItem(STORAGE_KEYS.qualitative)) {
+                appData.qualitative = getSampleQualitativeParameters();
+                saveData('qualitative');
+            }
+
+            if (!localStorage.getItem(STORAGE_KEYS.adjustments)) {
+                appData.adjustments = getSampleAdjustments();
+                saveData('adjustments');
+            }
+
+            if (!localStorage.getItem(STORAGE_KEYS.overrides)) {
+                appData.overrides = getSampleOverrides();
+                saveData('overrides');
+            }
+
+            mergeAllParameters();
+        }
+
+        function loadAllData() {
+            Object.keys(STORAGE_KEYS).forEach(key => {
+                const stored = localStorage.getItem(STORAGE_KEYS[key]);
+                if (stored) {
+                    appData[key] = JSON.parse(stored);
+                }
+            });
+        }
+
+        function saveData(type) {
+            localStorage.setItem(STORAGE_KEYS[type], JSON.stringify(appData[type]));
+            if (type === 'financial' || type === 'qualitative') {
+                mergeAllParameters();
+            }
+        }
+
+        function mergeAllParameters() {
+            appData.allParameters = [
+                ...appData.financial.map(p => ({...p, type: 'financial'})),
+                ...appData.qualitative.map(p => ({...p, type: 'qualitative'}))
+            ];
+            localStorage.setItem(STORAGE_KEYS.allParameters, JSON.stringify(appData.allParameters));
+        }
+
+        // ===================================
+        // SAMPLE DATA
+        // ===================================
+        function getSampleFinancialParameters() {
+            return [
+                {
+                    id: 'F-001',
+                    name: 'Current Ratio',
+                    formula: 'currentAssets / currentLiabilities',
+                    weight: 4.12,
+                    templateGroup: 'contracting_service',
+                    dbColumn: 'current_ratio',
+                    fieldType: 'number',
+                    isRequired: true,
+                    isActive: true,
+                    ranges: [
+                        { label: 'Current Ratio < 0.78', from: 0, to: 0.78, points: 7.1 },
+                        { label: '0.78 ≤ Current Ratio < 1.1', from: 0.78, to: 1.1, points: 11.9 },
+                        { label: 'Current Ratio ≥ 1.1', from: 1.1, to: 9999, points: 27.1 }
+                    ],
+                    formulaDescription: 'Measures ability to pay short-term obligations'
+                },
+                {
+                    id: 'F-002',
+                    name: 'Debt Equity Ratio',
+                    formula: 'totalDebt / netWorth',
+                    weight: 4.1,
+                    templateGroup: 'contracting_service',
+                    dbColumn: 'debt_equity_ratio',
+                    fieldType: 'number',
+                    isRequired: true,
+                    isActive: true,
+                    ranges: [
+                        { label: 'DER < 0.42', from: 0, to: 0.42, points: 33.9 },
+                        { label: '0.42 ≤ DER < 1.06', from: 0.42, to: 1.06, points: 21.5 },
+                        { label: 'DER ≥ 1.06', from: 1.06, to: 9999, points: 14.5 }
+                    ],
+                    formulaDescription: 'Measures financial leverage'
+                }
+            ];
+        }
+
+        function getSampleQualitativeParameters() {
+            return [
+                {
+                    id: 'Q-001',
+                    name: 'F1 - Constitution and Establishment',
+                    description: 'Type of entity & incorporation',
+                    weight: 2.9,
+                    templateGroup: 'contracting_service',
+                    dbColumn: 'constitution_type',
+                    fieldType: 'select',
+                    isRequired: true,
+                    isActive: true,
+                    options: [
+                        { order: 1, label: 'Government / Semi-government', score: 29 },
+                        { order: 2, label: 'Public Shareholding Companies', score: 22 },
+                        { order: 3, label: 'Closed Shareholding Companies', score: 15 },
+                        { order: 4, label: 'Partnership', score: 7 }
+                    ]
+                },
+                {
+                    id: 'Q-002',
+                    name: 'F2 - Years in Business',
+                    description: 'Operational history',
+                    weight: 2.9,
+                    templateGroup: 'contracting_service',
+                    dbColumn: 'years_in_business',
+                    fieldType: 'select',
+                    isRequired: true,
+                    isActive: true,
+                    options: [
+                        { order: 1, label: 'More than 20 years', score: 29 },
+                        { order: 2, label: '10 – 20 years', score: 22 },
+                        { order: 3, label: '2 – 10 years', score: 11 },
+                        { order: 4, label: 'Less than 2 years', score: 0 }
+                    ]
+                }
+            ];
+        }
+
+        function getSampleAdjustments() {
+            return [
+                {
+                    id: 'ADJ-001',
+                    category: 'age_of_info',
+                    categoryDisplay: 'Age of Financial Information',
+                    option: 'Financial statements older than 12 months',
+                    scoreAdjustment: -10,
+                    impact: 'high',
+                    dbColumn: 'adj_age_of_info',
+                    description: 'Penalty for outdated financial data'
+                },
+                {
+                    id: 'ADJ-002',
+                    category: 'audit_qualification',
+                    categoryDisplay: 'Audit Report Qualification',
+                    option: 'Qualified audit opinion',
+                    scoreAdjustment: -15,
+                    impact: 'critical',
+                    dbColumn: 'adj_audit_qualified',
+                    description: 'Significant penalty for qualified audit'
+                },
+                {
+                    id: 'ADJ-003',
+                    category: 'account_conduct',
+                    categoryDisplay: 'Account Conduct',
+                    option: 'Payment delays in last 6 months',
+                    scoreAdjustment: -5,
+                    impact: 'medium',
+                    dbColumn: 'adj_payment_delays',
+                    description: 'Penalty for payment issues'
+                }
+            ];
+        }
+
+        function getSampleOverrides() {
+            return [
+                {
+                    id: 'OVR-001',
+                    category: 'GEN',
+                    categoryDisplay: 'General Overall Assessment',
+                    reason: 'Exceptional circumstances warrant adjustment based on forward-looking view',
+                    maxUpgrade: 2,
+                    maxDowngrade: 2,
+                    requiresApproval: true,
+                    dbColumn: 'override_gen'
+                },
+                {
+                    id: 'OVR-002',
+                    category: 'FIN',
+                    categoryDisplay: 'Financial Performance',
+                    reason: 'Strong recent financial performance not reflected in historical data',
+                    maxUpgrade: 1,
+                    maxDowngrade: 0,
+                    requiresApproval: true,
+                    dbColumn: 'override_fin'
+                },
+                {
+                    id: 'OVR-003',
+                    category: 'MANAGEMENT',
+                    categoryDisplay: 'Management Quality',
+                    reason: 'Proven management team with strong track record',
+                    maxUpgrade: 1,
+                    maxDowngrade: 0,
+                    requiresApproval: false,
+                    dbColumn: 'override_mgmt'
+                }
+            ];
+        }
+
+        // ===================================
+        // RENDERING FUNCTIONS
+        // ===================================
+        function renderAllTables() {
+            renderAllParametersTable();
+            renderFinancialTable();
+            renderQualitativeTable();
+            renderAdjustmentsTable();
+            renderOverridesTable();
+        }
+
+        function renderAllParametersTable() {
+            const tbody = document.getElementById('allParametersTableBody');
+            if (appData.allParameters.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">No parameters configured yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = appData.allParameters.map(param => {
+                const tableName = param.templateGroup ? `assessment_${param.templateGroup}_params` : 'N/A';
+                
+                return `
+                    <tr>
+                        <td><strong>${param.id}</strong></td>
+                        <td>${param.name}</td>
+                        <td><span class="badge badge-custom badge-${param.type === 'financial' ? 'financial' : 'qualitative'}">${param.type}</span></td>
+                        <td>${param.templateGroup || 'N/A'}</td>
+                        <td><code class="small">${param.dbColumn}</code></td>
+                        <td><strong>${param.weight.toFixed(2)}%</strong></td>
+                        <td><span class="badge badge-custom badge-${param.isActive ? 'active' : 'inactive'}">${param.isActive ? 'Active' : 'Inactive'}</span></td>
+                        <td>
+                            <button class="btn btn-primary-custom btn-action" onclick="editParameter('${param.type}', '${param.id}')" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-action" onclick="deleteParameter('${param.type}', '${param.id}')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderFinancialTable() {
+            const tbody = document.getElementById('financialTableBody');
+            if (appData.financial.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">No financial parameters configured</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = appData.financial.map((param, index) => `
+                <tr>
+                    <td><strong>${index + 1}</strong></td>
+                    <td>${param.name}</td>
+                    <td><code class="small">${param.formula}</code></td>
+                    <td>${param.templateGroup || 'N/A'}</td>
+                    <td><strong>${param.weight.toFixed(2)}%</strong></td>
+                    <td><span class="badge bg-info">${param.ranges.length} ranges</span></td>
+                    <td><code class="small">${param.dbColumn}</code></td>
+                    <td>
+                        <button class="btn btn-primary-custom btn-action" onclick="editParameter('financial', '${param.id}')" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-action" onclick="deleteParameter('financial', '${param.id}')" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderQualitativeTable() {
+            const tbody = document.getElementById('qualitativeTableBody');
+            if (appData.qualitative.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">No qualitative parameters configured</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = appData.qualitative.map(param => {
+                const scores = param.options.map(o => o.score);
+                const minScore = Math.min(...scores);
+                const maxScore = Math.max(...scores);
+
+                return `
+                    <tr>
+                        <td><strong>${param.id}</strong></td>
+                        <td>${param.name}</td>
+                        <td>${param.templateGroup || 'N/A'}</td>
+                        <td><strong>${param.weight.toFixed(2)}%</strong></td>
+                        <td><span class="badge bg-success">${param.options.length} options</span></td>
+                        <td>${minScore} to ${maxScore}</td>
+                        <td><code class="small">${param.dbColumn}</code></td>
+                        <td>
+                            <button class="btn btn-primary-custom btn-action" onclick="editParameter('qualitative', '${param.id}')" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-action" onclick="deleteParameter('qualitative', '${param.id}')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderAdjustmentsTable() {
+            const tbody = document.getElementById('adjustmentsTableBody');
+            if (appData.adjustments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">No mandatory adjustments configured</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = appData.adjustments.map(adj => {
+                const impactColors = {
+                    low: 'info',
+                    medium: 'warning',
+                    high: 'danger',
+                    critical: 'dark'
+                };
+
+                return `
+                    <tr>
+                        <td><strong>${adj.id}</strong></td>
+                        <td>${adj.categoryDisplay}</td>
+                        <td>${adj.option}</td>
+                        <td><strong class="text-${adj.scoreAdjustment < 0 ? 'danger' : 'success'}">${adj.scoreAdjustment > 0 ? '+' : ''}${adj.scoreAdjustment}</strong></td>
+                        <td><span class="badge bg-${impactColors[adj.impact]}">${adj.impact.toUpperCase()}</span></td>
+                        <td><code class="small">${adj.dbColumn}</code></td>
+                        <td>
+                            <button class="btn btn-primary-custom btn-action" onclick="editAdjustment('${adj.id}')" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-action" onclick="deleteAdjustment('${adj.id}')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderOverridesTable() {
+            const tbody = document.getElementById('overridesTableBody');
+            if (appData.overrides.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">No discretionary overrides configured</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = appData.overrides.map(ovr => `
+                <tr>
+                    <td><strong>${ovr.id}</strong></td>
+                    <td><span class="badge badge-custom badge-override">${ovr.category}</span></td>
+                    <td>${ovr.reason}</td>
+                    <td><span class="badge bg-success">↑ ${ovr.maxUpgrade} notches</span></td>
+                    <td><span class="badge bg-danger">↓ ${ovr.maxDowngrade} notches</span></td>
+                    <td><span class="badge ${ovr.requiresApproval ? 'bg-warning' : 'bg-info'}">${ovr.requiresApproval ? 'Yes' : 'No'}</span></td>
+                    <td>
+                        <button class="btn btn-primary-custom btn-action" onclick="editOverride('${ovr.id}')" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-action" onclick="deleteOverride('${ovr.id}')" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ===================================
+        // STATS UPDATE
+        // ===================================
+        function updateStats() {
+            const totalParams = appData.financial.length + appData.qualitative.length;
+            const financialCount = appData.financial.length;
+            const qualitativeCount = appData.qualitative.length;
+            const adjustmentOverride = appData.adjustments.length + appData.overrides.length;
+
+            document.getElementById('totalParametersCount').textContent = totalParams;
+            document.getElementById('financialParamsCount').textContent = financialCount;
+            document.getElementById('qualitativeParamsCount').textContent = qualitativeCount;
+            document.getElementById('adjustmentOverrideCount').textContent = adjustmentOverride;
+        }
+
+        // ===================================
+        // PARAMETER MODAL FUNCTIONS
+        // ===================================
+        function openParameterModal(type = null, paramId = null) {
+            const modal = new bootstrap.Modal(document.getElementById('parameterModal'));
+            const isEdit = paramId !== null;
+
+            clearParameterForm();
+
+            if (type) {
+                document.getElementById('parameterTypeSelect').value = type;
+                document.getElementById('parameterType').value = type;
+                toggleParameterSections();
+            }
+
+            document.getElementById('parameterModalTitle').innerHTML = 
+                isEdit ? '<i class="fas fa-edit me-2"></i>Edit Parameter' : '<i class="fas fa-plus-circle me-2"></i>Add New Parameter';
+
+            if (isEdit) {
+                const param = appData[type].find(p => p.id === paramId);
+                if (param) {
+                    populateParameterForm(param, type);
+                }
+            } else {
+                if (type === 'financial') {
+                    addRangeRow();
+                } else if (type === 'qualitative') {
+                    addQualitativeOption();
+                }
+            }
+
+            modal.show();
+        }
+
+        function clearParameterForm() {
+            document.getElementById('editParameterId').value = '';
+            document.getElementById('parameterName').value = '';
+            document.getElementById('parameterTypeSelect').value = '';
+            document.getElementById('parameterWeight').value = '';
+            document.getElementById('templateGroup').value = '';
+            document.getElementById('fieldType').value = 'number';
+            document.getElementById('dbColumnName').value = '';
+            document.getElementById('isRequired').value = 'true';
+            document.getElementById('isActive').value = 'true';
+            document.getElementById('parameterFormula').value = '';
+            document.getElementById('formulaDescription').value = '';
+            document.getElementById('parameterDescription').value = '';
+            document.getElementById('rangesContainer').innerHTML = '';
+            document.getElementById('qualitativeOptionsContainer').innerHTML = '';
+        }
+
+        function populateParameterForm(param, type) {
+            document.getElementById('editParameterId').value = param.id;
+            document.getElementById('parameterName').value = param.name;
+            document.getElementById('parameterTypeSelect').value = type;
+            document.getElementById('parameterWeight').value = param.weight;
+            document.getElementById('templateGroup').value = param.templateGroup || '';
+            document.getElementById('fieldType').value = param.fieldType || 'number';
+            document.getElementById('dbColumnName').value = param.dbColumn || '';
+            document.getElementById('isRequired').value = param.isRequired ? 'true' : 'false';
+            document.getElementById('isActive').value = param.isActive ? 'true' : 'false';
+
+            if (type === 'financial') {
+                document.getElementById('parameterFormula').value = param.formula;
+                document.getElementById('formulaDescription').value = param.formulaDescription || '';
+                param.ranges.forEach(range => addRangeRow(range));
+            } else {
+                document.getElementById('parameterDescription').value = param.description || '';
+                param.options.forEach(option => addQualitativeOption(option));
+            }
+
+            updatePreview();
+        }
+
+        function toggleParameterSections() {
+            const type = document.getElementById('parameterTypeSelect').value;
+            document.getElementById('parameterType').value = type;
+
+            const financialSection = document.getElementById('financialSection');
+            const qualitativeSection = document.getElementById('qualitativeSection');
+
+            if (type === 'financial') {
+                financialSection.style.display = 'block';
+                qualitativeSection.style.display = 'none';
+            } else if (type === 'qualitative') {
+                financialSection.style.display = 'none';
+                qualitativeSection.style.display = 'block';
+            } else {
+                financialSection.style.display = 'none';
+                qualitativeSection.style.display = 'none';
+            }
+        }
+
+        function addRangeRow(range = null) {
+            const container = document.getElementById('rangesContainer');
+            const id = 'range-' + Date.now() + Math.random();
+
+            const row = document.createElement('div');
+            row.className = 'range-row';
+            row.id = id;
+            row.innerHTML = `
+                <input type="text" class="form-control" placeholder="e.g., DER < 0.16" value="${range ? range.label : ''}">
+                <input type="number" class="form-control" placeholder="From" step="0.01" value="${range ? range.from : ''}">
+                <input type="number" class="form-control" placeholder="To" step="0.01" value="${range ? range.to : ''}">
+                <input type="number" class="form-control" placeholder="Points" step="0.1" value="${range ? range.points : ''}">
+                <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteRangeRow('${id}')">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+
+            container.appendChild(row);
+        }
+
+        function deleteRangeRow(id) {
+            document.getElementById(id).remove();
+        }
+
+        function addQualitativeOption(option = null) {
+            const container = document.getElementById('qualitativeOptionsContainer');
+            const id = 'option-' + Date.now() + Math.random();
+
+            const row = document.createElement('tr');
+            row.id = id;
+            row.innerHTML = `
+                <td><input type="number" class="form-control" placeholder="1" min="0" value="${option ? option.order : ''}"></td>
+                <td><input type="text" class="form-control" placeholder="Option description" value="${option ? option.label : ''}"></td>
+                <td><input type="number" class="form-control" placeholder="Score" step="0.1" value="${option ? option.score : ''}"></td>
+                <td>
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteQualitativeOption('${id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+
+            container.appendChild(row);
+        }
+
+        function deleteQualitativeOption(id) {
+            document.getElementById(id).remove();
+        }
+
+        function updatePreview() {
+            const dbColumn = document.getElementById('dbColumnName').value;
+            const fieldType = document.getElementById('fieldType').value;
+            const templateGroup = document.getElementById('templateGroup').value;
+            const isRequired = document.getElementById('isRequired').value === 'true';
+
+            const dbType = DB_TYPE_MAP[fieldType] || 'VARCHAR(255)';
+            const nullConstraint = isRequired ? ' NOT NULL' : ' NULL';
+            
+            const dbPreview = document.getElementById('dbColumnPreview');
+            dbPreview.innerHTML = `
+                <span class="keyword">ALTER TABLE</span> assessment_${templateGroup}_params<br>
+                <span class="keyword">ADD COLUMN</span> ${dbColumn} <span class="datatype">${dbType}</span>${nullConstraint};<br>
+                <span class="comment">-- Auto-generated for: ${document.getElementById('parameterName').value || 'New Parameter'}</span>
+            `;
+
+            document.getElementById('apiEndpointPreview').textContent = `/api/v1/assessment/${templateGroup}/${dbColumn}`;
+        }
+
+        function saveParameter() {
+            showLoading();
+
+            const type = document.getElementById('parameterType').value || document.getElementById('parameterTypeSelect').value;
+            const editId = document.getElementById('editParameterId').value;
+            const name = document.getElementById('parameterName').value.trim();
+            const weight = parseFloat(document.getElementById('parameterWeight').value);
+            const templateGroup = document.getElementById('templateGroup').value;
+            const dbColumn = document.getElementById('dbColumnName').value.trim();
+            const fieldType = document.getElementById('fieldType').value;
+            const isRequired = document.getElementById('isRequired').value === 'true';
+            const isActive = document.getElementById('isActive').value === 'true';
+
+            if (!name || isNaN(weight) || !type || !templateGroup || !dbColumn) {
+                hideLoading();
+                showToast('Error', 'Please fill in all required fields', 'danger');
+                return;
+            }
+
+            const isEdit = editId !== '';
+            let paramData = {
+                id: isEdit ? editId : (type === 'financial' ? 'F-' : 'Q-') + String((type === 'financial' ? appData.financial.length : appData.qualitative.length) + 1).padStart(3, '0'),
+                name,
+                weight,
+                templateGroup,
+                dbColumn,
+                fieldType,
+                isRequired,
+                isActive
+            };
+
+            if (type === 'financial') {
+                const formula = document.getElementById('parameterFormula').value.trim();
+                const formulaDescription = document.getElementById('formulaDescription').value.trim();
+
+                if (!formula) {
+                    hideLoading();
+                    showToast('Error', 'Please enter a formula', 'danger');
+                    return;
+                }
+
+                const ranges = [];
+                document.querySelectorAll('#rangesContainer .range-row').forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    ranges.push({
+                        label: inputs[0].value,
+                        from: parseFloat(inputs[1].value),
+                        to: parseFloat(inputs[2].value),
+                        points: parseFloat(inputs[3].value)
+                    });
+                });
+
+                if (ranges.length === 0) {
+                    hideLoading();
+                    showToast('Error', 'Please add at least one scoring range', 'danger');
+                    return;
+                }
+
+                paramData = {
+                    ...paramData,
+                    formula,
+                    formulaDescription,
+                    ranges
+                };
+            } else {
+                const description = document.getElementById('parameterDescription').value.trim();
+
+                const options = [];
+                document.querySelectorAll('#qualitativeOptionsContainer tr').forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    options.push({
+                        order: parseInt(inputs[0].value) || 0,
+                        label: inputs[1].value,
+                        score: parseFloat(inputs[2].value)
+                    });
+                });
+
+                if (options.length === 0) {
+                    hideLoading();
+                    showToast('Error', 'Please add at least one option', 'danger');
+                    return;
+                }
+
+                paramData = {
+                    ...paramData,
+                    description,
+                    options
+                };
+            }
+
+            setTimeout(() => {
+                if (isEdit) {
+                    const index = appData[type].findIndex(p => p.id === editId);
+                    if (index !== -1) {
+                        appData[type][index] = paramData;
+                    }
+                } else {
+                    appData[type].push(paramData);
+                }
+
+                saveData(type);
+                renderAllTables();
+                updateStats();
+
+                hideLoading();
+                bootstrap.Modal.getInstance(document.getElementById('parameterModal')).hide();
+                showToast('Success', `Parameter ${isEdit ? 'updated' : 'added'} successfully! Database column and API endpoints generated.`, 'success');
+            }, 1500);
+        }
+
+        function editParameter(type, id) {
+            openParameterModal(type, id);
+        }
+
+        function deleteParameter(type, id) {
+            if (!confirm('Delete this parameter? This will remove the database column and API endpoints.')) return;
+
+            showLoading();
+
+            setTimeout(() => {
+                appData[type] = appData[type].filter(p => p.id !== id);
+                saveData(type);
+                renderAllTables();
+                updateStats();
+
+                hideLoading();
+                showToast('Success', 'Parameter deleted successfully', 'success');
+            }, 1000);
+        }
+
+        // ===================================
+        // ADJUSTMENT FUNCTIONS
+        // ===================================
+        function openAdjustmentModal(adjId = null) {
+            const modal = new bootstrap.Modal(document.getElementById('adjustmentModal'));
+            const isEdit = adjId !== null;
+
+            // Clear form
+            document.getElementById('editAdjustmentId').value = '';
+            document.getElementById('adjustmentCategory').value = '';
+            document.getElementById('adjustmentCategoryCustom').value = '';
+            document.getElementById('customCategoryField').style.display = 'none';
+            document.getElementById('adjustmentOption').value = '';
+            document.getElementById('adjustmentScore').value = '';
+            document.getElementById('adjustmentImpact').value = 'low';
+            document.getElementById('adjustmentDbColumn').value = '';
+            document.getElementById('adjustmentDescription').value = '';
+
+            document.getElementById('adjustmentModalTitle').innerHTML = 
+                isEdit ? '<i class="fas fa-edit me-2"></i>Edit Mandatory Adjustment' : '<i class="fas fa-exclamation-triangle me-2"></i>Add Mandatory Adjustment';
+
+            if (isEdit) {
+                const adj = appData.adjustments.find(a => a.id === adjId);
+                if (adj) {
+                    document.getElementById('editAdjustmentId').value = adj.id;
+                    document.getElementById('adjustmentCategory').value = adj.category;
+                    document.getElementById('adjustmentOption').value = adj.option;
+                    document.getElementById('adjustmentScore').value = adj.scoreAdjustment;
+                    document.getElementById('adjustmentImpact').value = adj.impact;
+                    document.getElementById('adjustmentDbColumn').value = adj.dbColumn;
+                    document.getElementById('adjustmentDescription').value = adj.description || '';
+                    updateAdjustmentPreview();
+                }
+            }
+
+            modal.show();
+        }
+
+        function updateAdjustmentPreview() {
+            const category = document.getElementById('adjustmentCategory').value;
+            const option = document.getElementById('adjustmentOption').value;
+            const score = document.getElementById('adjustmentScore').value;
+            const dbColumn = document.getElementById('adjustmentDbColumn').value;
+
+            const categoryMap = {
+                'age_of_info': 'Age of Financial Information',
+                'audit_qualification': 'Audit Report Qualification',
+                'account_conduct': 'Account Conduct',
+                'data_quality': 'Data Quality & Completeness',
+                'regulatory': 'Regulatory Issues',
+                'custom': 'Custom Category'
+            };
+
+            document.getElementById('adjustmentDbPreview').textContent = `adjustment_table.${dbColumn}`;
+            document.getElementById('adjustmentApiPreview').textContent = `POST /api/v1/assessment/adjustments/${dbColumn}`;
+        }
+
+        function saveAdjustment() {
+            showLoading();
+
+            const editId = document.getElementById('editAdjustmentId').value;
+            const category = document.getElementById('adjustmentCategory').value;
+            const categoryCustom = document.getElementById('adjustmentCategoryCustom').value;
+            const option = document.getElementById('adjustmentOption').value.trim();
+            const scoreAdjustment = parseFloat(document.getElementById('adjustmentScore').value);
+            const impact = document.getElementById('adjustmentImpact').value;
+            const dbColumn = document.getElementById('adjustmentDbColumn').value.trim();
+            const description = document.getElementById('adjustmentDescription').value.trim();
+
+            const categoryMap = {
+                'age_of_info': 'Age of Financial Information',
+                'audit_qualification': 'Audit Report Qualification',
+                'account_conduct': 'Account Conduct',
+                'data_quality': 'Data Quality & Completeness',
+                'regulatory': 'Regulatory Issues',
+                'custom': categoryCustom
+            };
+
+            if (!category || !option || isNaN(scoreAdjustment) || !dbColumn) {
+                hideLoading();
+                showToast('Error', 'Please fill in all required fields', 'danger');
+                return;
+            }
+
+            if (category === 'custom' && !categoryCustom) {
+                hideLoading();
+                showToast('Error', 'Please enter custom category name', 'danger');
+                return;
+            }
+
+            const isEdit = editId !== '';
+            const adjData = {
+                id: isEdit ? editId : 'ADJ-' + String(appData.adjustments.length + 1).padStart(3, '0'),
+                category,
+                categoryDisplay: categoryMap[category],
+                option,
+                scoreAdjustment,
+                impact,
+                dbColumn,
+                description
+            };
+
+            setTimeout(() => {
+                if (isEdit) {
+                    const index = appData.adjustments.findIndex(a => a.id === editId);
+                    if (index !== -1) {
+                        appData.adjustments[index] = adjData;
+                    }
+                } else {
+                    appData.adjustments.push(adjData);
+                }
+
+                saveData('adjustments');
+                renderAllTables();
+                updateStats();
+
+                hideLoading();
+                bootstrap.Modal.getInstance(document.getElementById('adjustmentModal')).hide();
+                showToast('Success', `Mandatory adjustment ${isEdit ? 'updated' : 'added'} successfully!`, 'success');
+            }, 1500);
+        }
+
+        function editAdjustment(id) {
+            openAdjustmentModal(id);
+        }
+
+        function deleteAdjustment(id) {
+            if (!confirm('Delete this mandatory adjustment?')) return;
+
+            showLoading();
+
+            setTimeout(() => {
+                appData.adjustments = appData.adjustments.filter(a => a.id !== id);
+                saveData('adjustments');
+                renderAllTables();
+                updateStats();
+
+                hideLoading();
+                showToast('Success', 'Mandatory adjustment deleted successfully', 'success');
+            }, 1000);
+        }
+
+        // ===================================
+        // OVERRIDE FUNCTIONS
+        // ===================================
+        function openOverrideModal(ovrId = null) {
+            const modal = new bootstrap.Modal(document.getElementById('overrideModal'));
+            const isEdit = ovrId !== null;
+
+            // Clear form
+            document.getElementById('editOverrideId').value = '';
+            document.getElementById('overrideCategory').value = '';
+            document.getElementById('overrideReason').value = '';
+            document.getElementById('maxUpgrade').value = '0';
+            document.getElementById('maxDowngrade').value = '0';
+            document.getElementById('requiresApproval').value = 'true';
+            document.getElementById('overrideDbColumn').value = '';
+
+            document.getElementById('overrideModalTitle').innerHTML = 
+                isEdit ? '<i class="fas fa-edit me-2"></i>Edit Discretionary Override' : '<i class="fas fa-shield-alt me-2"></i>Add Discretionary Override Rule';
+
+            if (isEdit) {
+                const ovr = appData.overrides.find(o => o.id === ovrId);
+                if (ovr) {
+                    document.getElementById('editOverrideId').value = ovr.id;
+                    document.getElementById('overrideCategory').value = ovr.category;
+                    document.getElementById('overrideReason').value = ovr.reason;
+                    document.getElementById('maxUpgrade').value = ovr.maxUpgrade;
+                    document.getElementById('maxDowngrade').value = ovr.maxDowngrade;
+                    document.getElementById('requiresApproval').value = ovr.requiresApproval ? 'true' : 'false';
+                    document.getElementById('overrideDbColumn').value = ovr.dbColumn;
+                    updateOverridePreview();
+                }
+            }
+
+            modal.show();
+        }
+
+        function updateOverridePreview() {
+            const category = document.getElementById('overrideCategory').value;
+            const maxUpgrade = document.getElementById('maxUpgrade').value || 0;
+            const maxDowngrade = document.getElementById('maxDowngrade').value || 0;
+            const dbColumn = document.getElementById('overrideDbColumn').value;
+
+            const categoryMap = {
+                'GEN': 'General Overall Assessment',
+                'FIN': 'Financial Performance',
+                'BUSS_PERF': 'Business Performance',
+                'LEGAL': 'Legal Issues',
+                'ECONOMIC': 'Economic Environment',
+                'POLITICAL': 'Political Risk',
+                'INDUSTRY': 'Industry Outlook',
+                'MANAGEMENT': 'Management Quality',
+                'ACCOUNT_CONDUCT': 'Banking Relationship'
+            };
+
+            document.getElementById('overrideCategoryPreview').textContent = categoryMap[category] || '-';
+            document.getElementById('overrideUpgradePreview').textContent = `↑ ${maxUpgrade} notches`;
+            document.getElementById('overrideDowngradePreview').textContent = `↓ ${maxDowngrade} notches`;
+            document.getElementById('overrideDbPreview').textContent = `override_table.${dbColumn}`;
+            document.getElementById('overrideApiPreview').textContent = `POST /api/v1/assessment/overrides/${dbColumn}`;
+        }
+
+        function saveOverride() {
+            showLoading();
+
+            const editId = document.getElementById('editOverrideId').value;
+            const category = document.getElementById('overrideCategory').value;
+            const reason = document.getElementById('overrideReason').value.trim();
+            const maxUpgrade = parseInt(document.getElementById('maxUpgrade').value);
+            const maxDowngrade = parseInt(document.getElementById('maxDowngrade').value);
+            const requiresApproval = document.getElementById('requiresApproval').value === 'true';
+            const dbColumn = document.getElementById('overrideDbColumn').value.trim();
+
+            const categoryMap = {
+                'GEN': 'General Overall Assessment',
+                'FIN': 'Financial Performance',
+                'BUSS_PERF': 'Business Performance',
+                'LEGAL': 'Legal Issues',
+                'ECONOMIC': 'Economic Environment',
+                'POLITICAL': 'Political Risk',
+                'INDUSTRY': 'Industry Outlook',
+                'MANAGEMENT': 'Management Quality',
+                'ACCOUNT_CONDUCT': 'Banking Relationship'
+            };
+
+            if (!category || !reason || !dbColumn) {
+                hideLoading();
+                showToast('Error', 'Please fill in all required fields', 'danger');
+                return;
+            }
+
+            const isEdit = editId !== '';
+            const ovrData = {
+                id: isEdit ? editId : 'OVR-' + String(appData.overrides.length + 1).padStart(3, '0'),
+                category,
+                categoryDisplay: categoryMap[category],
+                reason,
+                maxUpgrade,
+                maxDowngrade,
+                requiresApproval,
+                dbColumn
+            };
+
+            setTimeout(() => {
+                if (isEdit) {
+                    const index = appData.overrides.findIndex(o => o.id === editId);
+                    if (index !== -1) {
+                        appData.overrides[index] = ovrData;
+                    }
+                } else {
+                    appData.overrides.push(ovrData);
+                }
+
+                saveData('overrides');
+                renderAllTables();
+                updateStats();
+
+                hideLoading();
+                bootstrap.Modal.getInstance(document.getElementById('overrideModal')).hide();
+                showToast('Success', `Discretionary override ${isEdit ? 'updated' : 'added'} successfully!`, 'success');
+            }, 1500);
+        }
+
+        function editOverride(id) {
+            openOverrideModal(id);
+        }
+
+        function deleteOverride(id) {
+            if (!confirm('Delete this discretionary override rule?')) return;
+
+            showLoading();
+
+            setTimeout(() => {
+                appData.overrides = appData.overrides.filter(o => o.id !== id);
+                saveData('overrides');
+                renderAllTables();
+                updateStats();
+
+                hideLoading();
+                showToast('Success', 'Discretionary override deleted successfully', 'success');
+            }, 1000);
+        }
+
+        // ===================================
+        // DATABASE SCHEMA VIEWER
+        // ===================================
+        function viewDatabaseSchema() {
+            const modal = new bootstrap.Modal(document.getElementById('databaseSchemaModal'));
+            generateDatabaseSchema();
+            modal.show();
+        }
+
+        function generateDatabaseSchema() {
+            const schemaDisplay = document.getElementById('schemaDisplay');
+            
+            let sql = '<span class="comment">-- =====================================================</span>\n';
+            sql += '<span class="comment">-- COMPLETE DATABASE SCHEMA - AUTO-GENERATED</span>\n';
+            sql += '<span class="comment">-- Generated: ' + new Date().toLocaleString() + '</span>\n';
+            sql += '<span class="comment">-- =====================================================</span>\n\n';
+
+            // Main assessment table
+            sql += '<span class="comment">-- Main Assessment Table</span>\n';
+            sql += '<span class="keyword">CREATE TABLE IF NOT EXISTS</span> credit_assessments (\n';
+            sql += '  id <span class="datatype">INT</span> <span class="keyword">PRIMARY KEY AUTO_INCREMENT</span>,\n';
+            sql += '  assessment_number <span class="datatype">VARCHAR(50)</span> <span class="keyword">UNIQUE NOT NULL</span>,\n';
+            sql += '  customer_id <span class="datatype">INT</span> <span class="keyword">NOT NULL</span>,\n';
+            sql += '  template_group <span class="datatype">VARCHAR(100)</span> <span class="keyword">NOT NULL</span>,\n';
+            sql += '  status <span class="datatype">ENUM</span>(\'draft\', \'submitted\', \'approved\', \'rejected\') <span class="keyword">DEFAULT</span> \'draft\',\n';
+            sql += '  total_score <span class="datatype">DECIMAL(10,2)</span>,\n';
+            sql += '  final_rating <span class="datatype">VARCHAR(10)</span>,\n';
+            sql += '  created_by <span class="datatype">INT</span>,\n';
+            sql += '  created_at <span class="datatype">TIMESTAMP</span> <span class="keyword">DEFAULT CURRENT_TIMESTAMP</span>,\n';
+            sql += '  updated_at <span class="datatype">TIMESTAMP</span> <span class="keyword">DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</span>\n';
+            sql += ');\n\n';
+
+            // Group parameters by template
+            const groupedParams = {};
+            appData.allParameters.forEach(param => {
+                if (!groupedParams[param.templateGroup]) {
+                    groupedParams[param.templateGroup] = [];
+                }
+                groupedParams[param.templateGroup].push(param);
+            });
+
+            // Generate parameter tables for each group
+            Object.keys(groupedParams).forEach(groupCode => {
+                const params = groupedParams[groupCode];
+                const tableName = `assessment_${groupCode}_params`;
+
+                sql += `<span class="comment">-- Parameter Table: ${groupCode}</span>\n`;
+                sql += `<span class="keyword">CREATE TABLE IF NOT EXISTS</span> ${tableName} (\n`;
+                sql += `  id <span class="datatype">INT</span> <span class="keyword">PRIMARY KEY AUTO_INCREMENT</span>,\n`;
+                sql += `  assessment_id <span class="datatype">INT</span> <span class="keyword">NOT NULL</span>,\n`;
+
+                params.forEach((param) => {
+                    const dbType = DB_TYPE_MAP[param.fieldType] || 'VARCHAR(255)';
+                    const nullConstraint = param.isRequired ? ' <span class="keyword">NOT NULL</span>' : '';
+                    sql += `  ${param.dbColumn} <span class="datatype">${dbType}</span>${nullConstraint}, <span class="comment">-- ${param.name}</span>\n`;
+                    
+                    // Add score column for each parameter
+                                        sql += `  ${param.dbColumn}_score <span class="datatype">DECIMAL(10,2)</span>, <span class="comment">-- Calculated score for ${param.name}</span>\n`;
+                });
+
+                sql += `  created_at <span class="datatype">TIMESTAMP</span> <span class="keyword">DEFAULT CURRENT_TIMESTAMP</span>,\n`;
+                sql += `  updated_at <span class="datatype">TIMESTAMP</span> <span class="keyword">DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</span>,\n`;
+                sql += `  <span class="keyword">FOREIGN KEY</span> (assessment_id) <span class="keyword">REFERENCES</span> credit_assessments(id) <span class="keyword">ON DELETE CASCADE</span>\n`;
+                sql += `);\n\n`;
+            });
+
+            // Mandatory Adjustments Table
+            sql += '<span class="comment">-- Mandatory Adjustments Table</span>\n';
+            sql += '<span class="keyword">CREATE TABLE IF NOT EXISTS</span> assessment_adjustments (\n';
+            sql += '  id <span class="datatype">INT</span> <span class="keyword">PRIMARY KEY AUTO_INCREMENT</span>,\n';
+            sql += '  assessment_id <span class="datatype">INT</span> <span class="keyword">NOT NULL</span>,\n';
+
+            appData.adjustments.forEach(adj => {
+                sql += `  ${adj.dbColumn} <span class="datatype">VARCHAR(100)</span>, <span class="comment">-- ${adj.categoryDisplay}</span>\n`;
+                sql += `  ${adj.dbColumn}_score <span class="datatype">DECIMAL(10,2)</span>, <span class="comment">-- Score adjustment</span>\n`;
+            });
+
+            sql += '  total_adjustment <span class="datatype">DECIMAL(10,2)</span>,\n';
+            sql += '  applied_by <span class="datatype">INT</span>,\n';
+            sql += '  applied_at <span class="datatype">TIMESTAMP</span> <span class="keyword">DEFAULT CURRENT_TIMESTAMP</span>,\n';
+            sql += '  <span class="keyword">FOREIGN KEY</span> (assessment_id) <span class="keyword">REFERENCES</span> credit_assessments(id) <span class="keyword">ON DELETE CASCADE</span>\n';
+            sql += ');\n\n';
+
+            // Discretionary Overrides Table
+            sql += '<span class="comment">-- Discretionary Overrides Table</span>\n';
+            sql += '<span class="keyword">CREATE TABLE IF NOT EXISTS</span> assessment_overrides (\n';
+            sql += '  id <span class="datatype">INT</span> <span class="keyword">PRIMARY KEY AUTO_INCREMENT</span>,\n';
+            sql += '  assessment_id <span class="datatype">INT</span> <span class="keyword">NOT NULL</span>,\n';
+
+            appData.overrides.forEach(ovr => {
+                sql += `  ${ovr.dbColumn}_applied <span class="datatype">BOOLEAN</span> <span class="keyword">DEFAULT FALSE</span>, <span class="comment">-- ${ovr.categoryDisplay}</span>\n`;
+                sql += `  ${ovr.dbColumn}_notches <span class="datatype">INT</span>, <span class="comment">-- Number of notches adjusted</span>\n`;
+                sql += `  ${ovr.dbColumn}_justification <span class="datatype">TEXT</span>, <span class="comment">-- Justification for override</span>\n`;
+            });
+
+            sql += '  original_rating <span class="datatype">VARCHAR(10)</span>,\n';
+            sql += '  adjusted_rating <span class="datatype">VARCHAR(10)</span>,\n';
+            sql += '  override_officer_id <span class="datatype">INT</span>,\n';
+            sql += '  approved_by <span class="datatype">INT</span>,\n';
+            sql += '  override_timestamp <span class="datatype">TIMESTAMP</span> <span class="keyword">DEFAULT CURRENT_TIMESTAMP</span>,\n';
+            sql += '  approval_timestamp <span class="datatype">TIMESTAMP</span>,\n';
+            sql += '  <span class="keyword">FOREIGN KEY</span> (assessment_id) <span class="keyword">REFERENCES</span> credit_assessments(id) <span class="keyword">ON DELETE CASCADE</span>\n';
+            sql += ');\n\n';
+			
+			// Add after the overrides table generation
+
+			// Rating Master Table
+			sql += '<span class="comment">-- Rating Master Table</span>\n';
+			sql += '<span class="keyword">CREATE TABLE IF NOT EXISTS</span> rating_master (\n';
+			sql += '  id <span class="datatype">INT</span> <span class="keyword">PRIMARY KEY AUTO_INCREMENT</span>,\n';
+			sql += '  min_score <span class="datatype">INT</span> <span class="keyword">NOT NULL</span>,\n';
+			sql += '  max_score <span class="datatype">INT</span> <span class="keyword">NOT NULL</span>,\n';
+			sql += '  grade <span class="datatype">INT</span> <span class="keyword">NOT NULL</span>,\n';
+			sql += '  description <span class="datatype">VARCHAR(255)</span>,\n';
+			sql += '  risk_category <span class="datatype">VARCHAR(50)</span>,\n';
+			sql += '  created_at <span class="datatype">TIMESTAMP</span> <span class="keyword">DEFAULT CURRENT_TIMESTAMP</span>\n';
+			sql += ');\n\n';
+
+			// NPA Classification Table
+			sql += '<span class="comment">-- Non-Performing Asset Classification Table</span>\n';
+			sql += '<span class="keyword">CREATE TABLE IF NOT EXISTS</span> npa_classifications (\n';
+			sql += '  id <span class="datatype">INT</span> <span class="keyword">PRIMARY KEY AUTO_INCREMENT</span>,\n';
+			sql += '  assessment_id <span class="datatype">INT</span> <span class="keyword">NOT NULL</span>,\n';
+			sql += '  asset_class <span class="datatype">ENUM</span>(\'Sub-Standard\', \'Doubtful\', \'Loss Asset\') <span class="keyword">NOT NULL</span>,\n';
+			sql += '  assigned_grade <span class="datatype">INT</span> <span class="keyword">NOT NULL</span>,\n';
+			sql += '  is_npa <span class="datatype">BOOLEAN</span> <span class="keyword">DEFAULT TRUE</span>,\n';
+			sql += '  classified_by <span class="datatype">INT</span>,\n';
+			sql += '  classification_date <span class="datatype">TIMESTAMP</span> <span class="keyword">DEFAULT CURRENT_TIMESTAMP</span>,\n';
+			sql += '  justification <span class="datatype">TEXT</span>,\n';
+			sql += '  <span class="keyword">FOREIGN KEY</span> (assessment_id) <span class="keyword">REFERENCES</span> credit_assessments(id) <span class="keyword">ON DELETE CASCADE</span>\n';
+			sql += ');\n\n';
+
+
+            // Indexes
+            sql += '<span class="comment">-- Indexes for Performance</span>\n';
+            sql += '<span class="keyword">CREATE INDEX</span> idx_assessment_customer ON credit_assessments(customer_id);\n';
+            sql += '<span class="keyword">CREATE INDEX</span> idx_assessment_status ON credit_assessments(status);\n';
+            sql += '<span class="keyword">CREATE INDEX</span> idx_assessment_created ON credit_assessments(created_at);\n';
+
+            Object.keys(groupedParams).forEach(groupCode => {
+                const tableName = `assessment_${groupCode}_params`;
+                sql += `<span class="keyword">CREATE INDEX</span> idx_${groupCode}_assessment ON ${tableName}(assessment_id);\n`;
+            });
+
+            sql += '<span class="keyword">CREATE INDEX</span> idx_adjustments_assessment ON assessment_adjustments(assessment_id);\n';
+            sql += '<span class="keyword">CREATE INDEX</span> idx_overrides_assessment ON assessment_overrides(assessment_id);\n';
+
+            schemaDisplay.innerHTML = sql;
+        }
+
+        function downloadSchema() {
+            const schemaText = document.getElementById('schemaDisplay').innerText;
+            const blob = new Blob([schemaText], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'credit_assessment_schema.sql';
+            a.click();
+            window.URL.revokeObjectURL(url);
+            showToast('Success', 'Schema downloaded successfully', 'success');
+        }
+
+        function copySchemaToClipboard() {
+            const schemaText = document.getElementById('schemaDisplay').innerText;
+            navigator.clipboard.writeText(schemaText).then(() => {
+                showToast('Success', 'Schema copied to clipboard', 'success');
+            });
+        }
+
+        // ===================================
+        // API DOCUMENTATION VIEWER
+        // ===================================
+        function viewAPIDocumentation() {
+            const modal = new bootstrap.Modal(document.getElementById('apiDocModal'));
+            generateAPIDocumentation();
+            modal.show();
+        }
+
+        function generateAPIDocumentation() {
+    const apiDoc = document.getElementById('apiDocumentation');
+    
+    let html = '<div class="section-title"><i class="fas fa-server"></i> Base Configuration</div>';
+    html += '<div class="api-endpoint"><strong>Base URL:</strong> <code>https://api.creditassessment.com/v1</code></div>';
+    html += '<div class="api-endpoint"><strong>Authentication:</strong> Bearer Token in Authorization header</div>';
+    html += '<div class="api-endpoint"><strong>Content-Type:</strong> application/json</div>';
+
+    // Assessment APIs
+    html += '<div class="section-title mt-4"><i class="fas fa-file-alt"></i> Assessment Management</div>';
+    
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Create New Assessment</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-post">POST</span>';
+    html += '<code>/api/v1/assessments</code>';
+    html += '</div>';
+    html += '<p class="small mt-2"><strong>Request Body:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "customerId": 12345,\n';
+    html += '  "templateGroup": "contracting_service",\n';
+    html += '  "assessmentNumber": "ASS-2025-001"\n';
+    html += '}</code></pre>';
+    html += '<p class="small"><strong>Response:</strong> Returns assessment ID</p>';
+    html += '</div>';
+
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Get Assessment Details</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-get">GET</span>';
+    html += '<code>/api/v1/assessments/{assessmentId}</code>';
+    html += '</div>';
+    html += '</div>';
+
+    // Financial Parameters APIs
+    html += '<div class="section-title mt-4"><i class="fas fa-chart-line"></i> Financial Parameters</div>';
+    
+    const groupedFinancial = {};
+    appData.financial.forEach(param => {
+        if (!groupedFinancial[param.templateGroup]) {
+            groupedFinancial[param.templateGroup] = [];
+        }
+        groupedFinancial[param.templateGroup].push(param);
+    });
+
+    Object.keys(groupedFinancial).forEach(groupCode => {
+        const params = groupedFinancial[groupCode];
+
+        html += `<h6 class="mt-3">Template: ${groupCode}</h6>`;
+
+        params.forEach(param => {
+            html += '<div class="section-card mt-3">';
+            html += `<h6>${param.name}</h6>`;
+
+            // Submit parameter value
+            html += '<div class="api-endpoint mt-2">';
+            html += '<span class="api-method api-method-post">POST</span>';
+            html += `<code>/api/v1/assessments/{assessmentId}/financial/${param.dbColumn}</code>`;
+            html += '</div>';
+            html += '<p class="small mt-2"><strong>Request Body:</strong></p>';
+            html += '<pre class="bg-light p-2"><code>{\n';
+            html += `  "${param.dbColumn}": 1.25,\n`;
+            html += '  "formula": "' + param.formula + '",\n';
+            html += '  "calculatedScore": 25.5,\n';
+            html += '  "appliedRange": "0.96 ≤ Current Ratio < 1.1"\n';
+            html += '}</code></pre>';
+
+            // Get parameter value
+            html += '<div class="api-endpoint mt-2">';
+            html += '<span class="api-method api-method-get">GET</span>';
+            html += `<code>/api/v1/assessments/{assessmentId}/financial/${param.dbColumn}</code>`;
+            html += '</div>';
+
+            html += '</div>';
+        });
+    });
+
+    // Qualitative Parameters APIs
+    html += '<div class="section-title mt-4"><i class="fas fa-list-check"></i> Qualitative Parameters</div>';
+    
+    const groupedQualitative = {};
+    appData.qualitative.forEach(param => {
+        if (!groupedQualitative[param.templateGroup]) {
+            groupedQualitative[param.templateGroup] = [];
+        }
+        groupedQualitative[param.templateGroup].push(param);
+    });
+
+    Object.keys(groupedQualitative).forEach(groupCode => {
+        const params = groupedQualitative[groupCode];
+
+        html += `<h6 class="mt-3">Template: ${groupCode}</h6>`;
+
+        params.forEach(param => {
+            html += '<div class="section-card mt-3">';
+            html += `<h6>${param.name}</h6>`;
+
+            // Submit parameter selection
+            html += '<div class="api-endpoint mt-2">';
+            html += '<span class="api-method api-method-post">POST</span>';
+            html += `<code>/api/v1/assessments/{assessmentId}/qualitative/${param.dbColumn}</code>`;
+            html += '</div>';
+            html += '<p class="small mt-2"><strong>Request Body:</strong></p>';
+            html += '<pre class="bg-light p-2"><code>{\n';
+            html += `  "${param.dbColumn}": "Public Shareholding Companies",\n`;
+            html += '  "selectedScore": 22,\n';
+            html += '  "optionOrder": 2\n';
+            html += '}</code></pre>';
+
+            html += '</div>';
+        });
+    });
+
+    // Mandatory Adjustments APIs
+    html += '<div class="section-title mt-4"><i class="fas fa-exclamation-triangle"></i> Mandatory Adjustments</div>';
+    
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Submit Mandatory Adjustments</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-post">POST</span>';
+    html += '<code>/api/v1/assessments/{assessmentId}/adjustments</code>';
+    html += '</div>';
+    html += '<p class="small mt-2"><strong>Request Body:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "adjustments": [\n';
+    
+    appData.adjustments.forEach((adj, index) => {
+        const comma = index < appData.adjustments.length - 1 ? ',' : '';
+        html += '    {\n';
+        html += `      "adjustmentId": "${adj.id}",\n`;
+        html += `      "category": "${adj.category}",\n`;
+        html += `      "selectedOption": "${adj.option}",\n`;
+        html += `      "scoreAdjustment": ${adj.scoreAdjustment},\n`;
+        html += `      "dbColumn": "${adj.dbColumn}"\n`;
+        html += `    }${comma}\n`;
+    });
+
+    html += '  ],\n';
+    html += '  "totalAdjustment": -25,\n';
+    html += '  "appliedBy": 1001\n';
+    html += '}</code></pre>';
+    html += '</div>';
+
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Get Applied Adjustments</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-get">GET</span>';
+    html += '<code>/api/v1/assessments/{assessmentId}/adjustments</code>';
+    html += '</div>';
+    html += '</div>';
+
+    // Discretionary Overrides APIs
+    html += '<div class="section-title mt-4"><i class="fas fa-shield-alt"></i> Discretionary Overrides</div>';
+    
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Submit Override Request</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-post">POST</span>';
+    html += '<code>/api/v1/assessments/{assessmentId}/overrides</code>';
+    html += '</div>';
+    html += '<p class="small mt-2"><strong>Request Body:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "overrides": [\n';
+
+    appData.overrides.slice(0, 2).forEach((ovr, index) => {
+        const comma = index < 1 ? ',' : '';
+        html += '    {\n';
+        html += `      "overrideId": "${ovr.id}",\n`;
+        html += `      "category": "${ovr.category}",\n`;
+        html += '      "applied": true,\n';
+        html += '      "notchesAdjustment": 1,\n';
+        html += '      "direction": "upgrade",\n';
+        html += `      "justification": "Strong management team with proven track record",\n`;
+        html += `      "dbColumn": "${ovr.dbColumn}"\n`;
+        html += `    }${comma}\n`;
+    });
+
+    html += '  ],\n';
+    html += '  "originalRating": "BBB",\n';
+    html += '  "adjustedRating": "BBB+",\n';
+    html += '  "overrideOfficerId": 2001,\n';
+    html += '  "requiresApproval": true\n';
+    html += '}</code></pre>';
+    html += '</div>';
+
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Approve Override Request</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-put">PUT</span>';
+    html += '<code>/api/v1/assessments/{assessmentId}/overrides/approve</code>';
+    html += '</div>';
+    html += '<p class="small mt-2"><strong>Request Body:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "approvedBy": 3001,\n';
+    html += '  "approvalComments": "Approved based on exceptional circumstances",\n';
+    html += '  "approvalStatus": "approved"\n';
+    html += '}</code></pre>';
+    html += '</div>';
+
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Get Applied Overrides</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-get">GET</span>';
+    html += '<code>/api/v1/assessments/{assessmentId}/overrides</code>';
+    html += '</div>';
+    html += '</div>';
+
+    // ===================================
+    // SCORE WEIGHTAGE & RATING MASTER APIs
+    // ===================================
+    html += '<div class="section-title mt-4"><i class="fas fa-award"></i> Score Weightage & Rating Master</div>';
+    
+    // Get All Rating Ranges
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Get All Rating Ranges</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-get">GET</span>';
+    html += '<code>/api/v1/rating-master</code>';
+    html += '</div>';
+    html += '<p class="small mt-2"><strong>Response:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "ratings": [\n';
+    html += '    {\n';
+    html += '      "id": 1,\n';
+    html += '      "minScore": 0,\n';
+    html += '      "maxScore": 139,\n';
+    html += '      "grade": 8,\n';
+    html += '      "description": "Excellent creditworthiness",\n';
+    html += '      "riskCategory": "Low"\n';
+    html += '    },\n';
+    html += '    {\n';
+    html += '      "id": 2,\n';
+    html += '      "minScore": 140,\n';
+    html += '      "maxScore": 159,\n';
+    html += '      "grade": 7,\n';
+    html += '      "description": "Very good credit standing",\n';
+    html += '      "riskCategory": "Low"\n';
+    html += '    }\n';
+    html += '  ],\n';
+    html += '  "totalRanges": 8\n';
+    html += '}</code></pre>';
+    html += '</div>';
+
+    // Get Specific Grade Details
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Get Grade Details by Score</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-get">GET</span>';
+    html += '<code>/api/v1/rating-master/grade?score={score}</code>';
+    html += '</div>';
+    html += '<p class="small mt-2"><strong>Example Request:</strong> <code>/api/v1/rating-master/grade?score=180.5</code></p>';
+    html += '<p class="small"><strong>Response:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "score": 180.5,\n';
+    html += '  "grade": 5,\n';
+    html += '  "scoreRange": "175 - 189",\n';
+    html += '  "description": "Satisfactory credit",\n';
+    html += '  "riskCategory": "Medium"\n';
+    html += '}</code></pre>';
+    html += '</div>';
+
+    // Add/Update Rating Range
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Add or Update Rating Range</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-post">POST</span>';
+    html += '<code>/api/v1/rating-master</code>';
+    html += '</div>';
+    html += '<p class="small mt-2"><strong>Request Body:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "minScore": 225,\n';
+    html += '  "maxScore": 9999,\n';
+    html += '  "grade": 1,\n';
+    html += '  "description": "High risk credit",\n';
+    html += '  "riskCategory": "Critical"\n';
+    html += '}</code></pre>';
+    html += '<p class="small"><strong>Response:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "success": true,\n';
+    html += '  "ratingId": 8,\n';
+    html += '  "message": "Rating range created successfully"\n';
+    html += '}</code></pre>';
+    html += '</div>';
+
+    // Delete Rating Range
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Delete Rating Range</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-delete">DELETE</span>';
+    html += '<code>/api/v1/rating-master/{ratingId}</code>';
+    html += '</div>';
+    html += '</div>';
+
+    // ===================================
+    // NPA CLASSIFICATION APIs
+    // ===================================
+    html += '<div class="section-title mt-4"><i class="fas fa-ban"></i> Non-Performing Asset (NPA) Classification</div>';
+    
+    // Get NPA Asset Class Configuration
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Get NPA Asset Class Configuration</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-get">GET</span>';
+    html += '<code>/api/v1/npa/config</code>';
+    html += '</div>';
+    html += '<p class="small mt-2"><strong>Response:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "npaClassifications": [\n';
+    html += '    {\n';
+    html += '      "assetClass": "Sub-Standard",\n';
+    html += '      "assignedGrade": 9,\n';
+    html += '      "description": "Account has remained NPA for a period not exceeding 12 months",\n';
+    html += '      "autoApplied": true\n';
+    html += '    },\n';
+    html += '    {\n';
+    html += '      "assetClass": "Doubtful",\n';
+    html += '      "assignedGrade": 10,\n';
+    html += '      "description": "Account has remained NPA for a period exceeding 12 months",\n';
+    html += '      "autoApplied": true\n';
+    html += '    },\n';
+    html += '    {\n';
+    html += '      "assetClass": "Loss Asset",\n';
+    html += '      "assignedGrade": 11,\n';
+    html += '      "description": "Asset identified as loss by bank or auditors",\n';
+    html += '      "autoApplied": true\n';
+    html += '    }\n';
+    html += '  ]\n';
+    html += '}</code></pre>';
+    html += '</div>';
+
+    // Apply NPA Classification
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Apply NPA Classification to Assessment</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-post">POST</span>';
+    html += '<code>/api/v1/assessments/{assessmentId}/npa/classify</code>';
+    html += '</div>';
+    html += '<p class="small mt-2"><strong>Request Body:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "assetClass": "Sub-Standard",\n';
+    html += '  "classifiedBy": 1001,\n';
+    html += '  "justification": "Account overdue for 90+ days with no payment received",\n';
+    html += '  "requiresApproval": true\n';
+    html += '}</code></pre>';
+    html += '<p class="small"><strong>Response:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "success": true,\n';
+    html += '  "assessmentId": 12345,\n';
+    html += '  "isNPA": true,\n';
+    html += '  "assetClass": "Sub-Standard",\n';
+    html += '  "assignedGrade": 9,\n';
+    html += '  "overrideAllScores": true,\n';
+    html += '  "status": "pending",\n';
+    html += '  "classifiedAt": "2025-12-02T12:35:00Z",\n';
+    html += '  "message": "NPA classification applied. Grade 9 assigned. Awaiting approval."\n';
+    html += '}</code></pre>';
+    html += '</div>';
+
+    // Approve NPA Classification
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Approve NPA Classification</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-put">PUT</span>';
+    html += '<code>/api/v1/assessments/{assessmentId}/npa/approve</code>';
+    html += '</div>';
+    html += '<p class="small mt-2"><strong>Request Body:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "approvedBy": 2001,\n';
+    html += '  "approvalStatus": "approved",\n';
+    html += '  "remarks": "Classification confirmed based on account conduct review"\n';
+    html += '}</code></pre>';
+    html += '<p class="small"><strong>Response:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "success": true,\n';
+    html += '  "assessmentId": 12345,\n';
+    html += '  "npaStatus": "approved",\n';
+    html += '  "finalGrade": 9,\n';
+    html += '  "approvedBy": 2001,\n';
+    html += '  "approvedAt": "2025-12-02T13:10:00Z"\n';
+    html += '}</code></pre>';
+    html += '</div>';
+
+    // Remove NPA Classification
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Remove NPA Classification</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-delete">DELETE</span>';
+    html += '<code>/api/v1/assessments/{assessmentId}/npa</code>';
+    html += '</div>';
+    html += '<p class="small mt-2"><strong>Request Body:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "removedBy": 2001,\n';
+    html += '  "reason": "Account regularized, all dues cleared",\n';
+    html += '  "requiresApproval": true\n';
+    html += '}</code></pre>';
+    html += '<p class="small"><strong>Response:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "success": true,\n';
+    html += '  "assessmentId": 12345,\n';
+    html += '  "isNPA": false,\n';
+    html += '  "npaGrade": null,\n';
+    html += '  "message": "NPA classification removed. Normal scoring will resume."\n';
+    html += '}</code></pre>';
+    html += '</div>';
+
+    // Get NPA History
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Get NPA Classification History</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-get">GET</span>';
+    html += '<code>/api/v1/assessments/{assessmentId}/npa/history</code>';
+    html += '</div>';
+    html += '<p class="small mt-2"><strong>Response:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "assessmentId": 12345,\n';
+    html += '  "currentNPAStatus": true,\n';
+    html += '  "currentGrade": 9,\n';
+    html += '  "history": [\n';
+    html += '    {\n';
+    html += '      "id": 101,\n';
+    html += '      "assetClass": "Sub-Standard",\n';
+    html += '      "assignedGrade": 9,\n';
+    html += '      "classifiedBy": 1001,\n';
+    html += '      "classifiedAt": "2025-12-02T12:35:00Z",\n';
+    html += '      "approvedBy": 2001,\n';
+    html += '      "approvedAt": "2025-12-02T13:10:00Z",\n';
+    html += '      "status": "approved",\n';
+    html += '      "justification": "Account overdue for 90+ days"\n';
+    html += '    }\n';
+    html += '  ]\n';
+    html += '}</code></pre>';
+    html += '</div>';
+
+    // Calculate Final Score API
+    html += '<div class="section-title mt-4"><i class="fas fa-calculator"></i> Score Calculation & Final Rating</div>';
+    
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Calculate Final Score & Rating</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-post">POST</span>';
+    html += '<code>/api/v1/assessments/{assessmentId}/calculate</code>';
+    html += '</div>';
+    html += '<p class="small mt-2"><strong>Request Body (Optional):</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "recalculate": true,\n';
+    html += '  "includeOverrides": true\n';
+    html += '}</code></pre>';
+    html += '<p class="small"><strong>Response (Normal Assessment):</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "assessmentId": 12345,\n';
+    html += '  "isNPA": false,\n';
+    html += '  "financialScore": 325.5,\n';
+    html += '  "qualitativeScore": 180.2,\n';
+    html += '  "subtotal": 505.7,\n';
+    html += '  "mandatoryAdjustments": -25,\n';
+    html += '  "adjustedScore": 480.7,\n';
+    html += '  "baseGrade": 3,\n';
+    html += '  "baseRating": "Watch list credit",\n';
+    html += '  "riskCategory": "High",\n';
+    html += '  "overridesApplied": true,\n';
+    html += '  "overrideNotches": 1,\n';
+    html += '  "finalGrade": 4,\n';
+    html += '  "finalRating": "Adequate credit quality",\n';
+    html += '  "calculatedAt": "2025-12-02T13:25:00Z"\n';
+    html += '}</code></pre>';
+    html += '<p class="small"><strong>Response (NPA Assessment):</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "assessmentId": 12346,\n';
+    html += '  "isNPA": true,\n';
+    html += '  "npaAssetClass": "Sub-Standard",\n';
+    html += '  "financialScore": 0,\n';
+    html += '  "qualitativeScore": 0,\n';
+    html += '  "subtotal": 0,\n';
+    html += '  "mandatoryAdjustments": 0,\n';
+    html += '  "adjustedScore": 0,\n';
+    html += '  "overrideAllScores": true,\n';
+    html += '  "finalGrade": 9,\n';
+    html += '  "finalRating": "Non-Performing - Sub-Standard",\n';
+    html += '  "riskCategory": "NPA",\n';
+    html += '  "message": "NPA classification overrides normal scoring mechanism",\n';
+    html += '  "calculatedAt": "2025-12-02T13:25:00Z"\n';
+    html += '}</code></pre>';
+    html += '</div>';
+
+    // Batch Calculate Grades
+    html += '<div class="section-card mt-3">';
+    html += '<h6>Batch Calculate Grades for Multiple Scores</h6>';
+    html += '<div class="api-endpoint mt-2">';
+    html += '<span class="api-method api-method-post">POST</span>';
+    html += '<code>/api/v1/rating-master/batch-calculate</code>';
+    html += '</div>';
+    html += '<p class="small mt-2"><strong>Request Body:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "scores": [120.5, 155.2, 180.7, 200.3, 230.8]\n';
+    html += '}</code></pre>';
+    html += '<p class="small"><strong>Response:</strong></p>';
+    html += '<pre class="bg-light p-2"><code>{\n';
+    html += '  "results": [\n';
+    html += '    { "score": 120.5, "grade": 8, "riskCategory": "Low" },\n';
+    html += '    { "score": 155.2, "grade": 7, "riskCategory": "Low" },\n';
+    html += '    { "score": 180.7, "grade": 5, "riskCategory": "Medium" },\n';
+    html += '    { "score": 200.3, "grade": 4, "riskCategory": "Medium" },\n';
+    html += '    { "score": 230.8, "grade": 1, "riskCategory": "Critical" }\n';
+    html += '  ]\n';
+    html += '}</code></pre>';
+    html += '</div>';
+
+    apiDoc.innerHTML = html;
+}
+
+        // ===================================
+        // ASSESSMENT STEPPER PREVIEW
+        // ===================================
+        function viewAssessmentStepper() {
+            const modal = new bootstrap.Modal(document.getElementById('stepperPreviewModal'));
+            generateStepperPreview();
+            modal.show();
+        }
+
+        function generateStepperPreview() {
+            const preview = document.getElementById('stepperFormPreview');
+            
+            let html = '';
+
+            // Financial Parameters Section
+            if (appData.financial.filter(p => p.isActive).length > 0) {
+                html += '<div class="section-title mb-3"><i class="fas fa-chart-line"></i> Financial Parameters</div>';
+                html += '<div class="row">';
+
+                appData.financial.filter(p => p.isActive).forEach((param, index) => {
+                    if (index > 0 && index % 2 === 0) html += '</div><div class="row">';
+                    
+                    html += '<div class="col-md-6 mb-3">';
+                    html += `<label class="form-label">${param.name}${param.isRequired ? ' <span class="text-danger">*</span>' : ''}</label>`;
+                    
+                    if (param.fieldType === 'select') {
+                        html += '<select class="form-select" disabled>';
+                        html += '<option>-- Select Option --</option>';
+                        html += '</select>';
+                    } else {
+                        html += `<input type="${param.fieldType}" class="form-control" placeholder="Enter ${param.name}" disabled>`;
+                    }
+                    
+                    html += `<small class="text-muted">DB: ${param.dbColumn} | Formula: ${param.formula}</small>`;
+                    html += '</div>';
+                });
+
+                html += '</div>';
+            }
+
+            // Qualitative Parameters Section
+            if (appData.qualitative.filter(p => p.isActive).length > 0) {
+                html += '<div class="section-title mb-3 mt-4"><i class="fas fa-list-check"></i> Qualitative Factors</div>';
+                html += '<div class="row">';
+
+                appData.qualitative.filter(p => p.isActive).forEach((param, index) => {
+                    if (index > 0 && index % 2 === 0) html += '</div><div class="row">';
+                    
+                    html += '<div class="col-md-6 mb-3">';
+                    html += `<label class="form-label">${param.name}${param.isRequired ? ' <span class="text-danger">*</span>' : ''}</label>`;
+                    
+                    if (param.fieldType === 'select') {
+                        html += '<select class="form-select" disabled>';
+                        html += '<option>-- Select Option --</option>';
+                        param.options.forEach(opt => {
+                            html += `<option>${opt.label} (Score: ${opt.score})</option>`;
+                        });
+                        html += '</select>';
+                    } else if (param.fieldType === 'radio') {
+                        param.options.forEach(opt => {
+                            html += '<div class="form-check">';
+                            html += `<input class="form-check-input" type="radio" disabled>`;
+                            html += `<label class="form-check-label">${opt.label} <span class="badge bg-info">${opt.score} pts</span></label>`;
+                            html += '</div>';
+                        });
+                    }
+                    
+                    html += `<small class="text-muted">DB: ${param.dbColumn}</small>`;
+                    html += '</div>';
+                });
+
+                html += '</div>';
+            }
+
+            // Mandatory Adjustments Section
+            if (appData.adjustments.length > 0) {
+                html += '<div class="section-title mb-3 mt-4"><i class="fas fa-exclamation-triangle"></i> Mandatory Adjustments</div>';
+                html += '<div class="alert alert-danger"><i class="fas fa-info-circle me-2"></i>These adjustments are automatically applied by the system based on data quality and account conduct.</div>';
+                html += '<div class="row">';
+
+                appData.adjustments.forEach((adj, index) => {
+                    if (index > 0 && index % 2 === 0) html += '</div><div class="row">';
+                    
+                    html += '<div class="col-md-6 mb-3">';
+                    html += `<label class="form-label">${adj.categoryDisplay}</label>`;
+                    html += '<select class="form-select" disabled>';
+                    html += '<option>-- Select Condition --</option>';
+                    html += `<option>${adj.option} (Adjustment: ${adj.scoreAdjustment})</option>`;
+                    html += '</select>';
+                    html += `<small class="text-muted">Impact: ${adj.impact.toUpperCase()} | DB: ${adj.dbColumn}</small>`;
+                    html += '</div>';
+                });
+
+                html += '</div>';
+            }
+
+            // Discretionary Overrides Section
+            if (appData.overrides.length > 0) {
+                html += '<div class="section-title mb-3 mt-4"><i class="fas fa-shield-alt"></i> Discretionary Overrides (Senior Officer Only)</div>';
+                html += '<div class="alert alert-warning"><i class="fas fa-exclamation-triangle me-2"></i>Overrides require manager approval and full justification.</div>';
+                html += '<div class="row">';
+
+                appData.overrides.forEach((ovr, index) => {
+                    if (index > 0 && index % 2 === 0) html += '</div><div class="row">';
+                    
+                    html += '<div class="col-md-6 mb-3">';
+                    html += `<div class="card">`;
+                    html += `<div class="card-body">`;
+                    html += `<h6>${ovr.categoryDisplay}</h6>`;
+                    html += `<p class="small text-muted">${ovr.reason}</p>`;
+                    html += '<div class="form-check">';
+                    html += `<input class="form-check-input" type="checkbox" disabled>`;
+                    html += `<label class="form-check-label">Apply Override</label>`;
+                    html += '</div>';
+                    html += '<div class="mt-2">';
+                    html += `<label class="form-label small">Notches Adjustment</label>`;
+                    html += `<input type="range" class="form-range" min="-${ovr.maxDowngrade}" max="${ovr.maxUpgrade}" disabled>`;
+                    html += `<small class="text-muted">Max Upgrade: ${ovr.maxUpgrade} | Max Downgrade: ${ovr.maxDowngrade}</small>`;
+                    html += '</div>';
+                    html += '<div class="mt-2">';
+                    html += `<label class="form-label small">Justification</label>`;
+                    html += `<textarea class="form-control form-control-sm" rows="2" disabled></textarea>`;
+                    html += '</div>';
+                    html += `</div></div>`;
+                    html += '</div>';
+                });
+
+                html += '</div>';
+            }
+
+            // Navigation Buttons
+            html += '<div class="mt-4 d-flex justify-content-between">';
+            html += '<button class="btn btn-secondary" disabled><i class="fas fa-arrow-left me-2"></i>Previous</button>';
+            html += '<button class="btn btn-orange" disabled>Next <i class="fas fa-arrow-right ms-2"></i></button>';
+            html += '</div>';
+
+            preview.innerHTML = html;
+        }
+
+        // ===================================
+        // UTILITY FUNCTIONS
+        // ===================================
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        function showToast(title, message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toastId = 'toast-' + Date.now();
+
+            const colorMap = {
+                success: 'bg-success',
+                danger: 'bg-danger',
+                warning: 'bg-warning',
+                info: 'bg-info'
+            };
+
+            const iconMap = {
+                success: 'fa-check-circle',
+                danger: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+
+            const toastHTML = `
+                <div class="toast align-items-center text-white ${colorMap[type]} border-0" role="alert" id="${toastId}">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas ${iconMap[type]} me-2"></i>
+                            <strong>${title}:</strong> ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { delay: 5000 });
+            toast.show();
+
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
+            });
+        }
+
+        // ===================================
+        // EXPORT/IMPORT FUNCTIONS
+        // ===================================
+        function exportConfiguration() {
+            const config = {
+                financial: appData.financial,
+                qualitative: appData.qualitative,
+                adjustments: appData.adjustments,
+                overrides: appData.overrides,
+                exportedAt: new Date().toISOString(),
+                version: '1.0'
+            };
+
+            const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'credit_assessment_config.json';
+            a.click();
+            window.URL.revokeObjectURL(url);
+            showToast('Success', 'Configuration exported successfully', 'success');
+        }
+
+        function importConfiguration(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const config = JSON.parse(e.target.result);
+                    
+                    if (confirm('This will replace all current configurations. Continue?')) {
+                        appData.financial = config.financial || [];
+                        appData.qualitative = config.qualitative || [];
+                        appData.adjustments = config.adjustments || [];
+                        appData.overrides = config.overrides || [];
+
+                        Object.keys(STORAGE_KEYS).forEach(key => {
+                            if (key !== 'allParameters') {
+                                saveData(key);
+                            }
+                        });
+
+                        mergeAllParameters();
+                        renderAllTables();
+                        updateStats();
+
+                        showToast('Success', 'Configuration imported successfully', 'success');
+                    }
+                } catch (error) {
+                    showToast('Error', 'Invalid configuration file', 'danger');
+                }
+            };
+            reader.readAsText(file);
+        }
+		
+		// ===================================
+		// SCORE WEIGHTAGE & RATING MASTER
+		// ===================================
+
+		// Initialize rating master data
+		function initializeRatingMaster() {
+			const storedRatings = localStorage.getItem('ratingMasterData');
+			if (!storedRatings) {
+				const defaultRatings = [
+					{ id: 'R-001', minScore: 0, maxScore: 139, grade: 8, description: 'Excellent creditworthiness', riskCategory: 'Low' },
+					{ id: 'R-002', minScore: 140, maxScore: 159, grade: 7, description: 'Very good credit standing', riskCategory: 'Low' },
+					{ id: 'R-003', minScore: 160, maxScore: 174, grade: 6, description: 'Good credit quality', riskCategory: 'Medium' },
+					{ id: 'R-004', minScore: 175, maxScore: 189, grade: 5, description: 'Satisfactory credit', riskCategory: 'Medium' },
+					{ id: 'R-005', minScore: 190, maxScore: 204, grade: 4, description: 'Adequate credit quality', riskCategory: 'Medium' },
+					{ id: 'R-006', minScore: 205, maxScore: 214, grade: 3, description: 'Watch list credit', riskCategory: 'High' },
+					{ id: 'R-007', minScore: 215, maxScore: 224, grade: 2, description: 'Special mention', riskCategory: 'High' },
+					{ id: 'R-008', minScore: 225, maxScore: 9999, grade: 1, description: 'High risk credit', riskCategory: 'Critical' }
+				];
+				localStorage.setItem('ratingMasterData', JSON.stringify(defaultRatings));
+				return defaultRatings;
+			}
+			return JSON.parse(storedRatings);
+		}
+
+		// Initialize NPA classifications
+		function initializeNPAClassifications() {
+			const storedNPA = localStorage.getItem('npaClassificationData');
+			if (!storedNPA) {
+				const defaultNPA = [
+					{ id: 'NPA-001', assetClass: 'Sub-Standard', grade: 9, description: 'Account has remained NPA for a period not exceeding 12 months', autoApplied: true },
+					{ id: 'NPA-002', assetClass: 'Doubtful', grade: 10, description: 'Account has remained NPA for a period exceeding 12 months', autoApplied: true },
+					{ id: 'NPA-003', assetClass: 'Loss Asset', grade: 11, description: 'Asset identified as loss by bank or auditors', autoApplied: true }
+				];
+				localStorage.setItem('npaClassificationData', JSON.stringify(defaultNPA));
+				return defaultNPA;
+			}
+			return JSON.parse(storedNPA);
+		}
+
+		// Render Rating Master Table
+		function renderRatingMasterTable() {
+			const tbody = document.getElementById('ratingMasterTableBody');
+			const ratings = initializeRatingMaster();
+			
+			if (ratings.length === 0) {
+				tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-4">No rating ranges configured</td></tr>';
+				return;
+			}
+
+			const riskColors = {
+				'Low': 'success',
+				'Medium': 'warning',
+				'High': 'danger',
+				'Critical': 'dark',
+				'NPA': 'secondary'
+			};
+
+			tbody.innerHTML = ratings.map(rating => {
+				const maxDisplay = rating.maxScore === 9999 ? 'and above' : rating.maxScore;
+				const scoreRange = rating.minScore === rating.maxScore ? `${rating.minScore}` : `${rating.minScore} – ${maxDisplay}`;
+				
+				return `
+					<tr>
+						<td><strong>${scoreRange}</strong></td>
+						<td><span class="badge bg-primary" style="font-size: 1.1rem;">Grade ${rating.grade}</span></td>
+						<td>${rating.description || '-'}</td>
+						<td><span class="badge bg-${riskColors[rating.riskCategory]}">${rating.riskCategory}</span></td>
+						<td>
+							<button class="btn btn-primary-custom btn-action" onclick="editRating('${rating.id}')" title="Edit">
+								<i class="fas fa-edit"></i>
+							</button>
+							<button class="btn btn-outline-danger btn-action" onclick="deleteRating('${rating.id}')" title="Delete">
+								<i class="fas fa-trash"></i>
+							</button>
+						</td>
+					</tr>
+				`;
+			}).join('');
+		}
+
+		// Render NPA Classification Table
+		function renderNPAClassificationTable() {
+			const tbody = document.getElementById('npaClassificationTableBody');
+			const npaData = initializeNPAClassifications();
+			
+			tbody.innerHTML = npaData.map(npa => `
+				<tr>
+					<td><strong>${npa.assetClass}</strong></td>
+					<td><span class="badge bg-danger" style="font-size: 1.1rem;">Grade ${npa.grade}</span></td>
+					<td>${npa.description}</td>
+					<td><span class="badge ${npa.autoApplied ? 'bg-success' : 'bg-secondary'}">${npa.autoApplied ? 'Yes' : 'No'}</span></td>
+				</tr>
+			`).join('');
+		}
+
+		// Open Rating Modal
+		function openRatingModal(ratingId = null) {
+			const modal = new bootstrap.Modal(document.getElementById('ratingModal'));
+			const isEdit = ratingId !== null;
+
+			// Clear form
+			document.getElementById('editRatingId').value = '';
+			document.getElementById('ratingScoreMin').value = '';
+			document.getElementById('ratingScoreMax').value = '';
+			document.getElementById('ratingGrade').value = '';
+			document.getElementById('ratingDescription').value = '';
+			document.getElementById('ratingRisk').value = '';
+
+			document.getElementById('ratingModalTitle').innerHTML = 
+				isEdit ? '<i class="fas fa-edit me-2"></i>Edit Rating Range' : '<i class="fas fa-award me-2"></i>Add Rating Range';
+
+			if (isEdit) {
+				const ratings = initializeRatingMaster();
+				const rating = ratings.find(r => r.id === ratingId);
+				if (rating) {
+					document.getElementById('editRatingId').value = rating.id;
+					document.getElementById('ratingScoreMin').value = rating.minScore;
+					document.getElementById('ratingScoreMax').value = rating.maxScore === 9999 ? '' : rating.maxScore;
+					document.getElementById('ratingGrade').value = rating.grade;
+					document.getElementById('ratingDescription').value = rating.description || '';
+					document.getElementById('ratingRisk').value = rating.riskCategory;
+					updateRatingPreview();
+				}
+			}
+
+			// Add event listeners for preview
+			['ratingScoreMin', 'ratingScoreMax', 'ratingGrade'].forEach(id => {
+				document.getElementById(id).addEventListener('input', updateRatingPreview);
+			});
+
+			modal.show();
+		}
+
+		// Update rating preview
+		function updateRatingPreview() {
+			const min = document.getElementById('ratingScoreMin').value || '0';
+			const max = document.getElementById('ratingScoreMax').value || '9999';
+			const grade = document.getElementById('ratingGrade').value || '?';
+			
+			const maxDisplay = max === '9999' || max === '' ? 'and above' : max;
+			document.getElementById('ratingRangePreview').textContent = 
+				`Score ${min} – ${maxDisplay} → Grade ${grade}`;
+		}
+
+		// Save Rating
+		function saveRating() {
+			showLoading();
+
+			const editId = document.getElementById('editRatingId').value;
+			const minScore = parseInt(document.getElementById('ratingScoreMin').value);
+			const maxScore = document.getElementById('ratingScoreMax').value === '' ? 9999 : parseInt(document.getElementById('ratingScoreMax').value);
+			const grade = parseInt(document.getElementById('ratingGrade').value);
+			const description = document.getElementById('ratingDescription').value.trim();
+			const riskCategory = document.getElementById('ratingRisk').value;
+
+			if (isNaN(minScore) || isNaN(maxScore) || isNaN(grade) || !riskCategory) {
+				hideLoading();
+				showToast('Error', 'Please fill in all required fields', 'danger');
+				return;
+			}
+
+			if (grade < 1 || grade > 11) {
+				hideLoading();
+				showToast('Error', 'Grade must be between 1 and 11', 'danger');
+				return;
+			}
+
+			if (minScore > maxScore && maxScore !== 9999) {
+				hideLoading();
+				showToast('Error', 'Min score cannot be greater than max score', 'danger');
+				return;
+			}
+
+			setTimeout(() => {
+				const ratings = initializeRatingMaster();
+				const isEdit = editId !== '';
+
+				const ratingData = {
+					id: isEdit ? editId : 'R-' + String(ratings.length + 1).padStart(3, '0'),
+					minScore,
+					maxScore,
+					grade,
+					description,
+					riskCategory
+				};
+
+				if (isEdit) {
+					const index = ratings.findIndex(r => r.id === editId);
+					if (index !== -1) {
+						ratings[index] = ratingData;
+					}
+				} else {
+					ratings.push(ratingData);
+				}
+
+				// Sort by grade ascending
+				ratings.sort((a, b) => b.grade - a.grade);
+
+				localStorage.setItem('ratingMasterData', JSON.stringify(ratings));
+				renderRatingMasterTable();
+
+				hideLoading();
+				bootstrap.Modal.getInstance(document.getElementById('ratingModal')).hide();
+				showToast('Success', `Rating range ${isEdit ? 'updated' : 'added'} successfully!`, 'success');
+			}, 1000);
+		}
+
+		// Edit Rating
+		function editRating(id) {
+			openRatingModal(id);
+		}
+
+		// Delete Rating
+		function deleteRating(id) {
+			if (!confirm('Delete this rating range?')) return;
+
+			showLoading();
+
+			setTimeout(() => {
+				let ratings = initializeRatingMaster();
+				ratings = ratings.filter(r => r.id !== id);
+				localStorage.setItem('ratingMasterData', JSON.stringify(ratings));
+				renderRatingMasterTable();
+
+				hideLoading();
+				showToast('Success', 'Rating range deleted successfully', 'success');
+			}, 1000);
+		}
+
+		// Open NPA Modal
+		function openNPAModal() {
+			const modal = new bootstrap.Modal(document.getElementById('npaModal'));
+			modal.show();
+		}
+
+		// Calculate final grade based on score
+		function calculateFinalGrade(score) {
+			const ratings = initializeRatingMaster();
+			
+			for (let rating of ratings) {
+				if (score >= rating.minScore && score <= rating.maxScore) {
+					return rating.grade;
+				}
+			}
+			
+			return null; // No matching grade found
+		}
+
+		// Apply NPA classification
+		function applyNPAClassification(assetClass) {
+			const npaData = initializeNPAClassifications();
+			const npa = npaData.find(n => n.assetClass === assetClass);
+			
+			if (npa) {
+				return {
+					grade: npa.grade,
+					isNPA: true,
+					description: npa.description
+				};
+			}
+			
+			return null;
+		}
+
+    </script>
+</body>
+</html>

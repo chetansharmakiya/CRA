@@ -1,0 +1,116 @@
+Discretionary Overrides
+
+************************************************************************************
+
+API : /discretionary-overrides/create
+METHOD : POST
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    discretionaryOverrideId : "DO-1",
+    discretionaryOverrideName : "Industry Risk Adjustment",
+    description : "Industry Risk Adjustment",
+    controlName : "industryRiskAdjustment",
+    discretionaryOverrideStatus : "Pending",
+    category : "GEN",
+    maxUpgrade : 2,
+    maxDowngrade : -2,
+    isRequired : true,
+    activeInStepper : true,
+    reasons : [
+        "Favorable Industry Outlook",
+        "Adverse Industry Conditions",
+        "Cyclical Industry Downturn",
+        "Regulatory Headwinds"
+    ],
+    version : 1,
+}
+
+************************************************************************************
+
+API : /discretionary-overrides/update/{discretionaryOverrideId}
+METHOD : PUT
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    discretionaryOverrideName : "Industry Risk Adjustment",
+    description : "Industry Risk Adjustment",
+    controlName : "industryRiskAdjustment",
+    discretionaryOverrideStatus : "Pending",
+    category : "GEN",
+    maxUpgrade : 2,
+    maxDowngrade : -2,
+    isRequired : true,
+    activeInStepper : true,
+    reasons : [
+        "Favorable Industry Outlook",
+        "Adverse Industry Conditions",
+        "Cyclical Industry Downturn",
+        "Regulatory Headwinds"
+    ],
+    version : 1,
+}
+
+************************************************************************************
+
+API : /discretionary-overrides/patch/status/{discretionaryOverrideId}
+METHOD : PATCH
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    discretionaryOverrideStatus : "Approved"
+}
+
+************************************************************************************
+
+API : /discretionary-overrides/view/{discretionaryOverrideId}
+METHOD : GET
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    discretionaryOverrideName : "Industry Risk Adjustment",
+    description : "Industry Risk Adjustment",
+    controlName : "industryRiskAdjustment",
+    discretionaryOverrideStatus : "Pending",
+    category : "GEN",
+    maxUpgrade : 2,
+    maxDowngrade : -2,
+    isRequired : true,
+    activeInStepper : true,
+    reasons : [
+        "Favorable Industry Outlook",
+        "Adverse Industry Conditions",
+        "Cyclical Industry Downturn",
+        "Regulatory Headwinds"
+    ],
+    version : 1,
+    actionByUserId: 42,
+    actionDate: "2025-12-31T10:13:59.919Z",
+    action: "CREATE",
+    actionByUserName: "Chetan Sharma",
+    actionByEmailId: "chetan@gmail.com",
+    actionByRoleName: "Super Admin",
+    actionByWorkflow: "Maker"
+}
+
+************************************************************************************
+
+API : /discretionary-overrides/delete/{discretionaryOverrideId}
+METHOD : DELETE
+
+************************************************************************************
+
+API : /discretionary-overrides/all
+METHOD : GET

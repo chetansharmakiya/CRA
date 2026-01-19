@@ -1,0 +1,186 @@
+Financial Ratio
+
+
+API : /financial-ratio/create
+METHOD : POST
+REQUEST : 
+{
+    auditId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+
+    financialRatioId : "FR-1",
+    financialRatioName : "Current Ratio",
+    financialInputs : [ "FI-1", "FI-2" ],
+    formulaExpression : "currentAssets/currentLiabilities",
+    controlName : "currentRatio",
+    description : "",
+    financialRatioStatus : "Pending",
+    category : "Liquidity Ratios",
+    isRequired : true,
+    activeInStepper : true,
+    scoreRange : [
+        {
+            optionLabel : "Current Ratio < 0.78",
+            minValue : 0,
+            maxValue : 0.78,
+            score : 7.1,
+            impression : "Good"
+        },
+        {
+            optionLabel : "0.78 ≤ Current Ratio < 1.1",
+            minValue : 0.78,
+            maxValue : 1.1,
+            score : 11.9,
+            impression : "Excellent"
+        },
+        {
+            optionLabel : "Current Ratio ≥ 1.1",
+            minValue : 1.1,
+            maxValue : 9999,
+            score : 27.1,
+            impression : "Strong"
+        },
+        {
+            optionLabel : "Current Ratio ≥ 1.1",
+            minValue : 1.1,
+            maxValue : 9999,
+            score : 27.1,
+            impression : "Acceptable"
+        }
+    ],
+    version : "1"
+}
+
+API : /financial-ratio/update/{financialRatioId}
+METHOD : PUT
+REQUEST : 
+{
+    auditId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+
+    financialRatioId : "FR-1",
+    financialRatioName : "Current Ratio",
+    financialInputs : [ "FI-1", "FI-2" ],
+    formulaExpression : "currentAssets/currentLiabilities",
+    controlName : "currentRatio",
+    description : "",
+    category : "Liquidity Ratios",
+    financialRatioStatus : "Pending",
+    isRequired : true,
+    activeInStepper : true,
+    scoreRange : [
+        {
+            optionLabel : "Current Ratio < 0.78",
+            minValue : 0,
+            maxValue : 0.78,
+            score : 7.1,
+            impression : "Good"
+        },
+        {
+            optionLabel : "0.78 ≤ Current Ratio < 1.1",
+            minValue : 0.78,
+            maxValue : 1.1,
+            score : 11.9,
+            impression : "Excellent"
+        },
+        {
+            optionLabel : "Current Ratio ≥ 1.1",
+            minValue : 1.1,
+            maxValue : 9999,
+            score : 27.1,
+            impression : "Strong"
+        },
+        {
+            optionLabel : "Current Ratio ≥ 1.1",
+            minValue : 1.1,
+            maxValue : 9999,
+            score : 27.1,
+            impression : "Acceptable"
+        }
+    ],
+    version : "1"
+}
+
+API : /financial-ratio/patch/status/{financialRatioId}
+METHOD : PATCH
+REQUEST :
+{
+    auditId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+
+    financialRatioStatus : "Approved"
+}
+
+API : /financial-ratio/view/{financialRatioId}
+METHOD : GET
+RESPONSE :
+{
+    financialRatioId : "FR-1",
+    financialRatioName : "Current Ratio",
+    financialInputs : [
+        {
+            financialInputId : "FI-1",
+            financialInputName : "Current Assets"
+        },
+        {
+            financialInputId : "FI-2"
+            financialInputName : "Current Liabilities"
+        }
+    ],
+    formulaExpression : "currentAssets/currentLiabilities",
+    controlName : "currentRatio",
+    description : "",
+    category : "Liquidity Ratios",
+    financialRatioStatus : "Pending",
+    isRequired : true,
+    activeInStepper : true,
+    scoreRange : [
+        {
+            optionLabel : "Current Ratio < 0.78",
+            minValue : 0,
+            maxValue : 0.78,
+            score : 7.1,
+            impression : "Good"
+        },
+        {
+            optionLabel : "0.78 ≤ Current Ratio < 1.1",
+            minValue : 0.78,
+            maxValue : 1.1,
+            score : 11.9,
+            impression : "Excellent"
+        },
+        {
+            optionLabel : "Current Ratio ≥ 1.1",
+            minValue : 1.1,
+            maxValue : 9999,
+            score : 27.1,
+            impression : "Strong"
+        },
+        {
+            optionLabel : "Current Ratio ≥ 1.1",
+            minValue : 1.1,
+            maxValue : 9999,
+            score : 27.1,
+            impression : "Acceptable"
+        }
+    ],
+    version : "1"
+    actionByUserId: 42,
+    actionDate: "2025-12-26T12:19:20.704553",
+    action: "CREATE",
+    actionByUserName: "Chetan Sharma",
+    actionByEmailId: "chetan.sharma@kiya.ai",
+    actionByRoleName: "SUPER ADMIN",
+    actionByWorkflow: "Super user"
+}
+
+API : /financial-ratio/all
+METHOD : GET
+
+API : /financial-ratio/delete/{financialRatioId}
+METHOD : DELETE
+
+

@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Credit Rating Template Management System">
+    <title>Template Management | Credit Assessment System</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Multiselect CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+    
+    <style>
+        /* ============================================
+           CSS VARIABLES (Theme Colors)
+           ============================================ */
+        :root {
+            --primary-dark: #11224E;
+            --primary-orange: #F87B1B;
+            --accent-green: #CBD99B;
+            --background-light: #EEEEEE;
+            --text-dark: #1a1a1a;
+            --text-light: #6c757d;
+            --border-color: #dee2e6;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --sidebar-width: 280px;
+            --header-height: 60px;
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+        
+        /* ============================================
+           HEADER / TOP BAR
+           ============================================ */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 1040;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+        }
+        
+        .hamburger-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-right: 1rem;
+            transition: transform var(--transition-speed);
+        }
+        
+        .hamburger-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .header-brand {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .theme-toggle {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* ============================================
+           LEFT SIDEBAR NAVIGATION
+           ============================================ */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: white;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            z-index: 1030;
+            transform: translateX(-100%);
+            transition: transform var(--transition-speed) ease-in-out;
+            overflow-y: auto;
+        }
+        
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: 100%;
+            height: calc(100vh - var(--header-height));
+            background: rgba(0,0,0,0.5);
+            z-index: 1020;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed), visibility var(--transition-speed);
+        }
+        
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 1rem 0;
+        }
+        
+        .sidebar-nav-item {
+            margin: 0.25rem 0.75rem;
+        }
+        
+        .sidebar-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all var(--transition-speed);
+            font-weight: 500;
+        }
+        
+        .sidebar-nav-link:hover,
+        .sidebar-nav-link.active {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            color: white;
+        }
+        
+        .sidebar-nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+        
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 1rem 0.75rem;
+        }
+        
+        /* ============================================
+           MAIN CONTENT AREA
+           ============================================ */
+        .main-content {
+            margin-top: var(--header-height);
+            padding: 2rem 1rem;
+            min-height: calc(100vh - var(--header-height));
+        }
+        
+        @media (min-width: 992px) {
+            .main-content {
+                padding: 2rem 3rem;
+            }
+        }
+        
+        /* ============================================
+           SECTION CARDS
+           ============================================ */
+        .section-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--background-light);
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* ============================================
+           TEMPLATES TABLE
+           ============================================ */
+        .templates-table {
+            width: 100%;
+            margin-bottom: 0;
+        }
+        
+        .templates-table thead {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .templates-table th {
+            font-weight: 600;
+            padding: 1rem;
+            border: none;
+        }
+        
+        .templates-table td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+        
+        .templates-table tbody tr {
+            transition: background-color var(--transition-speed);
+        }
+        
+        .templates-table tbody tr:hover {
+            background-color: rgba(17, 34, 78, 0.03);
+        }
+        
+        /* ============================================
+           BADGES
+           ============================================ */
+        .status-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-badge.active {
+            background: rgba(40, 167, 69, 0.2);
+            color: #155724;
+        }
+        
+        .status-badge.draft {
+            background: rgba(108, 117, 125, 0.2);
+            color: #383d41;
+        }
+        
+        .status-badge.inactive {
+            background: rgba(220, 53, 69, 0.2);
+            color: #721c24;
+        }
+        
+        .category-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(248, 123, 27, 0.1);
+            color: var(--primary-orange);
+            margin: 0.125rem;
+            display: inline-block;
+        }
+        
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        .btn-action {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            margin: 0 0.25rem;
+        }
+        
+        .btn-primary-custom {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .btn-primary-custom:hover {
+            background: #1a3570;
+            transform: translateY(-2px);
+        }
+        
+        .btn-orange {
+            background: var(--primary-orange);
+            color: white;
+        }
+        
+        .btn-orange:hover {
+            background: #e06a0a;
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        .btn-outline-custom {
+            border: 1px solid var(--primary-dark);
+            background: transparent;
+            color: var(--primary-dark);
+        }
+        
+        .btn-outline-custom:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        /* ============================================
+           FORM ELEMENTS
+           ============================================ */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .form-label-required::after {
+            content: ' *';
+            color: var(--danger);
+        }
+        
+        .form-control,
+        .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            transition: all var(--transition-speed);
+        }
+        
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.2rem rgba(248, 123, 27, 0.25);
+        }
+        
+        /* ============================================
+           MULTI-SELECT STYLING
+           ============================================ */
+        .bootstrap-select .btn {
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+        }
+        
+        .bootstrap-select .btn:focus {
+            border-color: var(--primary-orange) !important;
+            box-shadow: 0 0 0 0.2rem rgba(248, 123, 27, 0.25) !important;
+        }
+        
+        .bootstrap-select .dropdown-menu {
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .bootstrap-select .dropdown-item.active,
+        .bootstrap-select .dropdown-item:active {
+            background-color: var(--primary-orange);
+        }
+        
+        /* ============================================
+           MODAL CUSTOMIZATION
+           ============================================ */
+        .modal-header {
+            background: var(--primary-dark);
+            color: white;
+            border-bottom: none;
+        }
+        
+        .modal-header .btn-close {
+            filter: invert(1);
+        }
+        
+        .modal-title {
+            font-weight: 700;
+        }
+        
+        .modal-xl {
+            max-width: 1200px;
+        }
+        
+        /* ============================================
+           PARAMETER CONFIGURATION
+           ============================================ */
+        .parameter-section {
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--background-light);
+        }
+        
+        .parameter-section-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .parameter-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .parameter-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all var(--transition-speed);
+        }
+        
+        .parameter-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .parameter-name {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .parameter-weight {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+        
+        .parameter-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        /* ============================================
+           TABS
+           ============================================ */
+        .nav-tabs {
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--text-dark);
+            font-weight: 500;
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-orange);
+            border-bottom-color: var(--primary-orange);
+            background: transparent;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            border-bottom-color: var(--primary-orange);
+        }
+        
+        /* ============================================
+           ALERT ENHANCEMENTS
+           ============================================ */
+        .alert-warning-custom {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid var(--warning);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        
+        /* ============================================
+           SEARCH & FILTER BAR
+           ============================================ */
+        .search-filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        /* ============================================
+           TOAST NOTIFICATIONS
+           ============================================ */
+        .toast-container {
+            position: fixed;
+            top: calc(var(--header-height) + 1rem);
+            right: 1rem;
+            z-index: 1050;
+        }
+        
+        /* ============================================
+           EMPTY STATE
+           ============================================ */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-state-text {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            .search-filter-bar {
+                flex-direction: column;
+            }
+            
+            .search-input {
+                width: 100%;
+            }
+            
+            .header-brand {
+                font-size: 1rem;
+            }
+            
+            .user-profile .user-name {
+                display: none;
+            }
+        }
+        
+        /* ============================================
+           ACCESSIBILITY
+           ============================================ */
+        *:focus {
+            outline: 2px solid var(--primary-orange);
+            outline-offset: 2px;
+        }
+        
+        button:focus,
+        a:focus {
+            outline-width: 3px;
+        }
+        
+        /* ============================================
+           SMOOTH SCROLLING
+           ============================================ */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================
+         TOP HEADER
+         ============================================ -->
+    <header class="top-header" role="banner">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <a href="#" class="header-brand">
+            <i class="fas fa-chart-line"></i>
+            Template Management
+        </a>
+        
+        <div class="header-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+            
+            <div class="user-profile" role="button" tabindex="0" aria-label="User profile menu">
+                <div class="user-avatar">AD</div>
+                <span class="user-name d-none d-md-inline">Admin</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </header>
+    
+    <!-- ============================================
+         SIDEBAR OVERLAY
+         ============================================ -->
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+    
+    <!-- ============================================
+         LEFT SIDEBAR NAVIGATION
+         ============================================ -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+        <nav>
+            <ul class="sidebar-nav">
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link" onclick="returnToDashboard()"> -->
+                        <!-- <i class="fas fa-home"></i> -->
+                        <!-- <span>Dashboard</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <li class="sidebar-nav-item">
+                    <a href="#templates" class="sidebar-nav-link active" data-page="templates">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Rating Templates</span>
+                    </a>
+                </li>
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-cog"></i> -->
+                        <!-- <span>Model Configuration</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                
+                <!-- <div class="sidebar-divider"></div> -->
+                
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-users"></i> -->
+                        <!-- <span>User Management</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-history"></i> -->
+                        <!-- <span>Audit Trail</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-database"></i> -->
+                        <!-- <span>Data Management</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                
+                <!-- <div class="sidebar-divider"></div> -->
+                
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-book"></i> -->
+                        <!-- <span>Documentation</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-question-circle"></i> -->
+                        <!-- <span>Help & Support</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- ============================================
+         MAIN CONTENT AREA
+         ============================================ -->
+    <main class="main-content" id="mainContent" role="main">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h2 mb-1" style="color: var(--primary-dark); font-weight: 700;">Rating Template Management</h1>
+                <p class="text-muted mb-0">Configure and manage credit rating models and parameters</p>
+            </div>
+            <button class="btn btn-orange btn-lg" id="newTemplateBtn" aria-label="Create new rating template">
+                <i class="fas fa-plus me-2"></i>New Template
+            </button>
+        </div>
+        
+        <!-- Templates Table -->
+        <div class="section-card">
+            <div class="section-header">
+                <h3 class="section-title">
+                    <i class="fas fa-list"></i>
+                    Rating Templates
+                </h3>
+                <div>
+                    <button class="btn btn-outline-custom" id="exportTemplatesBtn">
+                        <i class="fas fa-download me-1"></i>Export
+                    </button>
+                    <button class="btn btn-outline-custom" id="importTemplatesBtn">
+                        <i class="fas fa-upload me-1"></i>Import
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Search & Filter Bar -->
+            <div class="search-filter-bar">
+                <div class="search-input">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control" id="templateSearchInput" placeholder="Search by template name or ID..." aria-label="Search templates">
+                    </div>
+                </div>
+                <select class="form-select" id="categoryFilter" style="max-width: 200px;" aria-label="Filter by category">
+                    <option value="">All Categories</option>
+                    <option value="corporate">Corporate</option>
+                    <option value="sme">SME</option>
+                    <option value="individual">Individual</option>
+                    <option value="real-estate">Real Estate</option>
+                </select>
+                <select class="form-select" id="statusFilterTemplate" style="max-width: 200px;" aria-label="Filter by status">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="draft">Draft</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="templates-table table" role="table" aria-label="Rating templates">
+                    <thead>
+                        <tr>
+                            <th scope="col">Template ID</th>
+                            <th scope="col">Template Name</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Industry</th>
+                            <th scope="col">Parameters</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="templatesTableBody">
+                        <!-- Dynamic content will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+    
+    <!-- ============================================
+         ADD/EDIT TEMPLATE MODAL
+         ============================================ -->
+    <div class="modal fade" id="templateModal" tabindex="-1" aria-labelledby="templateModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="templateModalLabel">Add New Rating Template</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Template Basic Info -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="templateName" class="form-label form-label-required">Template Name</label>
+                                <input type="text" class="form-control" id="templateName" placeholder="e.g., Contracting & Services Rating" aria-label="Template name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="templateStatus" class="form-label form-label-required">Status</label>
+                                <select class="form-select" id="templateStatus" aria-label="Template status" required>
+                                    <option value="draft">Draft</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="templateCategory" class="form-label form-label-required">Category (Multi-Select)</label>
+                                <select class="selectpicker form-control" id="templateCategory" multiple data-live-search="true" aria-label="Template category" required title="Select one or more categories">
+                                    <option value="corporate">Corporate</option>
+                                    <option value="sme">SME</option>
+                                    <option value="individual">Individual</option>
+                                    <option value="real-estate">Real Estate & Finance</option>
+                                    <option value="trading">Trading</option>
+                                    <option value="manufacturing">Manufacturing</option>
+                                </select>
+                                <small class="form-text text-muted">Select multiple categories if template applies to multiple entity types</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="templateIndustry" class="form-label form-label-required">Industry Sector (Multi-Select)</label>
+                                <select class="selectpicker form-control" id="templateIndustry" multiple data-live-search="true" aria-label="Industry sector" required title="Select one or more industries">
+                                    <option value="construction">Construction</option>
+                                    <option value="engineering">Engineering</option>
+                                    <option value="services">Services</option>
+                                    <option value="real-estate">Real Estate</option>
+                                    <option value="investment">Investment & Finance</option>
+                                    <option value="trading">Trading</option>
+                                    <option value="manufacturing">Manufacturing</option>
+                                    <option value="technology">Technology</option>
+                                    <option value="healthcare">Healthcare</option>
+                                    <option value="retail">Retail</option>
+                                </select>
+                                <small class="form-text text-muted">Template will auto-select during assessment based on borrower's industry</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="templateDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="templateDescription" rows="3" placeholder="Brief description of this rating template..." aria-label="Template description"></textarea>
+                    </div>
+                    
+                    <!-- Template Configuration Tabs -->
+                    <ul class="nav nav-tabs mt-4" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="financialTab" data-bs-toggle="tab" data-bs-target="#financialParams" type="button" role="tab">
+                                <i class="fas fa-chart-bar me-2"></i>Financial Parameters
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="qualitativeTab" data-bs-toggle="tab" data-bs-target="#qualitativeParams" type="button" role="tab">
+                                <i class="fas fa-clipboard-list me-2"></i>Qualitative Parameters
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="adjustmentsTab" data-bs-toggle="tab" data-bs-target="#adjustments" type="button" role="tab">
+                                <i class="fas fa-sliders-h me-2"></i>Adjustments
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="overridesTab" data-bs-toggle="tab" data-bs-target="#overrides" type="button" role="tab">
+                                <i class="fas fa-exclamation-triangle me-2"></i>Overrides
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content mt-3">
+                        <!-- Financial Parameters Tab -->
+                        <div class="tab-pane fade show active" id="financialParams" role="tabpanel">
+                            <div class="parameter-section">
+                                <div class="parameter-section-title">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    Financial Line Items
+                                </div>
+                                <ul class="parameter-list" id="financialLineItems">
+                                    <!-- Will be populated dynamically -->
+                                </ul>
+                                <button class="btn btn-outline-custom btn-sm" onclick="addFinancialParameter()">
+                                    <i class="fas fa-plus me-1"></i>Add Line Item
+                                </button>
+                            </div>
+                            
+                            <div class="parameter-section">
+                                <div class="parameter-section-title">
+                                    <i class="fas fa-calculator"></i>
+                                    Financial Ratios
+                                </div>
+                                <ul class="parameter-list" id="financialRatios">
+                                    <!-- Will be populated dynamically -->
+                                </ul>
+                                <button class="btn btn-outline-custom btn-sm" onclick="addRatioParameter()">
+                                    <i class="fas fa-plus me-1"></i>Add Ratio
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Qualitative Parameters Tab -->
+                        <div class="tab-pane fade" id="qualitativeParams" role="tabpanel">
+                            <div class="parameter-section">
+                                <div class="parameter-section-title">
+                                    <i class="fas fa-tasks"></i>
+                                    Non-Financial Factors
+                                </div>
+                                <ul class="parameter-list" id="qualitativeFactors">
+                                    <!-- Will be populated dynamically -->
+                                </ul>
+                                <button class="btn btn-outline-custom btn-sm" onclick="addQualitativeParameter()">
+                                    <i class="fas fa-plus me-1"></i>Add Factor
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Mandatory Adjustments Tab -->
+                        <div class="tab-pane fade" id="adjustments" role="tabpanel">
+                            <div class="parameter-section">
+                                <div class="parameter-section-title">
+                                    <i class="fas fa-adjust"></i>
+                                    Mandatory Adjustments
+                                </div>
+                                <ul class="parameter-list" id="mandatoryAdjustments">
+                                    <!-- Will be populated dynamically -->
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Discretionary Overrides Tab -->
+                        <div class="tab-pane fade" id="overrides" role="tabpanel">
+                            <div class="parameter-section">
+                                <div class="parameter-section-title">
+                                    <i class="fas fa-shield-alt"></i>
+                                    Discretionary Overrides
+                                </div>
+                                <ul class="parameter-list" id="discretionaryOverrides">
+                                    <!-- Will be populated dynamically -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary-custom" onclick="saveTemplate('draft')">
+                        <i class="fas fa-save me-2"></i>Save as Draft
+                    </button>
+                    <button type="button" class="btn btn-orange" onclick="saveTemplate('active')">
+                        <i class="fas fa-check me-2"></i>Save & Activate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ============================================
+         VIEW TEMPLATE DETAILS MODAL
+         ============================================ -->
+    <div class="modal fade" id="viewTemplateModal" tabindex="-1" aria-labelledby="viewTemplateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewTemplateModalLabel">Template Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="viewTemplateContent">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-orange" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ============================================
+         TEMPLATE OVERRIDE WARNING MODAL
+         ============================================ -->
+    <div class="modal fade" id="overrideWarningModal" tabindex="-1" aria-labelledby="overrideWarningLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title text-dark" id="overrideWarningLabel">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Template Override Warning
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning-custom" role="alert">
+                        <strong>Recommended Template:</strong> <span id="recommendedTemplate"></span>
+                    </div>
+                    <p>Based on the borrower's Entity Type and Industry Sector, the system recommends a different template.</p>
+                    <p><strong>Current Selection:</strong> <span id="manualTemplate"></span></p>
+                    <p class="mb-0">Do you want to:</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-custom" onclick="useRecommended()">
+                        <i class="fas fa-robot me-2"></i>Use Recommended
+                    </button>
+                    <button type="button" class="btn btn-orange" onclick="proceedWithManual()">
+                        <i class="fas fa-user-edit me-2"></i>Proceed with Manual Selection
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- jQuery (required for Bootstrap Select) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Bootstrap Select -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+    
+    <!-- Main Application JavaScript -->
+    <script>
+        // ============================================
+        // APPLICATION STATE & STORAGE
+        // ============================================
+        const STORAGE_KEYS = {
+            templates: 'ratingTemplates',
+            theme: 'appTheme'
+        };
+        
+        let appState = {
+            sidebarOpen: false,
+            templates: [],
+            currentTemplateId: null,
+            editMode: false
+        };
+        
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            initializeEventListeners();
+            loadTemplates();
+            renderTemplates();
+            loadTheme();
+        });
+        
+        function initializeApp() {
+            console.log('Template Management System Initialized');
+            
+            // Load templates from localStorage or initialize with defaults
+            const savedTemplates = localStorage.getItem(STORAGE_KEYS.templates);
+            if (savedTemplates) {
+                appState.templates = JSON.parse(savedTemplates);
+            } else {
+                // Initialize with the 4 predefined templates
+                appState.templates = getDefaultTemplates();
+                saveTemplates();
+            }
+            
+            // Initialize Bootstrap Select
+            $('.selectpicker').selectpicker();
+        }
+        
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        function initializeEventListeners() {
+            // Hamburger menu toggle
+            document.getElementById('hamburgerBtn').addEventListener('click', toggleSidebar);
+            document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+            
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // New Template button
+            document.getElementById('newTemplateBtn').addEventListener('click', openNewTemplateModal);
+            
+            // Search and filter
+            document.getElementById('templateSearchInput').addEventListener('input', filterTemplates);
+            document.getElementById('categoryFilter').addEventListener('change', filterTemplates);
+            document.getElementById('statusFilterTemplate').addEventListener('change', filterTemplates);
+            
+            // Export/Import
+            document.getElementById('exportTemplatesBtn').addEventListener('click', exportTemplates);
+            document.getElementById('importTemplatesBtn').addEventListener('click', importTemplates);
+        }
+        
+        // ============================================
+        // SIDEBAR NAVIGATION
+        // ============================================
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const hamburger = document.getElementById('hamburgerBtn');
+            
+            appState.sidebarOpen = !appState.sidebarOpen;
+            
+            if (appState.sidebarOpen) {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                hamburger.setAttribute('aria-expanded', 'true');
+            } else {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+            }
+        }
+        
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarOverlay').classList.remove('active');
+            document.getElementById('hamburgerBtn').setAttribute('aria-expanded', 'false');
+            appState.sidebarOpen = false;
+        }
+        
+        function returnToDashboard() {
+            window.location.href = 'credit-assessment-system.html';
+        }
+        
+        // ============================================
+        // RENDER TEMPLATES TABLE
+        // ============================================
+        function renderTemplates(templates = appState.templates) {
+            const tbody = document.getElementById('templatesTableBody');
+            
+            if (templates.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <div class="empty-state-icon"><i class="fas fa-file-alt"></i></div>
+                                <div class="empty-state-title">No Templates Found</div>
+                                <div class="empty-state-text">Create a new rating template to get started</div>
+                                <button class="btn btn-orange" onclick="openNewTemplateModal()">
+                                    <i class="fas fa-plus me-2"></i>New Template
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = templates.map(template => `
+                <tr>
+                    <td><strong>${template.id}</strong></td>
+                    <td>${template.name}</td>
+                    <td>
+                        ${template.categories.map(cat => `<span class="category-badge">${capitalizeFirst(cat)}</span>`).join(' ')}
+                    </td>
+                    <td>
+                        ${template.industries.map(ind => `<span class="category-badge">${capitalizeFirst(ind)}</span>`).join(' ')}
+                    </td>
+                    <td>
+                        <strong>${template.parameterCount}</strong> parameters
+                    </td>
+                    <td>
+                        <span class="status-badge ${template.status}">${capitalizeFirst(template.status)}</span>
+                    </td>
+                    <td>
+                        <button class="btn-action btn-primary-custom" onclick="viewTemplate('${template.id}')" aria-label="View template ${template.id}">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        <button class="btn-action btn-outline-custom" onclick="editTemplate('${template.id}')" aria-label="Edit template ${template.id}">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn-action btn-outline-custom" onclick="deleteTemplate('${template.id}')" aria-label="Delete template ${template.id}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // ============================================
+        // SEARCH & FILTER
+        // ============================================
+        function filterTemplates() {
+            const searchTerm = document.getElementById('templateSearchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const statusFilter = document.getElementById('statusFilterTemplate').value;
+            
+            let filtered = appState.templates.filter(template => {
+                const matchesSearch = template.name.toLowerCase().includes(searchTerm) ||
+                                    template.id.toLowerCase().includes(searchTerm);
+                const matchesCategory = !categoryFilter || template.categories.includes(categoryFilter);
+                const matchesStatus = !statusFilter || template.status === statusFilter;
+                
+                return matchesSearch && matchesCategory && matchesStatus;
+            });
+            
+            renderTemplates(filtered);
+        }
+        
+        // ============================================
+        // OPEN NEW TEMPLATE MODAL
+        // ============================================
+        function openNewTemplateModal() {
+            appState.editMode = false;
+            appState.currentTemplateId = null;
+            
+            // Reset form
+            document.getElementById('templateName').value = '';
+            document.getElementById('templateStatus').value = 'draft';
+            document.getElementById('templateDescription').value = '';
+            $('#templateCategory').selectpicker('val', []);
+            $('#templateIndustry').selectpicker('val', []);
+            
+            // Clear parameter lists
+            document.getElementById('financialLineItems').innerHTML = '';
+            document.getElementById('financialRatios').innerHTML = '';
+            document.getElementById('qualitativeFactors').innerHTML = '';
+            document.getElementById('mandatoryAdjustments').innerHTML = '';
+            document.getElementById('discretionaryOverrides').innerHTML = '';
+            
+            // Change modal title
+            document.getElementById('templateModalLabel').textContent = 'Add New Rating Template';
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('templateModal'));
+            modal.show();
+        }
+        
+        // ============================================
+        // VIEW TEMPLATE DETAILS
+        // ============================================
+        function viewTemplate(templateId) {
+            const template = appState.templates.find(t => t.id === templateId);
+            
+            if (!template) {
+                showToast('Error', 'Template not found', 'error');
+                return;
+            }
+            
+            const content = document.getElementById('viewTemplateContent');
+            content.innerHTML = `
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-muted">Template ID</h6>
+                        <p class="fw-bold">${template.id}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted">Template Name</h6>
+                        <p class="fw-bold">${template.name}</p>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-muted">Categories</h6>
+                        <p>${template.categories.map(cat => `<span class="category-badge">${capitalizeFirst(cat)}</span>`).join(' ')}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted">Industries</h6>
+                        <p>${template.industries.map(ind => `<span class="category-badge">${capitalizeFirst(ind)}</span>`).join(' ')}</p>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h6 class="text-muted">Description</h6>
+                        <p>${template.description || 'No description provided'}</p>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <h5 class="mb-3" style="color: var(--primary-dark);">
+                    <i class="fas fa-chart-bar me-2"></i>Financial Parameters
+                </h5>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6>Line Items (${template.financialLineItems.length})</h6>
+                        <ul class="list-group">
+                            ${template.financialLineItems.map(item => `<li class="list-group-item">${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Financial Ratios (${template.financialRatios.length})</h6>
+                        <ul class="list-group">
+                            ${template.financialRatios.map(ratio => `<li class="list-group-item">${ratio}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <h5 class="mb-3" style="color: var(--primary-dark);">
+                    <i class="fas fa-clipboard-list me-2"></i>Qualitative Parameters
+                </h5>
+                <ul class="list-group mb-4">
+                    ${template.qualitativeFactors.map(factor => `<li class="list-group-item">${factor}</li>`).join('')}
+                </ul>
+                
+                <hr class="my-4">
+                
+                <h5 class="mb-3" style="color: var(--primary-dark);">
+                    <i class="fas fa-adjust me-2"></i>Mandatory Adjustments
+                </h5>
+                <ul class="list-group mb-4">
+                    ${template.mandatoryAdjustments.map(adj => `<li class="list-group-item">${adj}</li>`).join('')}
+                </ul>
+                
+                ${template.discretionaryOverrides && template.discretionaryOverrides.length > 0 ? `
+                <hr class="my-4">
+                <h5 class="mb-3" style="color: var(--primary-dark);">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Discretionary Overrides
+                </h5>
+                <ul class="list-group mb-4">
+                    ${template.discretionaryOverrides.map(override => `<li class="list-group-item">${override}</li>`).join('')}
+                </ul>
+                ` : ''}
+            `;
+            
+            const modal = new bootstrap.Modal(document.getElementById('viewTemplateModal'));
+            modal.show();
+        }
+        
+        // ============================================
+        // EDIT TEMPLATE
+        // ============================================
+        function editTemplate(templateId) {
+            const template = appState.templates.find(t => t.id === templateId);
+            
+            if (!template) {
+                showToast('Error', 'Template not found', 'error');
+                return;
+            }
+            
+            appState.editMode = true;
+            appState.currentTemplateId = templateId;
+            
+            // Populate form
+            document.getElementById('templateName').value = template.name;
+            document.getElementById('templateStatus').value = template.status;
+            document.getElementById('templateDescription').value = template.description || '';
+            $('#templateCategory').selectpicker('val', template.categories);
+            $('#templateIndustry').selectpicker('val', template.industries);
+            
+            // Populate parameters (simplified for demo)
+            populateParameters(template);
+            
+            // Change modal title
+            document.getElementById('templateModalLabel').textContent = 'Edit Rating Template';
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('templateModal'));
+            modal.show();
+        }
+        
+        function populateParameters(template) {
+            // Financial Line Items
+            const lineItemsList = document.getElementById('financialLineItems');
+            lineItemsList.innerHTML = template.financialLineItems.map(item => `
+                <li class="parameter-item">
+                    <span class="parameter-name">${item}</span>
+                    <div class="parameter-actions">
+                        <button class="btn btn-sm btn-outline-custom" onclick="editParameter(this)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-custom" onclick="deleteParameter(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </li>
+            `).join('');
+            
+            // Financial Ratios
+            const ratiosList = document.getElementById('financialRatios');
+            ratiosList.innerHTML = template.financialRatios.map(ratio => `
+                <li class="parameter-item">
+                    <span class="parameter-name">${ratio}</span>
+                    <div class="parameter-actions">
+                        <button class="btn btn-sm btn-outline-custom" onclick="editParameter(this)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-custom" onclick="deleteParameter(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </li>
+            `).join('');
+            
+            // Qualitative Factors
+            const factorsList = document.getElementById('qualitativeFactors');
+            factorsList.innerHTML = template.qualitativeFactors.map(factor => `
+                <li class="parameter-item">
+                    <span class="parameter-name">${factor}</span>
+                    <div class="parameter-actions">
+                        <button class="btn btn-sm btn-outline-custom" onclick="editParameter(this)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-custom" onclick="deleteParameter(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </li>
+            `).join('');
+            
+            // Mandatory Adjustments
+            const adjustmentsList = document.getElementById('mandatoryAdjustments');
+            adjustmentsList.innerHTML = template.mandatoryAdjustments.map(adj => `
+                <li class="parameter-item">
+                    <span class="parameter-name">${adj}</span>
+                </li>
+            `).join('');
+            
+            // Discretionary Overrides
+            if (template.discretionaryOverrides) {
+                const overridesList = document.getElementById('discretionaryOverrides');
+                overridesList.innerHTML = template.discretionaryOverrides.map(override => `
+                    <li class="parameter-item">
+                        <span class="parameter-name">${override}</span>
+                    </li>
+                `).join('');
+            }
+        }
+        
+        // ============================================
+        // SAVE TEMPLATE
+        // ============================================
+        function saveTemplate(status) {
+            const name = document.getElementById('templateName').value.trim();
+            const categories = $('#templateCategory').val() || [];
+            const industries = $('#templateIndustry').val() || [];
+            const description = document.getElementById('templateDescription').value.trim();
+            
+            if (!name) {
+                showToast('Validation Error', 'Template name is required', 'warning');
+                return;
+            }
+            
+            if (categories.length === 0) {
+                showToast('Validation Error', 'Please select at least one category', 'warning');
+                return;
+            }
+            
+            if (industries.length === 0) {
+                showToast('Validation Error', 'Please select at least one industry', 'warning');
+                return;
+            }
+            
+            if (appState.editMode && appState.currentTemplateId) {
+                // Update existing template
+                const template = appState.templates.find(t => t.id === appState.currentTemplateId);
+                if (template) {
+                    template.name = name;
+                    template.categories = categories;
+                    template.industries = industries;
+                    template.description = description;
+                    template.status = status;
+                    template.lastModified = new Date().toISOString();
+                    
+                    showToast('Template Updated', `${name} has been updated successfully`, 'success');
+                }
+            } else {
+                // Create new template
+                const newTemplate = {
+                    id: `TPL-${Date.now().toString().slice(-6)}`,
+                    name: name,
+                    categories: categories,
+                    industries: industries,
+                    description: description,
+                    status: status,
+                    parameterCount: 0, // Would be calculated from actual parameters
+                    financialLineItems: [],
+                    financialRatios: [],
+                    qualitativeFactors: [],
+                    mandatoryAdjustments: ['Age of Financial Info', 'Quality of Financial Info', 'Historical Account Performance', 'Qualification of Audit Report'],
+                    discretionaryOverrides: [],
+                    created: new Date().toISOString(),
+                    lastModified: new Date().toISOString()
+                };
+                
+                appState.templates.unshift(newTemplate);
+                showToast('Template Created', `${name} has been created successfully`, 'success');
+            }
+            
+            saveTemplates();
+            renderTemplates();
+            
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('templateModal'));
+            modal.hide();
+        }
+        
+        // ============================================
+        // DELETE TEMPLATE
+        // ============================================
+        function deleteTemplate(templateId) {
+            if (!confirm('Are you sure you want to delete this template? This action cannot be undone.')) {
+                return;
+            }
+            
+            appState.templates = appState.templates.filter(t => t.id !== templateId);
+            saveTemplates();
+            renderTemplates();
+            showToast('Template Deleted', 'Template has been removed successfully', 'success');
+        }
+        
+        // ============================================
+        // PARAMETER MANAGEMENT
+        // ============================================
+        function addFinancialParameter() {
+            const paramName = prompt('Enter financial line item name:');
+            if (paramName) {
+                const list = document.getElementById('financialLineItems');
+                const item = document.createElement('li');
+                item.className = 'parameter-item';
+                item.innerHTML = `
+                    <span class="parameter-name">${paramName}</span>
+                    <div class="parameter-actions">
+                        <button class="btn btn-sm btn-outline-custom" onclick="editParameter(this)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-custom" onclick="deleteParameter(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                list.appendChild(item);
+            }
+        }
+        
+        function addRatioParameter() {
+            const ratioName = prompt('Enter financial ratio name:');
+            if (ratioName) {
+                const list = document.getElementById('financialRatios');
+                const item = document.createElement('li');
+                item.className = 'parameter-item';
+                item.innerHTML = `
+                    <span class="parameter-name">${ratioName}</span>
+                    <div class="parameter-actions">
+                        <button class="btn btn-sm btn-outline-custom" onclick="editParameter(this)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-custom" onclick="deleteParameter(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                list.appendChild(item);
+            }
+        }
+        
+        function addQualitativeParameter() {
+            const factorName = prompt('Enter qualitative factor name:');
+            if (factorName) {
+                const list = document.getElementById('qualitativeFactors');
+                const item = document.createElement('li');
+                item.className = 'parameter-item';
+                item.innerHTML = `
+                    <span class="parameter-name">${factorName}</span>
+                    <div class="parameter-actions">
+                        <button class="btn btn-sm btn-outline-custom" onclick="editParameter(this)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-custom" onclick="deleteParameter(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                list.appendChild(item);
+            }
+        }
+        
+        function editParameter(button) {
+            const paramItem = button.closest('.parameter-item');
+            const paramName = paramItem.querySelector('.parameter-name');
+            const newName = prompt('Edit parameter name:', paramName.textContent);
+            if (newName) {
+                paramName.textContent = newName;
+            }
+        }
+        
+        function deleteParameter(button) {
+            if (confirm('Remove this parameter?')) {
+                button.closest('.parameter-item').remove();
+            }
+        }
+        
+        // ============================================
+        // AUTO-SELECTION LOGIC & OVERRIDE WARNING
+        // ============================================
+        function autoSelectTemplate(entityType, industrySector) {
+            // Find templates that match the entity type and industry
+            const matchingTemplates = appState.templates.filter(template => 
+                template.status === 'active' &&
+                template.categories.some(cat => cat.toLowerCase() === entityType.toLowerCase()) &&
+                template.industries.some(ind => ind.toLowerCase() === industrySector.toLowerCase())
+            );
+            
+            if (matchingTemplates.length > 0) {
+                return matchingTemplates[0]; // Return the first matching template
+            }
+            
+            return null;
+        }
+        
+        function showOverrideWarning(recommended, manual) {
+            document.getElementById('recommendedTemplate').textContent = recommended;
+            document.getElementById('manualTemplate').textContent = manual;
+            
+            const modal = new bootstrap.Modal(document.getElementById('overrideWarningModal'));
+            modal.show();
+        }
+        
+        function useRecommended() {
+            const recommendedTemplate = document.getElementById('recommendedTemplate').textContent;
+            // Apply the recommended template
+            showToast('Template Applied', `Switched to recommended template: ${recommendedTemplate}`, 'success');
+            
+            const modal = bootstrap.Modal.getInstance(document.getElementById('overrideWarningModal'));
+            modal.hide();
+        }
+        
+        function proceedWithManual() {
+            showToast('Manual Override', 'Proceeding with manually selected template', 'info');
+            
+            const modal = bootstrap.Modal.getInstance(document.getElementById('overrideWarningModal'));
+            modal.hide();
+        }
+        
+        // ============================================
+        // EXPORT / IMPORT TEMPLATES
+        // ============================================
+        function exportTemplates() {
+            const dataStr = JSON.stringify(appState.templates, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `rating-templates-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('Export Complete', 'Templates exported successfully', 'success');
+        }
+        
+        function importTemplates() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const importedTemplates = JSON.parse(e.target.result);
+                            appState.templates = importedTemplates;
+                            saveTemplates();
+                            renderTemplates();
+                            showToast('Import Complete', `${importedTemplates.length} templates imported successfully`, 'success');
+                        } catch (error) {
+                            showToast('Import Error', 'Invalid JSON file', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+        
+        // ============================================
+        // DEFAULT TEMPLATES (4 Specific Templates from BRD)
+        // ============================================
+        function getDefaultTemplates() {
+            return [
+                {
+                    id: 'TPL-001',
+                    name: 'Contracting & Services Rating',
+                    categories: ['corporate'],
+                    industries: ['construction', 'engineering', 'services'],
+                    description: 'Rating template for contracting and services companies',
+                    status: 'active',
+                    parameterCount: 42,
+                    financialLineItems: [
+                        'Revenue',
+                        'Cost of Goods Sold',
+                        'Net Profit',
+                        'Total Current Assets',
+                        'Affiliates Due',
+                        'Investment Assets',
+                        'Total Assets',
+                        'Total Current Liabilities',
+                        'Total Debt',
+                        'Total Bank Borrowings',
+                        'Net Worth',
+                        'Operating Cash'
+                    ],
+                    financialRatios: [
+                        'Affiliates Due to Net Worth',
+                        'Current Ratio',
+                        'Debt Equity Ratio',
+                        'Operating Revenue / External Liabilities',
+                        'Investment Assets to Total Assets',
+                        'Net Profit Margin',
+                        'Working Capital Turnover',
+                        'Change in Debt Ratio'
+                    ],
+                    qualitativeFactors: [
+                        'Constitution and Establishment',
+                        'Years in Business',
+                        'Unutilized Credit Limits',
+                        'Financial Planning & Control',
+                        'Position in Market',
+                        'Govt/Private Contracting',
+                        'Sensitivity to Economic Shocks',
+                        'Contractor Grade',
+                        'Past Track Record',
+                        'Competition & Demand',
+                        'Qualified Resources'
+                    ],
+                    mandatoryAdjustments: [
+                        'Age of Financial Info',
+                        'Quality of Financial Info',
+                        'Historical Account Performance',
+                        'Qualification of Audit Report'
+                    ],
+                    discretionaryOverrides: [
+                        'Management changes',
+                        'Regulation changes',
+                        'Bankruptcy/Liquidation',
+                        'Succession plan issues',
+                        'Legal disputes',
+                        'Economic deterioration'
+                    ],
+                    created: '2025-01-15T10:00:00Z',
+                    lastModified: '2025-01-15T10:00:00Z'
+                },
+                {
+                    id: 'TPL-002',
+                    name: 'Investment Real Estate & Finance',
+                    categories: ['corporate', 'real-estate'],
+                    industries: ['real-estate', 'investment'],
+                    description: 'Rating template for real estate companies and investment firms',
+                    status: 'active',
+                    parameterCount: 38,
+                    financialLineItems: [
+                        'Gross Profit',
+                        'General & Admin Expenses',
+                        'Interest',
+                        'Net Profit',
+                        'Inventory',
+                        'Total Current Assets',
+                        'Total Assets',
+                        'Total Current Liabilities',
+                        'Total Long Term Liabilities',
+                        'Total Debt',
+                        'Total Bank Borrowings',
+                        'Unquoted Asset',
+                        'Unrealized Gains',
+                        'Operating Cash',
+                        'Net Worth'
+                    ],
+                    financialRatios: [
+                        'Current Debt to Total Debt',
+                        'Debt Equity Ratio (DER)',
+                        'Interest Coverage Ratio (ICR)',
+                        'Return on Assets (ROA)',
+                        'Change in DER',
+                        'Change in Quick Ratio',
+                        'Change in ROA',
+                        'Unrealized Gains to Net Profit',
+                        'Unquoted Assets to Total Assets',
+                        'Operating Cash / External Liabilities'
+                    ],
+                    qualitativeFactors: [
+                        'Constitution & Establishment',
+                        'Management Character',
+                        'Years in Business',
+                        'Unutilized Credit Lines',
+                        'Financial Planning & Control',
+                        'Asset Quality (Diversification)',
+                        'Asset Quality (Risk)',
+                        'Real Estate Concentration'
+                    ],
+                    mandatoryAdjustments: [
+                        'Age of Financial Info',
+                        'Quality of Financial Info',
+                        'Historical Account Performance',
+                        'Qualification of Audit Report'
+                    ],
+                    discretionaryOverrides: [],
+                    created: '2025-01-15T10:00:00Z',
+                    lastModified: '2025-01-15T10:00:00Z'
+                },
+                {
+                    id: 'TPL-003',
+                    name: 'Personal Net Worth Declaration',
+                    categories: ['individual'],
+                    industries: ['individual'],
+                    description: 'Rating template for individual borrowers based on personal net worth',
+                    status: 'active',
+                    parameterCount: 28,
+                    financialLineItems: [
+                        'Cash & Bank Balances',
+                        'Total Current Assets',
+                        'Total Assets',
+                        'Total Current Liabilities',
+                        'Total Long-Term Liabilities',
+                        'Net Worth',
+                        'Turnover',
+                        'Cost of Sales',
+                        'Gross Profit',
+                        'General & Admin Expenses',
+                        'Interest',
+                        'Net Profit'
+                    ],
+                    financialRatios: [
+                        'Debt Equity Ratio',
+                        'Cash / Current Liabilities',
+                        'Interest Coverage Ratio (ICR)',
+                        'EBIT / Total Current Liabilities',
+                        'LN(Networth)',
+                        'Growth in Net Worth'
+                    ],
+                    qualitativeFactors: [
+                        'Years in Business',
+                        'Existence of Legal Heirs',
+                        'Management Character',
+                        'Availability of Additional Resources',
+                        'Income Diversification',
+                        'Years in Relationship',
+                        'Accessibility',
+                        'Credit History',
+                        'Unquoted Assets'
+                    ],
+                    mandatoryAdjustments: [
+                        'Age of Financial Info',
+                        'Quality of Financial Info',
+                        'Historical Account Performance'
+                    ],
+                    discretionaryOverrides: [],
+                    created: '2025-01-15T10:00:00Z',
+                    lastModified: '2025-01-15T10:00:00Z'
+                },
+                {
+                    id: 'TPL-004',
+                    name: 'Trading & Manufacturing Template',
+                    categories: ['corporate', 'sme', 'trading', 'manufacturing'],
+                    industries: ['trading', 'manufacturing'],
+                    description: 'Rating template for trading and manufacturing companies',
+                    status: 'active',
+                    parameterCount: 40,
+                    financialLineItems: [
+                        'Revenue',
+                        'Cost of Goods Sold (COGS)',
+                        'Net Profit',
+                        'Total Current Assets',
+                        'Affiliates Due',
+                        'Investment Assets',
+                        'Total Assets',
+                        'Total Current Liabilities',
+                        'Total Debt',
+                        'Total Bank Borrowings',
+                        'Net Worth',
+                        'Operating Cash'
+                    ],
+                    financialRatios: [
+                        'Affiliates Due to Net Worth',
+                        'Current Ratio',
+                        'Debt Equity Ratio',
+                        'Operating Revenue / External Liabilities',
+                        'Investment Assets to Total Assets',
+                        'Net Profit Margin (NPM)',
+                        'Working Capital Turnover (WCT)',
+                        'Change in Debt Ratio'
+                    ],
+                    qualitativeFactors: [
+                        'Constitution & Establishment',
+                        'Years in Business',
+                        'Unutilized Credit Limits',
+                        'Financial Planning & Control',
+                        'Position in Market',
+                        'Competition / Supply & Demand',
+                        'Sensitivity to Economic Shocks',
+                        'Customer Base',
+                        'Quality of Receivables',
+                        'Distribution Channel',
+                        'Price Volatility Management'
+                    ],
+                    mandatoryAdjustments: [
+                        'Age of Financial Info',
+                        'Quality of Financial Info',
+                        'Historical Account Performance',
+                        'Qualification of Audit Report'
+                    ],
+                    discretionaryOverrides: [
+                        'Management changes',
+                        'Regulation changes',
+                        'Relationship strength',
+                        'Bankruptcy',
+                        'Liquidation',
+                        'Contract changes',
+                        'Market position change',
+                        'Reputation',
+                        'Legal disputes',
+                        'Fall in capital markets/oil prices',
+                        'Global economic deterioration',
+                        'Social disturbances',
+                        'Persistent ever-greening'
+                    ],
+                    created: '2025-01-15T10:00:00Z',
+                    lastModified: '2025-01-15T10:00:00Z'
+                }
+            ];
+        }
+        
+        // ============================================
+        // THEME TOGGLE
+        // ============================================
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.querySelector('#themeToggle i');
+            
+            body.classList.toggle('dark-theme');
+            
+            if (body.classList.contains('dark-theme')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem(STORAGE_KEYS.theme, 'dark');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem(STORAGE_KEYS.theme, 'light');
+            }
+        }
+        
+        function loadTheme() {
+            const savedTheme = localStorage.getItem(STORAGE_KEYS.theme);
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.querySelector('#themeToggle i').classList.replace('fa-moon', 'fa-sun');
+            }
+        }
+        
+        // ============================================
+        // TOAST NOTIFICATIONS
+        // ============================================
+        function showToast(title, message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toastId = `toast-${Date.now()}`;
+            
+            const iconMap = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            
+            const colorMap = {
+                success: 'success',
+                error: 'danger',
+                warning: 'warning',
+                info: 'info'
+            };
+            
+            const toastHTML = `
+                <div class="toast align-items-center text-white bg-${colorMap[type]} border-0" role="alert" aria-live="assertive" aria-atomic="true" id="${toastId}">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas ${iconMap[type]} me-2"></i>
+                            <strong>${title}</strong><br>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+            
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+            
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { delay: 4000 });
+            toast.show();
+            
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
+            });
+        }
+        
+        // ============================================
+        // DATA PERSISTENCE
+        // ============================================
+        function saveTemplates() {
+            localStorage.setItem(STORAGE_KEYS.templates, JSON.stringify(appState.templates));
+        }
+        
+        function loadTemplates() {
+            const saved = localStorage.getItem(STORAGE_KEYS.templates);
+            if (saved) {
+                appState.templates = JSON.parse(saved);
+            }
+        }
+        
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1).replace(/-/g, ' ');
+        }
+        
+        // ============================================
+        // WINDOW RESIZE HANDLER
+        // ============================================
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 992 && appState.sidebarOpen) {
+                closeSidebar();
+            }
+        });
+    </script>
+</body>
+</html>

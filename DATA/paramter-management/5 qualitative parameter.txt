@@ -1,0 +1,154 @@
+Qualitative Factors
+
+************************************************************************************
+
+API : /qualitative-factors/create
+METHOD : POST
+REQUEST : 
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    qualitativeFactorId : "QP-1",
+    qualitativeFactorName : "Years of Industry Experience",
+    category : "Management Quality & Experience",
+    controlName : "yearsOfIndustryExperience",
+    qualitativeFactorStatus : "Pending",
+    description : "",
+    isRequired : true,
+    activeInStepper : true,
+    qualitativeOptionsScores : [
+        {
+            optionLabel : "15+ years (Excellent)",
+            optionScore : 10,
+            impact : "Excellent"
+        },
+        {
+            optionLabel : "10-15 years (Good)",
+            optionScore : 7,
+            impact : "Good"
+        },
+        {
+            optionLabel : "5-10 years (Average)",
+            optionScore : 4,
+            impact : "Average"
+        },
+        {
+            optionLabel : "<5 years (Poor)",
+            optionScore : 1,
+            impact : "Poor"
+        }
+    ],
+    version : 1
+}
+
+************************************************************************************
+
+API : /qualitative-factor/update/{qualitativeFactorId}
+METHOD : PUT
+REQUEST : 
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    qualitativeFactorName : "Years of Industry Experience",
+    category : "Management Quality & Experience",
+    controlName : "yearsOfIndustryExperience",
+    qualitativeFactorStatus : "Pending",
+    description : "",
+    isRequired : true,
+    activeInStepper : true,
+    qualitativeOptionsScores : [
+        {
+            optionLabel : "15+ years (Excellent)",
+            optionScore : 10,
+            impact : "Excellent"
+        },
+        {
+            optionLabel : "10-15 years (Good)",
+            optionScore : 7,
+            impact : "Good"
+        },
+        {
+            optionLabel : "5-10 years (Average)",
+            optionScore : 4,
+            impact : "Average"
+        },
+        {
+            optionLabel : "<5 years (Poor)",
+            optionScore : 1,
+            impact : "Poor"
+        }
+    ],
+    version : 1
+}
+
+************************************************************************************
+
+API : /qualitative-factor/patch/status/{qualitativeFactorId}
+METHOD : PATCH
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+    qualitativeFactorStatus : "Approved",
+}
+
+************************************************************************************
+
+API : /qualitative-factor/view/{qualitativeFactorId}
+METHOD : GET
+RESPONSE : 
+{
+    qualitativeFactorId : "QP-1",
+    qualitativeFactorName : "Years of Industry Experience",
+    category : "Management Quality & Experience",
+    controlName : "yearsOfIndustryExperience",
+    qualitativeFactorStatus : "Pending",
+    description : "",
+    isRequired : true,
+    activeInStepper : true,
+    qualitativeOptionsScores : [
+        {
+            optionLabel : "15+ years (Excellent)",
+            optionScore : 10,
+            impact : "Excellent"
+        },
+        {
+            optionLabel : "10-15 years (Good)",
+            optionScore : 7,
+            impact : "Good"
+        },
+        {
+            optionLabel : "5-10 years (Average)",
+            optionScore : 4,
+            impact : "Average"
+        },
+        {
+            optionLabel : "<5 years (Poor)",
+            optionScore : 1,
+            impact : "Poor"
+        }
+    ],
+    version : 1,
+    actionByUserId: 42,
+    actionDate: "2025-12-31T10:13:59.919Z",
+    action: "CREATE",
+    actionByUserName: "Chetan Sharma",
+    actionByEmailId: "chetan@gmail.com",
+    actionByRoleName: "Super Admin",
+    actionByWorkflow: "Maker"
+}
+
+************************************************************************************
+
+API : /qualitative-factor/delete/{qualitativeFactorId}
+METHOD : DELETE
+
+************************************************************************************
+
+API : /qualitative-factor/all
+METHOD : GET

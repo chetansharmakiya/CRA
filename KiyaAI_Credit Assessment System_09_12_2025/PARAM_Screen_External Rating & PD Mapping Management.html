@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>External Rating & PD Mapping Management - Credit Assessment</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS VARIABLES */
+        :root {
+            --primary-dark: #11224E;
+            --primary-orange: #F87B1B;
+            --accent-green: #CBD99B;
+            --background-light: #EEEEEE;
+            --text-dark: #1a1a1a;
+            --text-light: #6c757d;
+            --border-color: #dee2e6;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --header-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            padding-top: var(--header-height);
+        }
+
+        /* Header */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1040;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+
+        .header-brand {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-brand i {
+            color: var(--primary-orange);
+            font-size: 1.8rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-header {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-header:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Info Cards */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--primary-orange);
+        }
+
+        .info-card-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-card-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        /* Custom Tabs */
+        .custom-tabs {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .nav-tabs-custom {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            border-bottom: none;
+            padding: 1rem 1rem 0 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-tabs-custom .nav-link {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+            border: none;
+            border-radius: 8px 8px 0 0;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .nav-tabs-custom .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .nav-tabs-custom .nav-link.active {
+            background: white;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .tab-content-custom {
+            padding: 2rem;
+        }
+
+        /* Alert Box */
+        .alert-custom {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left: 4px solid var(--warning);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-custom h5 {
+            color: var(--primary-dark);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .alert-custom ul {
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+
+        .alert-custom li {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Data Table */
+        .data-table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            color: white;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h4 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .table-responsive {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        table {
+            margin: 0;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background: var(--primary-dark);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+            border: none;
+            z-index: 10;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+
+        /* Badges */
+        .badge-investment {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        .badge-below-investment {
+            background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        /* Buttons */
+        .btn-action {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, #e56a0f 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(248, 123, 27, 0.3);
+        }
+
+        /* Modal Enhancements */
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.65rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.2rem rgba(248, 123, 27, 0.25);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--border-color);
+        }
+
+        /* PD Input Styling */
+        .pd-input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .pd-input-group input {
+            max-width: 120px;
+        }
+
+        .pd-input-group .input-group-text {
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+        }
+
+        /* Averaging Info Badge */
+        .averaging-badge {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 0.25rem;
+            display: inline-block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Grade Selector Pills */
+        .grade-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .grade-pill {
+            background: #f8f9fa;
+            border: 2px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .grade-pill.selected {
+            background: var(--primary-orange);
+            color: white;
+            border-color: var(--primary-orange);
+        }
+
+        .grade-pill:hover {
+            border-color: var(--primary-orange);
+        }
+
+        /* Formula Display */
+        .formula-display {
+            background: #f8f9fa;
+            border-left: 4px solid var(--info);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin-top: 1rem;
+        }
+
+        /* Status Badge */
+        .status-active {
+            background: var(--success);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-inactive {
+            background: var(--text-light);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-responsive {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="header-brand">
+            <i class="fas fa-chart-line"></i>
+            External Rating & PD Mapping Management
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-header" onclick="window.location.href='dashboard.html'">
+                <i class="fas fa-home me-2"></i>Dashboard
+            </button>
+            <button class="btn btn-header">
+                <i class="fas fa-user-circle me-2"></i>Admin
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">External Rating & PD Mapping Management</h1>
+            <p class="page-subtitle">Configure and maintain mappings between external agency ratings, internal ORR grades, and Probability of Default (PD) percentages.</p>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="info-cards">
+            <div class="info-card">
+                <div class="info-card-label">Total Grade Mappings</div>
+                <div class="info-card-value" id="totalMappings">8</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-label">Investment Grade</div>
+                <div class="info-card-value" id="investmentGrade">4</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-label">Below Investment Grade</div>
+                <div class="info-card-value" id="belowInvestmentGrade">4</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-label">Last Updated</div>
+                <div class="info-card-value" style="font-size: 1rem; padding-top: 0.5rem;" id="lastUpdated">N/A</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="custom-tabs">
+            <ul class="nav nav-tabs nav-tabs-custom" id="mappingTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="rating-tab" data-bs-toggle="tab" data-bs-target="#rating-mapping" type="button" role="tab">
+                        <i class="fas fa-star me-2"></i>External Rating Mapping
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pd-tab" data-bs-toggle="tab" data-bs-target="#pd-mapping" type="button" role="tab">
+                        <i class="fas fa-percentage me-2"></i>PD Mapping
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content tab-content-custom" id="mappingTabContent">
+                
+                <!-- TAB 1: External Rating Mapping -->
+                <div class="tab-pane fade show active" id="rating-mapping" role="tabpanel">
+                    
+                    <!-- Alert Box -->
+                    <div class="alert-custom">
+                        <h5><i class="fas fa-info-circle me-2"></i>About External Rating Mappings</h5>
+                        <ul>
+                            <li><strong>Purpose:</strong> This master table maps external credit ratings from recognized agencies to internal ORR grades (1-8).</li>
+                            <li><strong>Investment Grade:</strong> Grades 1-4 represent Investment Grade ratings with lower credit risk.</li>
+                            <li><strong>Below Investment Grade:</strong> Grades 5-8 represent speculative or high-risk ratings.</li>
+                            <li><strong>Access Control:</strong> Only users with "Rating Administrator" role can modify these mappings.</li>
+                            <li><strong>System Impact:</strong> Changes affect all credit assessments system-wide. Ensure accuracy before saving.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Rating Table -->
+                    <div class="data-table-container">
+                        <div class="table-header">
+                            <h4><i class="fas fa-table me-2"></i>Rating Mapping Master Table</h4>
+                            <button class="btn btn-primary-custom" onclick="openRatingModal()">
+                                <i class="fas fa-plus me-2"></i>Add New Mapping
+                            </button>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="ratingMappingTable">
+                                <thead>
+                                    <tr>
+                                        <th>Internal Grade</th>
+                                        <th>S&P Ratings</th>
+                                        <th>Moody's Ratings</th>
+                                        <th>Fitch Ratings</th>
+                                        <th>Grade Type</th>
+                                        <th>Comments</th>
+                                        <th>Last Updated</th>
+                                        <th>Updated By</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ratingTableBody">
+                                    <!-- Sample Data -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: PD Mapping -->
+                <div class="tab-pane fade" id="pd-mapping" role="tabpanel">
+                    
+                    <!-- Alert Box -->
+                    <div class="alert-custom">
+                        <h5><i class="fas fa-info-circle me-2"></i>About PD (Probability of Default) Mapping</h5>
+                        <ul>
+                            <li><strong>Purpose:</strong> Define the Probability of Default (PD) percentage for each internal grade (1-8).</li>
+                            <li><strong>Usage:</strong> PD values are used for unrated loan calculations, risk-weighted assets (RWA), and capital adequacy.</li>
+                            <li><strong>Averaging Rules:</strong> Unrated loans use grade-averaged PD values as per policy guidelines.</li>
+                            <li><strong>Calibration:</strong> PD values must be reviewed annually and aligned with S&P default rate statistics.</li>
+                            <li><strong>Impact:</strong> Changes affect all PD-based calculations across the system.</li>
+                        </ul>
+                    </div>
+
+                    <!-- PD Averaging Rules Info -->
+                    <div class="data-table-container mb-4">
+                        <div class="table-header">
+                            <h4><i class="fas fa-calculator me-2"></i>Unrated Loan PD Averaging Rules</h4>
+                            <button class="btn btn-primary-custom" onclick="openAveragingRuleModal()">
+                                <i class="fas fa-plus me-2"></i>Add Averaging Rule
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table" id="averagingRulesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Loan Category</th>
+                                        <th>Averaging Formula</th>
+                                        <th>Grades Used</th>
+                                        <th>Status</th>
+                                        <th>Last Updated</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="averagingRulesBody">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- PD Table -->
+                    <div class="data-table-container">
+                        <div class="table-header">
+                            <h4><i class="fas fa-table me-2"></i>PD Master Table</h4>
+                            <button class="btn btn-primary-custom" onclick="openPDModal()">
+                                <i class="fas fa-edit me-2"></i>Update PD Values
+                            </button>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="pdMappingTable">
+                                <thead>
+                                    <tr>
+                                        <th>Internal Grade</th>
+                                        <th>Grade Type</th>
+                                        <th>S&P Equivalent</th>
+                                        <th>PD (%)</th>
+                                        <th>Used in Averaging</th>
+                                        <th>Last Updated</th>
+                                        <th>Updated By</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pdTableBody">
+                                    <!-- Sample Data -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal: Add/Edit Rating Mapping -->
+    <div class="modal fade" id="ratingModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ratingModalTitle">
+                        <i class="fas fa-star me-2"></i>Add Rating Mapping
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="ratingForm">
+                        <input type="hidden" id="ratingEditIndex">
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="internalGrade" class="form-label">Internal Grade (ORR)</label>
+                                <select class="form-select" id="internalGrade" required>
+                                    <option value="">Select Grade</option>
+                                    <option value="1">Grade 1</option>
+                                    <option value="2">Grade 2</option>
+                                    <option value="3">Grade 3</option>
+                                    <option value="4">Grade 4</option>
+                                    <option value="5">Grade 5</option>
+                                    <option value="6">Grade 6</option>
+                                    <option value="7">Grade 7</option>
+                                    <option value="8">Grade 8</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="gradeType" class="form-label">Grade Type</label>
+                                <select class="form-select" id="gradeType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="Investment Grade">Investment Grade</option>
+                                    <option value="Below Investment Grade">Below Investment Grade</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="spRatings" class="form-label">S&P Ratings</label>
+                            <input type="text" class="form-control" id="spRatings" placeholder="e.g., AAA, AA+, AA, AA-" required>
+                            <small class="text-muted">Comma-separated values</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="moodysRatings" class="form-label">Moody's Ratings</label>
+                            <input type="text" class="form-control" id="moodysRatings" placeholder="e.g., Aaa, Aa1, Aa2" required>
+                            <small class="text-muted">Comma-separated values</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="fitchRatings" class="form-label">Fitch Ratings</label>
+                            <input type="text" class="form-control" id="fitchRatings" placeholder="e.g., AAA, AA+, AA" required>
+                            <small class="text-muted">Comma-separated values</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="comments" class="form-label">Comments</label>
+                            <textarea class="form-control" id="comments" rows="3" placeholder="Mapping methodology and notes"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary-custom" onclick="saveRatingMapping()">
+                        <i class="fas fa-save me-2"></i>Save Mapping
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Edit PD Values -->
+    <div class="modal fade" id="pdModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-percentage me-2"></i>Update PD (Probability of Default) Values
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> Changes to PD values will affect all unrated loan calculations system-wide. Ensure values are calibrated based on S&P default rate statistics.
+                    </div>
+                    
+                    <form id="pdForm">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Internal Grade</th>
+                                        <th>Grade Type</th>
+                                        <th>S&P Equivalent</th>
+                                        <th>PD (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pdFormBody">
+                                    <!-- Dynamically populated -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary-custom" onclick="savePDValues()">
+                        <i class="fas fa-save me-2"></i>Save All PD Values
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Add/Edit Averaging Rule -->
+    <div class="modal fade" id="averagingRuleModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="averagingRuleModalTitle">
+                        <i class="fas fa-calculator me-2"></i>Add Averaging Rule
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="averagingRuleForm">
+                        <input type="hidden" id="averagingRuleEditIndex">
+                        
+                        <div class="mb-3">
+                            <label for="loanCategory" class="form-label">Loan Category</label>
+                            <input type="text" class="form-control" id="loanCategory" placeholder="e.g., Shareholder Services Loans" required>
+                            <small class="text-muted">Enter a descriptive name for this loan category</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="categoryDescription" class="form-label">Category Description</label>
+                            <textarea class="form-control" id="categoryDescription" rows="2" placeholder="Brief description of when this rule applies"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Select Grades for Averaging</label>
+                            <div class="grade-pills" id="gradePills">
+                                <div class="grade-pill" data-grade="1" onclick="toggleGrade(1)">Grade 1</div>
+                                <div class="grade-pill" data-grade="2" onclick="toggleGrade(2)">Grade 2</div>
+                                <div class="grade-pill" data-grade="3" onclick="toggleGrade(3)">Grade 3</div>
+                                <div class="grade-pill" data-grade="4" onclick="toggleGrade(4)">Grade 4</div>
+                                <div class="grade-pill" data-grade="5" onclick="toggleGrade(5)">Grade 5</div>
+                                <div class="grade-pill" data-grade="6" onclick="toggleGrade(6)">Grade 6</div>
+                                <div class="grade-pill" data-grade="7" onclick="toggleGrade(7)">Grade 7</div>
+                                <div class="grade-pill" data-grade="8" onclick="toggleGrade(8)">Grade 8</div>
+                            </div>
+                            <small class="text-muted">Click to select/deselect grades. Minimum 2 grades required.</small>
+                        </div>
+
+                        <div class="formula-display" id="formulaPreview">
+                            <strong>Formula Preview:</strong> <span id="formulaText">Select at least 2 grades</span>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6 mb-3">
+                                <label for="ruleStatus" class="form-label">Status</label>
+                                <select class="form-select" id="ruleStatus" required>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="rulePriority" class="form-label">Priority Order</label>
+                                <input type="number" class="form-control" id="rulePriority" value="1" min="1" required>
+                                <small class="text-muted">Lower number = higher priority</small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary-custom" onclick="saveAveragingRule()">
+                        <i class="fas fa-save me-2"></i>Save Rule
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ==================== DATA STORAGE ====================
+        let ratingMappings = [
+            {
+                grade: '1',
+                type: 'Investment Grade',
+                sp: 'AAA, AA+, AA, AA-',
+                moodys: 'Aaa, Aa1, Aa2, Aa3',
+                fitch: 'AAA, AA+, AA, AA-',
+                pd: '0.02',
+                comments: 'S&P DR - Internal PD closest mapping',
+                lastUpdated: '2025-08-15',
+                updatedBy: 'Admin'
+            },
+            {
+                grade: '2',
+                type: 'Investment Grade',
+                sp: 'A+, A, A-',
+                moodys: 'A1, A2, A3',
+                fitch: 'A+, A, A-',
+                pd: '0.05',
+                comments: 'S&P DR - Internal PD closest mapping',
+                lastUpdated: '2025-08-15',
+                updatedBy: 'Admin'
+            },
+            {
+                grade: '3',
+                type: 'Investment Grade',
+                sp: 'BBB+, BBB',
+                moodys: 'Baa1, Baa2',
+                fitch: 'BBB+, BBB',
+                pd: '0.10',
+                comments: 'S&P DR - Internal PD closest mapping',
+                lastUpdated: '2025-08-15',
+                updatedBy: 'Admin'
+            },
+            {
+                grade: '4',
+                type: 'Investment Grade',
+                sp: 'BBB-',
+                moodys: 'Baa3',
+                fitch: 'BBB-',
+                pd: '0.25',
+                comments: 'S&P DR - Internal PD closest mapping',
+                lastUpdated: '2025-08-15',
+                updatedBy: 'Admin'
+            },
+            {
+                grade: '5',
+                type: 'Below Investment Grade',
+                sp: 'BB+, BB, BB-',
+                moodys: 'Ba1, Ba2, Ba3',
+                fitch: 'BB+, BB, BB-',
+                pd: '0.75',
+                comments: 'S&P DR - Internal PD closest mapping / BB+ shifted from 4 to 5',
+                lastUpdated: '2025-08-15',
+                updatedBy: 'Admin'
+            },
+            {
+                grade: '6',
+                type: 'Below Investment Grade',
+                sp: 'B+',
+                moodys: 'B1',
+                fitch: 'B+',
+                pd: '2.50',
+                comments: 'S&P DR - Internal PD closest mapping',
+                lastUpdated: '2025-08-15',
+                updatedBy: 'Admin'
+            },
+            {
+                grade: '7',
+                type: 'Below Investment Grade',
+                sp: 'B, B-',
+                moodys: 'B2, B3',
+                fitch: 'B, B-',
+                pd: '6.00',
+                comments: 'S&P DR - Internal PD closest mapping',
+                lastUpdated: '2025-08-15',
+                updatedBy: 'Admin'
+            },
+            {
+                grade: '8',
+                type: 'Below Investment Grade',
+                sp: 'CCC+, CCC, CCC-, CC',
+                moodys: 'Caa1, Caa2, Caa3, Ca',
+                fitch: 'CCC+, CCC, CCC-, CC',
+                pd: '15.00',
+                comments: 'S&P DR - Internal PD closest mapping',
+                lastUpdated: '2025-08-15',
+                updatedBy: 'Admin'
+            }
+        ];
+
+        let averagingRules = [
+            {
+                category: 'Shareholder Services Loans',
+                description: 'Loans provided to shareholders of the company',
+                grades: [4, 5, 6],
+                status: 'Active',
+                priority: 1,
+                lastUpdated: '2025-08-15',
+                updatedBy: 'Admin'
+            },
+            {
+                category: 'Personal Net Worth / Startup / 100% Cash Margin',
+                description: 'Personal net worth declaration loans, startup project loans, and loans with minimum 100% cash margin',
+                grades: [5, 6, 7],
+                status: 'Active',
+                priority: 2,
+                lastUpdated: '2025-08-15',
+                updatedBy: 'Admin'
+            },
+            {
+                category: 'All Other Unrated Loans',
+                description: 'Default category for all unrated loans not covered by specific rules',
+                grades: [6, 7, 8],
+                status: 'Active',
+                priority: 3,
+                lastUpdated: '2025-08-15',
+                updatedBy: 'Admin'
+            }
+        ];
+
+        let selectedGrades = [];
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            renderRatingTable();
+            renderPDTable();
+            renderAveragingRulesTable();
+            updateDashboard();
+        });
+
+        // ==================== RATING MAPPING FUNCTIONS ====================
+        function renderRatingTable() {
+            const tbody = document.getElementById('ratingTableBody');
+            
+            if (ratingMappings.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="empty-state">
+                            <i class="fas fa-folder-open"></i>
+                            <p>No rating mappings configured. Click "Add New Mapping" to get started.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = ratingMappings.map((mapping, index) => `
+                <tr>
+                    <td><strong>Grade ${mapping.grade}</strong></td>
+                    <td>${mapping.sp}</td>
+                    <td>${mapping.moodys}</td>
+                    <td>${mapping.fitch}</td>
+                    <td>
+                        <span class="${mapping.type === 'Investment Grade' ? 'badge-investment' : 'badge-below-investment'}">
+                            ${mapping.type}
+                        </span>
+                    </td>
+                    <td>${mapping.comments}</td>
+                    <td>${mapping.lastUpdated}</td>
+                    <td>${mapping.updatedBy}</td>
+                    <td>
+                        <button class="btn-action btn-edit me-2" onclick="editRatingMapping(${index})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn-action btn-delete" onclick="deleteRatingMapping(${index})">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openRatingModal(index = null) {
+            const modal = new bootstrap.Modal(document.getElementById('ratingModal'));
+            const form = document.getElementById('ratingForm');
+            form.reset();
+
+            if (index !== null) {
+                // Edit mode
+                document.getElementById('ratingModalTitle').innerHTML = '<i class="fas fa-edit me-2"></i>Edit Rating Mapping';
+                document.getElementById('ratingEditIndex').value = index;
+                
+                const mapping = ratingMappings[index];
+                document.getElementById('internalGrade').value = mapping.grade;
+                document.getElementById('gradeType').value = mapping.type;
+                document.getElementById('spRatings').value = mapping.sp;
+                document.getElementById('moodysRatings').value = mapping.moodys;
+                document.getElementById('fitchRatings').value = mapping.fitch;
+                document.getElementById('comments').value = mapping.comments;
+            } else {
+                // Add mode
+                document.getElementById('ratingModalTitle').innerHTML = '<i class="fas fa-plus me-2"></i>Add Rating Mapping';
+                document.getElementById('ratingEditIndex').value = '';
+            }
+
+            modal.show();
+        }
+
+        function saveRatingMapping() {
+            const index = document.getElementById('ratingEditIndex').value;
+            const mapping = {
+                grade: document.getElementById('internalGrade').value,
+                type: document.getElementById('gradeType').value,
+                sp: document.getElementById('spRatings').value,
+                moodys: document.getElementById('moodysRatings').value,
+                fitch: document.getElementById('fitchRatings').value,
+                comments: document.getElementById('comments').value,
+                lastUpdated: new Date().toISOString().split('T')[0],
+                updatedBy: 'Admin',
+                pd: ratingMappings.find(m => m.grade === document.getElementById('internalGrade').value)?.pd || '0.00'
+            };
+
+            if (index === '') {
+                // Add new
+                ratingMappings.push(mapping);
+            } else {
+                // Update existing
+                ratingMappings[index] = mapping;
+            }
+
+            ratingMappings.sort((a, b) => parseInt(a.grade) - parseInt(b.grade));
+            
+            renderRatingTable();
+            renderPDTable();
+            updateDashboard();
+            
+            bootstrap.Modal.getInstance(document.getElementById('ratingModal')).hide();
+            
+            alert('Rating mapping saved successfully!');
+        }
+
+        function editRatingMapping(index) {
+            openRatingModal(index);
+        }
+
+        function deleteRatingMapping(index) {
+            if (confirm('Are you sure you want to delete this rating mapping?')) {
+                ratingMappings.splice(index, 1);
+                renderRatingTable();
+                renderPDTable();
+                updateDashboard();
+                alert('Rating mapping deleted successfully!');
+            }
+        }
+
+        // ==================== PD MAPPING FUNCTIONS ====================
+        function renderPDTable() {
+            const tbody = document.getElementById('pdTableBody');
+            
+            if (ratingMappings.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="empty-state">
+                            <i class="fas fa-folder-open"></i>
+                            <p>No PD mappings available. Add rating mappings first.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = ratingMappings.map((mapping, index) => {
+                const usedIn = getAveragingUsage(mapping.grade);
+                return `
+                    <tr>
+                        <td><strong>Grade ${mapping.grade}</strong></td>
+                        <td>
+                            <span class="${mapping.type === 'Investment Grade' ? 'badge-investment' : 'badge-below-investment'}">
+                                ${mapping.type}
+                            </span>
+                        </td>
+                        <td>${mapping.sp}</td>
+                        <td><strong>${mapping.pd}%</strong></td>
+                        <td>${usedIn}</td>
+                        <td>${mapping.lastUpdated}</td>
+                        <td>${mapping.updatedBy}</td>
+                        <td>
+                            <button class="btn-action btn-edit" onclick="openPDModal(${index})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function getAveragingUsage(grade) {
+            const g = parseInt(grade);
+            const usages = [];
+            
+            averagingRules.forEach(rule => {
+                if (rule.status === 'Active' && rule.grades.includes(g)) {
+                    usages.push(rule.category);
+                }
+            });
+            
+            if (usages.length === 0) return '-';
+            
+            return usages.map(u => {
+                const shortName = u.length > 20 ? u.substring(0, 20) + '...' : u;
+                return `<span class="averaging-badge" title="${u}">${shortName}</span>`;
+            }).join(' ');
+        }
+
+        function openPDModal(gradeIndex = null) {
+            const modal = new bootstrap.Modal(document.getElementById('pdModal'));
+            const tbody = document.getElementById('pdFormBody');
+            
+            tbody.innerHTML = ratingMappings.map((mapping, index) => `
+                <tr>
+                    <td><strong>Grade ${mapping.grade}</strong></td>
+                    <td>
+                        <span class="${mapping.type === 'Investment Grade' ? 'badge-investment' : 'badge-below-investment'}">
+                            ${mapping.type}
+                        </span>
+                    </td>
+                    <td>${mapping.sp}</td>
+                    <td>
+                        <div class="pd-input-group input-group">
+                            <input type="number" step="0.01" min="0" max="100" 
+                                   class="form-control" id="pdValue${index}" 
+                                   value="${mapping.pd}" required>
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            modal.show();
+        }
+
+        function savePDValues() {
+            ratingMappings.forEach((mapping, index) => {
+                const newPD = document.getElementById(`pdValue${index}`).value;
+                mapping.pd = newPD;
+                mapping.lastUpdated = new Date().toISOString().split('T')[0];
+                mapping.updatedBy = 'Admin';
+            });
+
+            renderPDTable();
+            renderRatingTable();
+            updateDashboard();
+            
+            bootstrap.Modal.getInstance(document.getElementById('pdModal')).hide();
+            
+            alert('PD values updated successfully!');
+        }
+
+        // ==================== AVERAGING RULES FUNCTIONS ====================
+        function renderAveragingRulesTable() {
+            const tbody = document.getElementById('averagingRulesBody');
+            
+            if (averagingRules.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <i class="fas fa-folder-open"></i>
+                            <p>No averaging rules configured. Click "Add Averaging Rule" to get started.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // Sort by priority
+            const sortedRules = [...averagingRules].sort((a, b) => a.priority - b.priority);
+
+            tbody.innerHTML = sortedRules.map((rule, index) => {
+                const actualIndex = averagingRules.indexOf(rule);
+                const formula = generateFormula(rule.grades);
+                const gradesBadges = rule.grades.map(g => `<span class="averaging-badge">Grade ${g}</span>`).join(' ');
+                
+                return `
+                    <tr>
+                        <td>
+                            <strong>${rule.category}</strong>
+                            ${rule.description ? `<br><small class="text-muted">${rule.description}</small>` : ''}
+                        </td>
+                        <td><code>${formula}</code></td>
+                        <td>${gradesBadges}</td>
+                        <td>
+                            <span class="${rule.status === 'Active' ? 'status-active' : 'status-inactive'}">
+                                ${rule.status}
+                            </span>
+                        </td>
+                        <td>${rule.lastUpdated}</td>
+                        <td>
+                            <button class="btn-action btn-edit me-2" onclick="editAveragingRule(${actualIndex})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn-action btn-delete" onclick="deleteAveragingRule(${actualIndex})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function generateFormula(grades) {
+            if (!grades || grades.length === 0) return 'N/A';
+            
+            const pdTerms = grades.map(g => `PD<sub>${g}</sub>`).join(' + ');
+            return `PD = (${pdTerms}) / ${grades.length}`;
+        }
+
+        function openAveragingRuleModal(index = null) {
+            const modal = new bootstrap.Modal(document.getElementById('averagingRuleModal'));
+            const form = document.getElementById('averagingRuleForm');
+            form.reset();
+            
+            // Clear selected grades
+            selectedGrades = [];
+            document.querySelectorAll('.grade-pill').forEach(pill => {
+                pill.classList.remove('selected');
+            });
+
+            if (index !== null) {
+                // Edit mode
+                document.getElementById('averagingRuleModalTitle').innerHTML = '<i class="fas fa-edit me-2"></i>Edit Averaging Rule';
+                document.getElementById('averagingRuleEditIndex').value = index;
+                
+                const rule = averagingRules[index];
+                document.getElementById('loanCategory').value = rule.category;
+                document.getElementById('categoryDescription').value = rule.description || '';
+                document.getElementById('ruleStatus').value = rule.status;
+                document.getElementById('rulePriority').value = rule.priority;
+                
+                // Select grades
+                selectedGrades = [...rule.grades];
+                selectedGrades.forEach(grade => {
+                    document.querySelector(`.grade-pill[data-grade="${grade}"]`).classList.add('selected');
+                });
+                
+                updateFormulaPreview();
+            } else {
+                // Add mode
+                document.getElementById('averagingRuleModalTitle').innerHTML = '<i class="fas fa-plus me-2"></i>Add Averaging Rule';
+                document.getElementById('averagingRuleEditIndex').value = '';
+                document.getElementById('rulePriority').value = averagingRules.length + 1;
+                updateFormulaPreview();
+            }
+
+            modal.show();
+        }
+
+        function toggleGrade(grade) {
+            const index = selectedGrades.indexOf(grade);
+            const pill = document.querySelector(`.grade-pill[data-grade="${grade}"]`);
+            
+            if (index > -1) {
+                selectedGrades.splice(index, 1);
+                pill.classList.remove('selected');
+            } else {
+                selectedGrades.push(grade);
+                pill.classList.add('selected');
+            }
+            
+            selectedGrades.sort((a, b) => a - b);
+            updateFormulaPreview();
+        }
+
+        function updateFormulaPreview() {
+            const formulaText = document.getElementById('formulaText');
+            
+            if (selectedGrades.length < 2) {
+                formulaText.textContent = 'Select at least 2 grades';
+                formulaText.style.color = '#dc3545';
+            } else {
+                const formula = generateFormula(selectedGrades);
+                formulaText.innerHTML = formula;
+                formulaText.style.color = '#28a745';
+            }
+        }
+
+        function saveAveragingRule() {
+            if (selectedGrades.length < 2) {
+                alert('Please select at least 2 grades for averaging.');
+                return;
+            }
+
+            const index = document.getElementById('averagingRuleEditIndex').value;
+            const rule = {
+                category: document.getElementById('loanCategory').value,
+                description: document.getElementById('categoryDescription').value,
+                grades: [...selectedGrades],
+                status: document.getElementById('ruleStatus').value,
+                priority: parseInt(document.getElementById('rulePriority').value),
+                lastUpdated: new Date().toISOString().split('T')[0],
+                updatedBy: 'Admin'
+            };
+
+            if (index === '') {
+                // Add new
+                averagingRules.push(rule);
+            } else {
+                // Update existing
+                averagingRules[index] = rule;
+            }
+            
+            renderAveragingRulesTable();
+            renderPDTable(); // Refresh to show updated usage
+            
+            bootstrap.Modal.getInstance(document.getElementById('averagingRuleModal')).hide();
+            
+            alert('Averaging rule saved successfully!');
+        }
+
+        function editAveragingRule(index) {
+            openAveragingRuleModal(index);
+        }
+
+        function deleteAveragingRule(index) {
+            if (confirm('Are you sure you want to delete this averaging rule?')) {
+                averagingRules.splice(index, 1);
+                renderAveragingRulesTable();
+                renderPDTable();
+                alert('Averaging rule deleted successfully!');
+            }
+        }
+
+        // ==================== DASHBOARD UPDATE ====================
+        function updateDashboard() {
+            document.getElementById('totalMappings').textContent = ratingMappings.length;
+            
+            const investment = ratingMappings.filter(m => m.type === 'Investment Grade').length;
+            const belowInvestment = ratingMappings.filter(m => m.type === 'Below Investment Grade').length;
+            
+            document.getElementById('investmentGrade').textContent = investment;
+            document.getElementById('belowInvestmentGrade').textContent = belowInvestment;
+            
+            if (ratingMappings.length > 0) {
+                const lastUpdate = ratingMappings.reduce((latest, mapping) => {
+                    return mapping.lastUpdated > latest ? mapping.lastUpdated : latest;
+                }, '');
+                document.getElementById('lastUpdated').textContent = lastUpdate;
+            }
+        }
+
+        // ==================== UTILITY FUNCTIONS ====================
+        function getPDAverageForCategory(categoryName) {
+            const rule = averagingRules.find(r => r.category === categoryName && r.status === 'Active');
+            if (!rule) return null;
+            
+            const pdValues = rule.grades.map(g => {
+                const mapping = ratingMappings.find(m => parseInt(m.grade) === g);
+                return mapping ? parseFloat(mapping.pd) : 0;
+            });
+            
+            const average = pdValues.reduce((a, b) => a + b, 0) / pdValues.length;
+            return average.toFixed(4);
+        }
+
+        function getApplicableAveragingRule(loanType) {
+            // Sort by priority and return first active match
+            const sortedRules = [...averagingRules]
+                .filter(r => r.status === 'Active')
+                .sort((a, b) => a.priority - b.priority);
+            
+            // In real implementation, match based on loanType
+            // For now, return first active rule
+            return sortedRules.length > 0 ? sortedRules[0] : null;
+        }
+
+        // Export function for use in credit assessment
+        function exportPDMapping() {
+            return {
+                mappings: ratingMappings,
+                averagingRules: averagingRules.filter(r => r.status === 'Active'),
+                getGradePD: (grade) => {
+                    const mapping = ratingMappings.find(m => m.grade === grade.toString());
+                    return mapping ? parseFloat(mapping.pd) : 0;
+                },
+                getAveragePD: (categoryName) => getPDAverageForCategory(categoryName),
+                getApplicableRule: (loanType) => getApplicableAveragingRule(loanType)
+            };
+        }
+
+        // Make available globally
+        window.PDMapping = exportPDMapping;
+    </script>
+</body>
+</html>

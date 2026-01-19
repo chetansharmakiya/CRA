@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 6B: Facility Grading Override - Cash Security</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-dark: #11224E;
+            --primary-orange: #F87B1B;
+            --accent-green: #CBD99B;
+            --background-light: #EEEEEE;
+            --text-dark: #1a1a1a;
+            --text-light: #6c757d;
+            --border-color: #dee2e6;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            padding: 2rem;
+        }
+        
+        .stepper-container {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .step-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid var(--primary-orange);
+        }
+        
+        .step-title {
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .step-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        .alert-info-custom {
+            background: rgba(23, 162, 184, 0.1);
+            border-left: 4px solid var(--info);
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .alert-info-custom h5 {
+            color: var(--info);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .override-section {
+            background: var(--background-light);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-label {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .info-card {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all var(--transition-speed);
+        }
+        
+        .info-card:hover {
+            border-color: var(--primary-orange);
+            box-shadow: 0 4px 12px rgba(248, 123, 27, 0.15);
+        }
+        
+        .info-card.active {
+            border-color: var(--success);
+            background: rgba(40, 167, 69, 0.05);
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+        
+        .info-value {
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+        }
+        
+        .grade-badge {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        
+        .grade-badge.grade-1 {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        
+        .grade-badge.grade-2 {
+            background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+            color: white;
+        }
+        
+        .coverage-display {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .coverage-title {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .coverage-value {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin: 0.5rem 0;
+        }
+        
+        .coverage-subtitle {
+            font-size: 1rem;
+            opacity: 0.85;
+        }
+        
+        .override-result {
+            background: white;
+            border: 3px solid var(--success);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .override-result.pending {
+            border-color: var(--warning);
+        }
+        
+        .override-result.not-applicable {
+            border-color: var(--text-light);
+            opacity: 0.7;
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .result-icon.success {
+            color: var(--success);
+        }
+        
+        .result-icon.warning {
+            color: var(--warning);
+        }
+        
+        .result-icon.na {
+            color: var(--text-light);
+        }
+        
+        .result-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-message {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .comparison-item {
+            background: var(--background-light);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        
+        .comparison-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .comparison-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .arrow-indicator {
+            font-size: 2rem;
+            color: var(--primary-orange);
+            margin: 0 1rem;
+        }
+        
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+        
+        .matrix-table thead {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .matrix-table th {
+            padding: 1rem;
+            font-weight: 600;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+        
+        .matrix-table td {
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .matrix-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .matrix-table tbody tr.highlight {
+            background: rgba(248, 123, 27, 0.1);
+            border-left: 4px solid var(--primary-orange);
+        }
+        
+        .remarks-section {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .form-control,
+        .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            transition: all var(--transition-speed);
+        }
+        
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.2rem rgba(248, 123, 27, 0.25);
+            outline: none;
+        }
+        
+        .alert-warning-custom {
+            background: rgba(255, 193, 7, 0.15);
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .alert-danger-custom {
+            background: rgba(220, 53, 69, 0.15);
+            border-left: 4px solid var(--danger);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .alert-success-custom {
+            background: rgba(40, 167, 69, 0.15);
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .stepper-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--background-light);
+        }
+        
+        .btn {
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary-custom {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .btn-primary-custom:hover {
+            background: #1a3570;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(17, 34, 78, 0.3);
+        }
+        
+        .btn-orange {
+            background: var(--primary-orange);
+            color: white;
+        }
+        
+        .btn-orange:hover {
+            background: #e06a0a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(248, 123, 27, 0.3);
+        }
+        
+        .btn-outline-custom {
+            border: 2px solid var(--primary-dark);
+            background: transparent;
+            color: var(--primary-dark);
+        }
+        
+        .btn-outline-custom:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .status-pill {
+            display: inline-block;
+            padding: 0.35rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-pill.active {
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--success);
+        }
+        
+        .status-pill.inactive {
+            background: rgba(108, 117, 125, 0.2);
+            color: #6c757d;
+        }
+        
+        .audit-log {
+            background: #f8f9fa;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease-in;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stepper-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stepper-container">
+        <!-- Step Header -->
+        <div class="step-header">
+            <h3 class="step-title">
+                <i class="fas fa-shield-alt"></i>
+                Step 6B: Facility Grading Override (Cash Security Adjustment)
+            </h3>
+            <p class="step-subtitle">
+                Apply facility-level rating overrides based on cash collateral coverage as per Bank's Facility Grading Policy
+            </p>
+        </div>
+        
+        <!-- Info Alert -->
+        <div class="alert-info-custom">
+            <h5><i class="fas fa-info-circle me-2"></i>Override Logic - Cash Security Coverage</h5>
+            <p class="mb-0">
+                This step evaluates if the entity's credit limits are fully secured by cash collateral. 
+                If applicable, the system will automatically override the calculated rating grade based on the coverage level 
+                <strong></strong>.
+            </p>
+        </div>
+        
+        <!-- Cash Security Status Check -->
+        <div class="override-section fade-in">
+            <h4 class="section-label">
+                <i class="fas fa-check-circle"></i>
+                Cash Security Status
+            </h4>
+            
+            <div class="info-card active" id="cashSecurityCard">
+                <div class="info-row">
+                    <span class="info-label">Cash Security Available:</span>
+                    <span class="info-value">
+                        <span class="status-pill active" id="cashSecurityStatus">
+                            <i class="fas fa-check-circle"></i> YES
+                        </span>
+                    </span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Total Credit Limit Amount:</span>
+                    <span class="info-value" id="totalCreditLimitDisplay">KWD 1,500,000.00</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Cash Collateral Amount:</span>
+                    <span class="info-value" id="cashCollateralDisplay">KWD 1,650,000.00</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Cash Coverage Percentage:</span>
+                    <span class="info-value" id="coveragePercentDisplay">110%</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Coverage Visualization -->
+        <div class="coverage-display fade-in">
+            <div class="coverage-title">Cash Collateral Coverage</div>
+            <div class="coverage-value" id="coverageValueDisplay">110%</div>
+            <div class="coverage-subtitle">Cash as per Policy (≥110%)</div>
+        </div>
+        
+        <!-- Facility Grading Matrix -->
+        <div class="override-section fade-in">
+            <h4 class="section-label">
+                <i class="fas fa-table"></i>
+                Cash Security Coverage Matrix
+            </h4>
+            
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th>Coverage Level</th>
+                        <th>Facility Grade</th>
+                        <th>Adjustment to ORR</th>
+                        <th>Final Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight" id="matrixRow1">
+                        <td><strong>≥110% (Cash as per Policy)</strong></td>
+                        <td><span class="grade-badge grade-1">Grade 1</span></td>
+                        <td>Change ORR to 1</td>
+                        <td><strong>Force Final Grade = 1</strong></td>
+                    </tr>
+                    <tr id="matrixRow2">
+                        <td>100% to &lt;110% (Cash at 100%)</td>
+                        <td><span class="grade-badge grade-2">Grade 2</span></td>
+                        <td>Change ORR to 2</td>
+                        <td>Force Final Grade = 2</td>
+                    </tr>
+                    <tr id="matrixRow3">
+                        <td>&lt;100% (Partial Security)</td>
+                        <td>Not applicable</td>
+                        <td>No override</td>
+                        <td>Use calculated grade</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Rating Comparison Before/After Override -->
+        <div class="override-section fade-in">
+            <h4 class="section-label">
+                <i class="fas fa-exchange-alt"></i>
+                Rating Grade Adjustment
+            </h4>
+            
+            <div class="comparison-grid">
+                <div class="comparison-item">
+                    <div class="comparison-label">Calculated Grade (Pre-Override)</div>
+                    <div class="comparison-value" id="preOverrideGrade">5</div>
+                    <small class="text-muted">From STEP 5</small>
+                </div>
+                
+                <div class="comparison-item" style="display: flex; align-items: center; justify-content: center; background: transparent;">
+                    <i class="fas fa-arrow-right arrow-indicator"></i>
+                </div>
+                
+                <div class="comparison-item" style="border: 3px solid var(--success);">
+                    <div class="comparison-label">Final Grade (Post Override)</div>
+                    <div class="comparison-value" style="color: var(--success);" id="postOverrideGrade">1</div>
+                    <small style="color: var(--success); font-weight: 600;">
+                        <i class="fas fa-shield-alt"></i> Cash Override Applied
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Override Result Card -->
+        <div class="override-result fade-in" id="overrideResultCard">
+            <div class="result-header">
+                <div class="result-icon success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h4 class="result-title">Facility Grade 1 Applied</h4>
+                <p class="result-message">
+                    Cash collateral as per policy (≥110%). Final rating grade changed to <strong>Grade 1</strong>.
+                </p>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-row">
+                    <span class="info-label">Facility Grade Assigned:</span>
+                    <span class="info-value"><span class="grade-badge grade-1">Grade 1</span></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Override Justification:</span>
+                    <span class="info-value" style="font-size: 0.95rem; font-weight: 500;">
+                        Entire credit limits fully secured by cash as per Bank's Facility Grading Policy
+                    </span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Policy Reference:</span>
+                    <span class="info-value" style="font-size: 0.9rem; font-weight: 500;">
+                        Credit Risk Management Policy V19, Page 55
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Business Rules Display -->
+        <div class="alert-success-custom fade-in">
+            <h6 style="font-weight: 700; margin-bottom: 0.75rem;">
+                <i class="fas fa-check me-2"></i>Override Priority Hierarchy Applied
+            </h6>
+            <ol style="margin-bottom: 0; padding-left: 1.5rem;">
+                <li>Mandatory Overrides (STEP 5) - <strong>Applied</strong></li>
+                <li>Discretionary Overrides (STEP 5) - <strong>Applied</strong></li>
+				 <li>Qualitative Factors (STEP 6) - <strong>Applied</strong></li>
+                <li><strong>Facility Grading Override (STEP 6B) - Active (Takes Final Precedence)</strong></li>
+            </ol>
+        </div>
+        
+        <!-- Conditional: Non-Performing Exception Alert -->
+        <div class="alert-danger-custom" id="npExceptionAlert" style="display: none;">
+            <h6 style="font-weight: 700; color: var(--danger); margin-bottom: 0.5rem;">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Non-Performing Asset Exception
+            </h6>
+            <p class="mb-0">
+                Facility grading override is <strong>NOT APPLICABLE</strong> for Non-Performing borrowers 
+                (Grades 9, 10, or 11 based on asset classification). System-assigned NP rating remains final.
+            </p>
+        </div>
+        
+        <!-- Conditional: External Rating Interaction Warning -->
+        <div class="alert-warning-custom" id="externalRatingWarning" style="display: none;">
+            <h6 style="font-weight: 700; margin-bottom: 0.5rem;">
+                <i class="fas fa-star me-2"></i>
+                External Rating & Cash Security Interaction
+            </h6>
+            <p class="mb-0">
+                Both external rating mapping (Grade <strong id="externalRatingGrade">3</strong>) and cash security override 
+                (Grade <strong id="cashSecurityGrade">1</strong>) are applicable. 
+                As per policy, <strong>cash security override takes priority</strong>. 
+                Final Grade = <strong id="finalGradeResult">1</strong>.
+            </p>
+        </div>
+        
+        <!-- User Remarks Section -->
+        <div class="remarks-section fade-in">
+            <h5 style="color: var(--primary-dark); font-weight: 700; margin-bottom: 1rem;">
+                <i class="fas fa-comment-dots me-2"></i>
+                Additional Remarks (Optional)
+            </h5>
+            <div class="form-group">
+                <label for="overrideRemarks" class="form-label">
+                    Add any additional comments regarding this override:
+                </label>
+                <textarea 
+                    class="form-control" 
+                    id="overrideRemarks" 
+                    rows="4" 
+                    placeholder="Enter additional remarks or justification for this facility grading override..."
+                ></textarea>
+                <small class="form-text text-muted">
+                    <i class="fas fa-info-circle"></i> 
+                    Optional: Use this field to document special circumstances, collateral details, or any other relevant information
+                </small>
+            </div>
+        </div>
+        
+        <!-- Audit Trail -->
+        <!-- <div class="audit-log fade-in"> -->
+            <!-- <strong><i class="fas fa-history me-2"></i>Audit Trail:</strong><br> -->
+            <!-- Override Applied: <strong id="auditTimestamp">2025-12-08 14:35:22 IST</strong><br> -->
+            <!-- Applied By: <strong id="auditUser">John Doe (Risk Maker)</strong><br> -->
+            <!-- Cash Coverage: <strong id="auditCoverage">110%</strong><br> -->
+            <!-- Facility Grade: <strong id="auditGrade">Grade 1</strong><br> -->
+            <!-- Pre-Override Rating: <strong id="auditPreRating">5</strong> | Post-Override Rating: <strong id="auditPostRating">1</strong> -->
+        <!-- </div> -->
+        
+        <!-- Action Buttons -->
+        <div class="stepper-actions">
+            <button type="button" class="btn btn-outline-custom" id="btnPrevious">
+                <i class="fas fa-arrow-left"></i>
+                Previous Step
+            </button>
+            
+            <div style="display: flex; gap: 1rem;">
+                <button type="button" class="btn btn-primary-custom" id="btnSaveDraft">
+                    <i class="fas fa-save"></i>
+                    Save as Draft
+                </button>
+                <button type="button" class="btn btn-orange" id="btnNext">
+                    Confirm & Continue
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // =======================================================
+        // FACILITY GRADING OVERRIDE - JAVASCRIPT LOGIC
+        // =======================================================
+        
+        // Sample data from STEP 1 (Entity Details - Cash Security Fields)
+        const assessmentData = {
+            cashSecurityAvailable: 'yes',
+            totalCreditLimit: 1500000,
+            cashCollateralAmount: 1650000,
+            coveragePercentage: 110,
+            calculatedGradePreOverride: 5,
+            externalRatingAvailable: 'no',
+            externalRatingGrade: null,
+            isNonPerforming: false,
+            npRating: null
+        };
+        
+        // Function to determine facility grade based on coverage
+        function determineFacilityGrade(coveragePercent) {
+            if (coveragePercent >= 110) {
+                return {
+                    grade: 1,
+                    label: 'Grade 1',
+                    description: 'Cash as per Policy (≥110%)',
+                    message: 'Facility Grade 1 applied: Cash collateral as per policy (≥110%). Final rating grade changed to 1.'
+                };
+            } else if (coveragePercent >= 100 && coveragePercent < 110) {
+                return {
+                    grade: 2,
+                    label: 'Grade 2',
+                    description: 'Cash at 100% of facility',
+                    message: 'Facility Grade 2 applied: Cash collateral at 100% of facility. Final rating grade changed to 2.'
+                };
+            } else {
+                return {
+                    grade: null,
+                    label: 'Not Applicable',
+                    description: 'Coverage below 100%',
+                    message: 'Cash coverage below 100%. Facility grading override not applicable.'
+                };
+            }
+        }
+        
+        // Function to apply override logic
+        function applyFacilityOverride() {
+            // Check if cash security is available
+            if (assessmentData.cashSecurityAvailable !== 'yes') {
+                document.getElementById('overrideResultCard').classList.add('not-applicable');
+                document.querySelector('.result-icon').classList.remove('success');
+                document.querySelector('.result-icon').classList.add('na');
+                document.querySelector('.result-title').textContent = 'Cash Security Override Not Available';
+                document.querySelector('.result-message').textContent = 'No cash security flagged in STEP 1. Using calculated rating grade.';
+                document.getElementById('postOverrideGrade').textContent = assessmentData.calculatedGradePreOverride;
+                document.getElementById('postOverrideGrade').style.color = 'var(--text-dark)';
+                return;
+            }
+            
+            // Check for Non-Performing Exception
+            if (assessmentData.isNonPerforming && [9, 10, 11].includes(assessmentData.npRating)) {
+                document.getElementById('npExceptionAlert').style.display = 'block';
+                document.getElementById('overrideResultCard').style.display = 'none';
+                return;
+            }
+            
+            // Determine facility grade
+            const facilityResult = determineFacilityGrade(assessmentData.coveragePercentage);
+            
+            // Update matrix highlighting
+            document.querySelectorAll('.matrix-table tbody tr').forEach(row => row.classList.remove('highlight'));
+            if (facilityResult.grade === 1) {
+                document.getElementById('matrixRow1').classList.add('highlight');
+            } else if (facilityResult.grade === 2) {
+                document.getElementById('matrixRow2').classList.add('highlight');
+            } else {
+                document.getElementById('matrixRow3').classList.add('highlight');
+            }
+            
+            // Update displays
+            document.getElementById('totalCreditLimitDisplay').textContent = 
+                `KWD ${assessmentData.totalCreditLimit.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            document.getElementById('cashCollateralDisplay').textContent = 
+                `KWD ${assessmentData.cashCollateralAmount.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            document.getElementById('coveragePercentDisplay').textContent = `${assessmentData.coveragePercentage}%`;
+            document.getElementById('coverageValueDisplay').textContent = `${assessmentData.coveragePercentage}%`;
+            document.getElementById('preOverrideGrade').textContent = assessmentData.calculatedGradePreOverride;
+            
+            if (facilityResult.grade) {
+                document.getElementById('postOverrideGrade').textContent = facilityResult.grade;
+                document.querySelector('.result-title').textContent = `${facilityResult.label} Applied`;
+                document.querySelector('.result-message').textContent = facilityResult.message;
+                document.querySelector('.coverage-subtitle').textContent = facilityResult.description;
+                
+                // Update grade badge display
+                const gradeBadge = document.querySelector('.info-value .grade-badge');
+                gradeBadge.className = `grade-badge grade-${facilityResult.grade}`;
+                gradeBadge.textContent = facilityResult.label;
+                
+                // Check for external rating interaction
+                if (assessmentData.externalRatingAvailable === 'yes' && assessmentData.externalRatingGrade) {
+                    document.getElementById('externalRatingWarning').style.display = 'block';
+                    document.getElementById('externalRatingGrade').textContent = assessmentData.externalRatingGrade;
+                    document.getElementById('cashSecurityGrade').textContent = facilityResult.grade;
+                    document.getElementById('finalGradeResult').textContent = facilityResult.grade;
+                }
+            } else {
+                document.getElementById('overrideResultCard').classList.add('not-applicable');
+                document.querySelector('.result-icon').classList.remove('success');
+                document.querySelector('.result-icon').classList.add('warning');
+                document.querySelector('.result-title').textContent = 'Override Not Applicable';
+                document.querySelector('.result-message').textContent = facilityResult.message;
+                document.getElementById('postOverrideGrade').textContent = assessmentData.calculatedGradePreOverride;
+                document.getElementById('postOverrideGrade').style.color = 'var(--text-dark)';
+            }
+            
+            // Update audit log
+            const now = new Date();
+            document.getElementById('auditTimestamp').textContent = now.toLocaleString('en-IN');
+            document.getElementById('auditCoverage').textContent = `${assessmentData.coveragePercentage}%`;
+            document.getElementById('auditGrade').textContent = facilityResult.grade ? facilityResult.label : 'N/A';
+            document.getElementById('auditPreRating').textContent = assessmentData.calculatedGradePreOverride;
+            document.getElementById('auditPostRating').textContent = facilityResult.grade || assessmentData.calculatedGradePreOverride;
+        }
+        
+        // Function to validate and save override
+        function saveOverride() {
+            const remarks = document.getElementById('overrideRemarks').value.trim();
+            
+            const overrideData = {
+                cashSecurityStatus: assessmentData.cashSecurityAvailable,
+                totalCreditLimit: assessmentData.totalCreditLimit,
+                cashCollateralAmount: assessmentData.cashCollateralAmount,
+                coveragePercentage: assessmentData.coveragePercentage,
+                facilityGrade: determineFacilityGrade(assessmentData.coveragePercentage).grade,
+                preOverrideRating: assessmentData.calculatedGradePreOverride,
+                postOverrideRating: determineFacilityGrade(assessmentData.coveragePercentage).grade || assessmentData.calculatedGradePreOverride,
+                remarks: remarks,
+                timestamp: new Date().toISOString(),
+                appliedBy: 'John Doe' // Replace with actual user from session
+            };
+            
+            console.log('Override Data Saved:', overrideData);
+            
+            // Store in sessionStorage or send to backend
+            sessionStorage.setItem('facilityOverrideData', JSON.stringify(overrideData));
+            
+            return overrideData;
+        }
+        
+        // Event Listeners
+        document.getElementById('btnPrevious').addEventListener('click', function() {
+            // Navigate to STEP 5 (Overrides)
+            console.log('Navigate to STEP 5');
+            window.location.href = '#step5'; // Replace with actual navigation logic
+        });
+        
+        document.getElementById('btnSaveDraft').addEventListener('click', function() {
+            const data = saveOverride();
+            alert('Facility grading override saved as draft!');
+            console.log('Draft saved:', data);
+        });
+        
+        document.getElementById('btnNext').addEventListener('click', function() {
+            const data = saveOverride();
+            console.log('Proceeding to next step with data:', data);
+            
+            // Navigate to STEP 6 (Qualitative Factors) or next step
+            window.location.href = '#step6'; // Replace with actual navigation logic
+        });
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            applyFacilityOverride();
+        });
+        
+        // =======================================================
+        // SCENARIO SIMULATION (FOR TESTING DIFFERENT CASES)
+        // =======================================================
+        
+        // Uncomment one of the scenarios below to test different use cases:
+        
+        // SCENARIO 1: Coverage ≥110% (Grade 1)
+        // assessmentData.coveragePercentage = 110;
+        // assessmentData.cashCollateralAmount = 1650000;
+        
+        // SCENARIO 2: Coverage 100%-110% (Grade 2)
+        // assessmentData.coveragePercentage = 105;
+        // assessmentData.cashCollateralAmount = 1575000;
+        
+        // SCENARIO 3: Coverage <100% (No Override)
+        // assessmentData.coveragePercentage = 95;
+        // assessmentData.cashCollateralAmount = 1425000;
+        
+        // SCENARIO 4: Non-Performing Exception
+        // assessmentData.isNonPerforming = true;
+        // assessmentData.npRating = 9;
+        
+        // SCENARIO 5: External Rating Conflict
+        // assessmentData.externalRatingAvailable = 'yes';
+        // assessmentData.externalRatingGrade = 3;
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,3365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Credit Risk Assessment System - Comprehensive banking solution for credit evaluation">
+    <title>Credit Assessment System | Dashboard</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+    
+    <style>
+        /* ============================================
+           CSS VARIABLES (Theme Colors)
+           Customize these variables to change theme
+           ============================================ */
+        :root {
+            --primary-dark: #11224E;      /* rgb(17, 34, 78) - Navy Blue */
+            --primary-orange: #F87B1B;    /* rgb(248, 123, 27) - Orange */
+            --accent-green: #CBD99B;      /* rgb(203, 217, 155) - Light Green */
+            --background-light: #EEEEEE;  /* rgb(238, 238, 238) - Light Gray */
+            --text-dark: #1a1a1a;
+            --text-light: #6c757d;
+            --border-color: #dee2e6;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --sidebar-width: 280px;
+            --header-height: 60px;
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+        
+        /* ============================================
+           HEADER / TOP BAR
+           ============================================ */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 1040;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+        }
+        
+        .hamburger-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-right: 1rem;
+            transition: transform var(--transition-speed);
+        }
+        
+        .hamburger-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .header-brand {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .theme-toggle {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* ============================================
+           LEFT SIDEBAR NAVIGATION
+           Collapsible, opens only on hamburger click
+           ============================================ */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: white;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            z-index: 1030;
+            transform: translateX(-100%);
+            transition: transform var(--transition-speed) ease-in-out;
+            overflow-y: auto;
+        }
+        
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: 100%;
+            height: calc(100vh - var(--header-height));
+            background: rgba(0,0,0,0.5);
+            z-index: 1020;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed), visibility var(--transition-speed);
+        }
+        
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 1rem 0;
+        }
+        
+        .sidebar-nav-item {
+            margin: 0.25rem 0.75rem;
+        }
+        
+        .sidebar-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all var(--transition-speed);
+            font-weight: 500;
+        }
+        
+        .sidebar-nav-link:hover,
+        .sidebar-nav-link.active {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            color: white;
+        }
+        
+        .sidebar-nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+        
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 1rem 0.75rem;
+        }
+        
+        /* ============================================
+           MAIN CONTENT AREA
+           ============================================ */
+        .main-content {
+            margin-top: var(--header-height);
+            padding: 2rem 1rem;
+            min-height: calc(100vh - var(--header-height));
+            transition: margin-left var(--transition-speed);
+        }
+        
+        @media (min-width: 992px) {
+            .main-content {
+                padding: 2rem 3rem;
+            }
+        }
+        
+        /* ============================================
+           DASHBOARD STATS CARDS
+           ============================================ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            border-left: 4px solid var(--primary-orange);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        
+        .stat-card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-card-icon.primary {
+            background: rgba(17, 34, 78, 0.1);
+            color: var(--primary-dark);
+        }
+        
+        .stat-card-icon.orange {
+            background: rgba(248, 123, 27, 0.1);
+            color: var(--primary-orange);
+        }
+        
+        .stat-card-icon.success {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+        
+        .stat-card-icon.info {
+            background: rgba(23, 162, 184, 0.1);
+            color: var(--info);
+        }
+        
+        .stat-card-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .stat-card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .stat-card-change {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        
+        .stat-card-change.positive {
+            color: var(--success);
+        }
+        
+        .stat-card-change.negative {
+            color: var(--danger);
+        }
+        
+        /* ============================================
+           SECTION CARDS
+           ============================================ */
+        .section-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--background-light);
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* ============================================
+           CHARTS CONTAINER
+           ============================================ */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        /* ============================================
+           ASSESSMENTS TABLE
+           ============================================ */
+        .table-responsive {
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .assessments-table {
+            width: 100%;
+            margin-bottom: 0;
+        }
+        
+        .assessments-table thead {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .assessments-table th {
+            font-weight: 600;
+            padding: 1rem;
+            border: none;
+        }
+        
+        .assessments-table td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+        
+        .assessments-table tbody tr {
+            transition: background-color var(--transition-speed);
+        }
+        
+        .assessments-table tbody tr:hover {
+            background-color: rgba(17, 34, 78, 0.03);
+        }
+        
+        /* ============================================
+           BADGES
+           ============================================ */
+        .status-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-badge.pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #856404;
+        }
+        
+        .status-badge.completed {
+            background: rgba(40, 167, 69, 0.2);
+            color: #155724;
+        }
+        
+        .status-badge.draft {
+            background: rgba(108, 117, 125, 0.2);
+            color: #383d41;
+        }
+        
+        .status-badge.in-progress {
+            background: rgba(23, 162, 184, 0.2);
+            color: #0c5460;
+        }
+        
+        .rating-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.25rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+        
+        .rating-badge.grade-a {
+            background: #28a745;
+            color: white;
+        }
+        
+        .rating-badge.grade-b {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .rating-badge.grade-c {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .rating-badge.grade-d {
+            background: #dc3545;
+            color: white;
+        }
+        
+        /* ============================================
+           WORKFLOW STAGE INDICATOR
+           ============================================ */
+        .workflow-stage {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .workflow-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+        
+        .workflow-icon.business {
+            background: rgba(23, 162, 184, 0.2);
+            color: #0c5460;
+        }
+        
+        .workflow-icon.risk {
+            background: rgba(255, 193, 7, 0.2);
+            color: #856404;
+        }
+        
+        .workflow-icon.approval {
+            background: rgba(40, 167, 69, 0.2);
+            color: #155724;
+        }
+        
+        /* ============================================
+           ACTION BUTTONS
+           ============================================ */
+        .btn-action {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            margin: 0 0.25rem;
+        }
+        
+        .btn-primary-custom {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .btn-primary-custom:hover {
+            background: #1a3570;
+            transform: translateY(-2px);
+        }
+        
+        .btn-orange {
+            background: var(--primary-orange);
+            color: white;
+        }
+        
+        .btn-orange:hover {
+            background: #e06a0a;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline-custom {
+            border: 1px solid var(--primary-dark);
+            background: transparent;
+            color: var(--primary-dark);
+        }
+        
+        .btn-outline-custom:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        /* ============================================
+           MULTI-STEP WIZARD / STEPPER
+           ============================================ */
+        .stepper-container {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .stepper-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .stepper-header::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 0;
+        }
+        
+        .stepper-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .stepper-step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--text-light);
+            transition: all var(--transition-speed);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stepper-step.active .stepper-step-circle {
+            background: var(--primary-orange);
+            border-color: var(--primary-orange);
+            color: white;
+        }
+        
+        .stepper-step.completed .stepper-step-circle {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        
+        .stepper-step-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-light);
+            text-align: center;
+        }
+        
+        .stepper-step.active .stepper-step-label {
+            color: var(--primary-orange);
+            font-weight: 600;
+        }
+        
+        .stepper-content {
+            min-height: 400px;
+            padding: 2rem 0;
+        }
+        
+        .step-panel {
+            display: none;
+        }
+        
+        .step-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stepper-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--background-light);
+        }
+        
+        /* ============================================
+           FORM ELEMENTS
+           ============================================ */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .form-label-required::after {
+            content: ' *';
+            color: var(--danger);
+        }
+        
+        .form-control,
+        .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            transition: all var(--transition-speed);
+        }
+        
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.2rem rgba(248, 123, 27, 0.25);
+        }
+        
+        .input-group-text {
+            background: var(--background-light);
+            border: 2px solid var(--border-color);
+            border-right: none;
+        }
+        
+        .input-group .form-control {
+            border-left: none;
+        }
+        
+        /* ============================================
+           FINANCIAL DATA GRID
+           ============================================ */
+        .financial-tabs {
+            margin-bottom: 1.5rem;
+        }
+        
+        .nav-tabs {
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--text-dark);
+            font-weight: 500;
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-orange);
+            border-bottom-color: var(--primary-orange);
+            background: transparent;
+        }
+        
+        .financial-grid {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+        }
+        
+        .financial-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        .financial-table th {
+            background: var(--primary-dark);
+            color: white;
+            padding: 0.75rem;
+            text-align: right;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        .financial-table th:first-child {
+            text-align: left;
+            min-width: 200px;
+        }
+        
+        .financial-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            text-align: right;
+        }
+        
+        .financial-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .financial-table input {
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            text-align: right;
+        }
+        
+        .financial-table input:focus {
+            border-color: var(--primary-orange);
+            outline: none;
+        }
+        
+        .financial-table tr.section-header td {
+            background: var(--background-light);
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        /* ============================================
+           RATIO DISPLAY
+           ============================================ */
+        .ratio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .ratio-card {
+            background: var(--background-light);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary-orange);
+        }
+        
+        .ratio-name {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .ratio-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .ratio-formula {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        /* ============================================
+           QUALITATIVE FACTORS
+           ============================================ */
+        .question-group {
+            margin-bottom: 2rem;
+        }
+        
+        .question-group-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            background: var(--background-light);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .question-group-content {
+            padding: 1rem 0;
+        }
+        
+        .question-item {
+            padding: 1rem;
+            border-left: 3px solid var(--primary-orange);
+            background: white;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        
+        /* ============================================
+           RATING RESULT DISPLAY
+           ============================================ */
+        .rating-result-card {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            color: white;
+            border-radius: 1rem;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .rating-grade-display {
+            font-size: 5rem;
+            font-weight: 900;
+            margin: 1rem 0;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .rating-score-display {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .rating-pd-display {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+        
+        .rating-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .breakdown-item {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .breakdown-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .breakdown-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        /* ============================================
+           MODAL CUSTOMIZATION
+           ============================================ */
+        .modal-header {
+            background: var(--primary-dark);
+            color: white;
+            border-bottom: none;
+        }
+        
+        .modal-header .btn-close {
+            filter: invert(1);
+        }
+        
+        .modal-title {
+            font-weight: 700;
+        }
+        
+        /* ============================================
+           EMPTY STATE
+           ============================================ */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-state-text {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* ============================================
+           TOAST NOTIFICATIONS
+           ============================================ */
+        .toast-container {
+            position: fixed;
+            top: calc(var(--header-height) + 1rem);
+            right: 1rem;
+            z-index: 1050;
+        }
+        
+        /* ============================================
+           SEARCH & FILTER BAR
+           ============================================ */
+        .search-filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stepper-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stepper-header::before {
+                display: none;
+            }
+            
+            .search-filter-bar {
+                flex-direction: column;
+            }
+            
+            .search-input {
+                width: 100%;
+            }
+            
+            .header-brand {
+                font-size: 1rem;
+            }
+            
+            .user-profile .user-name {
+                display: none;
+            }
+        }
+        
+        /* ============================================
+           ACCESSIBILITY FOCUS STYLES
+           ============================================ */
+        *:focus {
+            outline: 2px solid var(--primary-orange);
+            outline-offset: 2px;
+        }
+        
+        button:focus,
+        a:focus {
+            outline-width: 3px;
+        }
+        
+        /* ============================================
+           SMOOTH SCROLLING
+           ============================================ */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* ============================================
+           PRINT STYLES
+           ============================================ */
+        @media print {
+            .sidebar,
+            .top-header,
+            .hamburger-btn,
+            .theme-toggle,
+            .stepper-actions {
+                display: none !important;
+            }
+            
+            .main-content {
+                margin-top: 0;
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================
+         TOP HEADER
+         ============================================ -->
+    <header class="top-header" role="banner">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <a href="#" class="header-brand">
+            <i class="fas fa-chart-line"></i>
+            Credit Assessment System
+        </a>
+        
+        <div class="header-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+            
+            <div class="user-profile" role="button" tabindex="0" aria-label="User profile menu">
+                <div class="user-avatar">JD</div>
+                <span class="user-name d-none d-md-inline">John Doe</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </header>
+    
+    <!-- ============================================
+         SIDEBAR OVERLAY (click to close)
+         ============================================ -->
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+    
+    <!-- ============================================
+         LEFT SIDEBAR NAVIGATION
+         Closed by default, opens on hamburger click
+         ============================================ -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+        <nav>
+            <ul class="sidebar-nav">
+                <li class="sidebar-nav-item">
+                    <a href="#dashboard" class="sidebar-nav-link active" data-page="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="#new-assessment" class="sidebar-nav-link" data-page="assessment">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>New Assessment</span>
+                    </a>
+                </li>
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#assessments" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-list-alt"></i> -->
+                        <!-- <span>All Assessments</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#pending" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-clock"></i> -->
+                        <!-- <span>Pending Reviews</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                
+                <!-- <div class="sidebar-divider"></div> -->
+                
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#borrowers" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-users"></i> -->
+                        <!-- <span>Borrowers</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#templates" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-file-alt"></i> -->
+                        <!-- <span>Rating Templates</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#reports" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-chart-bar"></i> -->
+                        <!-- <span>Reports</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                
+                <!-- <div class="sidebar-divider"></div> -->
+                
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#workflows" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-project-diagram"></i> -->
+                        <!-- <span>Workflow Management</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#audit" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-history"></i> -->
+                        <!-- <span>Audit Trail</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                
+                <!-- <div class="sidebar-divider"></div> -->
+                
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#settings" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-cog"></i> -->
+                        <!-- <span>Settings</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li class="sidebar-nav-item"> -->
+                    <!-- <a href="#help" class="sidebar-nav-link"> -->
+                        <!-- <i class="fas fa-question-circle"></i> -->
+                        <!-- <span>Help & Support</span> -->
+                    <!-- </a> -->
+                <!-- </li> -->
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- ============================================
+         MAIN CONTENT AREA
+         ============================================ -->
+    <main class="main-content" id="mainContent" role="main">
+        <!-- DASHBOARD VIEW -->
+        <div id="dashboardView" class="page-view">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h2 mb-1" style="color: var(--primary-dark); font-weight: 700;">Dashboard</h1>
+                    <p class="text-muted mb-0">Real-time overview of portfolio risk and workflow status</p>
+                </div>
+                <button class="btn btn-orange btn-lg" id="newAssessmentBtn" aria-label="Start new credit assessment">
+                    <i class="fas fa-plus me-2"></i>New Assessment
+                </button>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="stats-grid" role="region" aria-label="Dashboard statistics">
+                <div class="stat-card">
+                    <div class="stat-card-icon primary">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-card-label">Total Borrowers</div>
+                    <div class="stat-card-value" id="totalBorrowersCount">247</div>
+                    <div class="stat-card-change positive">
+                        <i class="fas fa-arrow-up"></i> 12% from last month
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-card-label">Completed Assessments</div>
+                    <div class="stat-card-value" id="completedCount">189</div>
+                    <div class="stat-card-change positive">
+                        <i class="fas fa-arrow-up"></i> 8% from last month
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-icon orange">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-card-label">Pending Assessments</div>
+                    <div class="stat-card-value" id="pendingCount">34</div>
+                    <div class="stat-card-change negative">
+                        <i class="fas fa-arrow-down"></i> 3% from last month
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-icon info">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-card-label">Average Rating</div>
+                    <div class="stat-card-value" id="avgRating">BBB+</div>
+                    <div class="stat-card-change positive">
+                        <i class="fas fa-arrow-up"></i> Improved
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts Section -->
+            <div class="charts-grid" role="region" aria-label="Visual analytics">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <i class="fas fa-chart-bar"></i>
+                            Rating Distribution
+                        </h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="ratingDistributionChart" role="img" aria-label="Bar chart showing rating distribution"></canvas>
+                    </div>
+                </div>
+                
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <i class="fas fa-chart-pie"></i>
+                            Assessment Status
+                        </h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="statusPieChart" role="img" aria-label="Pie chart showing assessment status breakdown"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-chart-line"></i>
+                        Monthly Assessment Trend
+                    </h3>
+                </div>
+                <div class="chart-container" style="height: 250px;">
+                    <canvas id="monthlyTrendChart" role="img" aria-label="Line chart showing monthly assessment trend"></canvas>
+                </div>
+            </div>
+            
+            <!-- Recent Assessments Table -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-list"></i>
+                        Recent Assessments
+                    </h3>
+                    <button class="btn btn-outline-custom" id="viewAllBtn">
+                        View All <i class="fas fa-arrow-right ms-1"></i>
+                    </button>
+                </div>
+                
+                <!-- Search & Filter Bar -->
+                <div class="search-filter-bar">
+                    <div class="search-input">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search by entity name, ID, or CIF..." aria-label="Search assessments">
+                        </div>
+                    </div>
+                    <select class="form-select" id="statusFilter" style="max-width: 200px;" aria-label="Filter by status">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="completed">Completed</option>
+                        <option value="draft">Draft</option>
+                        <option value="in-progress">In Progress</option>
+                    </select>
+                    <select class="form-select" id="workflowFilter" style="max-width: 200px;" aria-label="Filter by workflow stage">
+                        <option value="">All Stages</option>
+                        <option value="business-maker">Business Maker</option>
+                        <option value="business-checker">Business Checker</option>
+                        <option value="risk-maker">Risk Maker</option>
+                        <option value="risk-checker">Risk Checker</option>
+                        <option value="final-approval">Final Approval</option>
+                    </select>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="assessments-table table" role="table" aria-label="Recent credit assessments">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Entity Name</th>
+                                <th scope="col">Template</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Workflow Stage</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Rating</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assessmentsTableBody">
+                            <!-- Dynamic content will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ASSESSMENT WORKFLOW VIEW -->
+        <div id="assessmentView" class="page-view" style="display: none;">
+            <div class="stepper-container">
+                <!-- Stepper Header -->
+                <div class="stepper-header" role="navigation" aria-label="Assessment progress">
+                    <div class="stepper-step completed" data-step="1">
+                        <div class="stepper-step-circle">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="stepper-step-label">Entity Details</div>
+                    </div>
+                    <div class="stepper-step active" data-step="2">
+                        <div class="stepper-step-circle">2</div>
+                        <div class="stepper-step-label">Financial Data</div>
+                    </div>
+                    <div class="stepper-step" data-step="3">
+                        <div class="stepper-step-circle">3</div>
+                        <div class="stepper-step-label">Projections</div>
+                    </div>
+                    <div class="stepper-step" data-step="4">
+                        <div class="stepper-step-circle">4</div>
+                        <div class="stepper-step-label">Financial Ratios</div>
+                    </div>
+                    <div class="stepper-step" data-step="5">
+                        <div class="stepper-step-circle">5</div>
+                        <div class="stepper-step-label">Qualitative</div>
+                    </div>
+                    <div class="stepper-step" data-step="6">
+                        <div class="stepper-step-circle">6</div>
+                        <div class="stepper-step-label">Rating Result</div>
+                    </div>
+                </div>
+                
+                <!-- Stepper Content -->
+                <div class="stepper-content">
+                    <!-- STEP 1: Entity Details -->
+                    <div class="step-panel" id="step1" data-step="1">
+                        <h3 class="mb-4" style="color: var(--primary-dark); font-weight: 700;">Step 1: Entity Details</h3>
+                        <p class="text-muted mb-4">Capture basic borrower information and select the rating model</p>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="cifNumber" class="form-label form-label-required">CIF Number</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="cifNumber" placeholder="Enter CIF Number" aria-label="CIF Number" required>
+                                        <button class="btn btn-orange" type="button" id="searchCifBtn" aria-label="Search CIF">
+                                            <i class="fas fa-search"></i> Search
+                                        </button>
+                                    </div>
+                                    <small class="form-text text-muted">Leave empty for new customer without CIF</small>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="entityName" class="form-label form-label-required">Entity Name</label>
+                                    <input type="text" class="form-control" id="entityName" placeholder="Enter entity name" aria-label="Entity Name" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="entityType" class="form-label form-label-required">Entity Type</label>
+                                    <select class="form-select" id="entityType" aria-label="Entity Type" required>
+                                        <option value="">Select entity type</option>
+                                        <option value="corporate">Corporate</option>
+                                        <option value="sme">SME (Small & Medium Enterprise)</option>
+                                        <option value="individual">Individual</option>
+                                        <option value="partnership">Partnership</option>
+                                        <option value="llp">Limited Liability Partnership</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="industrySector" class="form-label form-label-required">Industry Sector</label>
+                                    <select class="form-select" id="industrySector" aria-label="Industry Sector" required>
+                                        <option value="">Select industry sector</option>
+                                        <option value="manufacturing">Manufacturing</option>
+                                        <option value="services">Services</option>
+                                        <option value="retail">Retail & Trade</option>
+                                        <option value="agriculture">Agriculture</option>
+                                        <option value="technology">Technology & IT</option>
+                                        <option value="construction">Construction & Real Estate</option>
+                                        <option value="healthcare">Healthcare</option>
+                                        <option value="education">Education</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="businessActivity" class="form-label">Business Activity</label>
+                                    <input type="text" class="form-control" id="businessActivity" placeholder="Describe primary business activity" aria-label="Business Activity">
+                                    <small class="form-text text-muted">Required for non-CIF customers</small>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="cinetNumber" class="form-label">CINET Number</label>
+                                    <input type="text" class="form-control" id="cinetNumber" placeholder="Enter CINET number" aria-label="CINET Number">
+                                    <small class="form-text text-muted">For credit bureau validation</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="ratingTemplate" class="form-label form-label-required">Rating Template</label>
+                                    <select class="form-select" id="ratingTemplate" aria-label="Rating Template" required>
+                                        <option value="">Select rating template</option>
+                                        <option value="corporate-standard">Corporate - Standard Model</option>
+                                        <option value="corporate-advanced">Corporate - Advanced Model</option>
+                                        <option value="sme-simplified">SME - Simplified Model</option>
+                                        <option value="sme-comprehensive">SME - Comprehensive Model</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="financialYear" class="form-label form-label-required">Financial Year</label>
+                                    <select class="form-select" id="financialYear" aria-label="Financial Year" required>
+                                        <option value="">Select financial year</option>
+                                        <option value="2025-26">2025-26</option>
+                                        <option value="2024-25">2024-25</option>
+                                        <option value="2023-24">2023-24</option>
+                                        <option value="2022-23">2022-23</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="registrationNo" class="form-label">Registration Number</label>
+                                    <input type="text" class="form-control" id="registrationNo" placeholder="Company registration number" aria-label="Registration Number">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="taxId" class="form-label">Tax ID / PAN</label>
+                                    <input type="text" class="form-control" id="taxId" placeholder="Tax identification number" aria-label="Tax ID">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Historical Data Alert (shown for existing customers) -->
+                        <div class="alert alert-info d-none" id="historicalDataAlert" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Historical Data Available:</strong> Previous assessment found. Entity and financial data will be auto-loaded for comparison.
+                        </div>
+                    </div>
+                    
+                    <!-- STEP 2: Financial Data -->
+                    <div class="step-panel" id="step2" data-step="2">
+                        <h3 class="mb-4" style="color: var(--primary-dark); font-weight: 700;">Step 2: Financial Data</h3>
+                        <p class="text-muted mb-4">Capture Balance Sheet, P&L, and Cash Flow data</p>
+                        
+                        <!-- Year Selector -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="yearCount" class="form-label">Number of Historical Years</label>
+                                    <select class="form-select" id="yearCount" aria-label="Select number of years">
+                                        <option value="3">3 Years</option>
+                                        <option value="5" selected>5 Years</option>
+                                        <option value="10">10 Years</option>
+                                        <option value="15">15 Years</option>
+                                        <option value="20">20 Years</option>
+                                        <option value="30">30 Years</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Upload Financial Statements</label>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-outline-custom flex-fill" id="uploadExcelBtn" type="button">
+                                            <i class="fas fa-file-excel me-2"></i>Upload Excel
+                                        </button>
+                                        <button class="btn btn-outline-custom flex-fill" id="uploadOcrBtn" type="button">
+                                            <i class="fas fa-file-pdf me-2"></i>OCR Upload (PDF/Image)
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Financial Tabs -->
+                        <ul class="nav nav-tabs financial-tabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="balanceSheetTab" data-bs-toggle="tab" data-bs-target="#balanceSheet" type="button" role="tab" aria-controls="balanceSheet" aria-selected="true">
+                                    <i class="fas fa-balance-scale me-2"></i>Balance Sheet
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="plTab" data-bs-toggle="tab" data-bs-target="#profitLoss" type="button" role="tab" aria-controls="profitLoss" aria-selected="false">
+                                    <i class="fas fa-chart-line me-2"></i>Profit & Loss
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="cashFlowTab" data-bs-toggle="tab" data-bs-target="#cashFlow" type="button" role="tab" aria-controls="cashFlow" aria-selected="false">
+                                    <i class="fas fa-money-bill-wave me-2"></i>Cash Flow
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <!-- Tab Content -->
+                        <div class="tab-content mt-3">
+                            <!-- Balance Sheet Tab -->
+                            <div class="tab-pane fade show active" id="balanceSheet" role="tabpanel" aria-labelledby="balanceSheetTab">
+                                <div class="financial-grid">
+                                    <table class="financial-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Line Item</th>
+                                                <th>2025</th>
+                                                <th>2024</th>
+                                                <th>2023</th>
+                                                <th>2022</th>
+                                                <th>2021</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="section-header">
+                                                <td colspan="6">ASSETS</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Current Assets</td>
+                                                <td><input type="number" placeholder="0" aria-label="Current Assets 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Current Assets 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Current Assets 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Current Assets 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Current Assets 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>- Cash & Bank</td>
+                                                <td><input type="number" placeholder="0" aria-label="Cash 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Cash 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Cash 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Cash 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Cash 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>- Accounts Receivable</td>
+                                                <td><input type="number" placeholder="0" aria-label="Receivables 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Receivables 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Receivables 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Receivables 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Receivables 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>- Inventory</td>
+                                                <td><input type="number" placeholder="0" aria-label="Inventory 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Inventory 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Inventory 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Inventory 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Inventory 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Fixed Assets</td>
+                                                <td><input type="number" placeholder="0" aria-label="Fixed Assets 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Fixed Assets 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Fixed Assets 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Fixed Assets 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Fixed Assets 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Intangible Assets</td>
+                                                <td><input type="number" placeholder="0" aria-label="Intangibles 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Intangibles 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Intangibles 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Intangibles 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Intangibles 2021"></td>
+                                            </tr>
+                                            <tr class="section-header">
+                                                <td colspan="6">LIABILITIES</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Current Liabilities</td>
+                                                <td><input type="number" placeholder="0" aria-label="Current Liabilities 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Current Liabilities 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Current Liabilities 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Current Liabilities 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Current Liabilities 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Long-term Debt</td>
+                                                <td><input type="number" placeholder="0" aria-label="LT Debt 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="LT Debt 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="LT Debt 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="LT Debt 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="LT Debt 2021"></td>
+                                            </tr>
+                                            <tr class="section-header">
+                                                <td colspan="6">EQUITY</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Share Capital</td>
+                                                <td><input type="number" placeholder="0" aria-label="Share Capital 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Share Capital 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Share Capital 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Share Capital 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Share Capital 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Retained Earnings</td>
+                                                <td><input type="number" placeholder="0" aria-label="Retained Earnings 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Retained Earnings 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Retained Earnings 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Retained Earnings 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Retained Earnings 2021"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Profit & Loss Tab -->
+                            <div class="tab-pane fade" id="profitLoss" role="tabpanel" aria-labelledby="plTab">
+                                <div class="financial-grid">
+                                    <table class="financial-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Line Item</th>
+                                                <th>2025</th>
+                                                <th>2024</th>
+                                                <th>2023</th>
+                                                <th>2022</th>
+                                                <th>2021</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Revenue</td>
+                                                <td><input type="number" placeholder="0" aria-label="Revenue 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Revenue 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Revenue 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Revenue 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Revenue 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Cost of Goods Sold</td>
+                                                <td><input type="number" placeholder="0" aria-label="COGS 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="COGS 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="COGS 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="COGS 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="COGS 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Gross Profit</td>
+                                                <td><input type="number" placeholder="0" aria-label="Gross Profit 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Gross Profit 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Gross Profit 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Gross Profit 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Gross Profit 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Operating Expenses</td>
+                                                <td><input type="number" placeholder="0" aria-label="OpEx 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="OpEx 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="OpEx 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="OpEx 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="OpEx 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>EBITDA</td>
+                                                <td><input type="number" placeholder="0" aria-label="EBITDA 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="EBITDA 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="EBITDA 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="EBITDA 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="EBITDA 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Interest Expense</td>
+                                                <td><input type="number" placeholder="0" aria-label="Interest 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Interest 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Interest 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Interest 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Interest 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Tax Expense</td>
+                                                <td><input type="number" placeholder="0" aria-label="Tax 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Tax 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Tax 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Tax 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Tax 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Net Income</td>
+                                                <td><input type="number" placeholder="0" aria-label="Net Income 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Net Income 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Net Income 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Net Income 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Net Income 2021"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Cash Flow Tab -->
+                            <div class="tab-pane fade" id="cashFlow" role="tabpanel" aria-labelledby="cashFlowTab">
+                                <div class="financial-grid">
+                                    <table class="financial-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Line Item</th>
+                                                <th>2025</th>
+                                                <th>2024</th>
+                                                <th>2023</th>
+                                                <th>2022</th>
+                                                <th>2021</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="section-header">
+                                                <td colspan="6">OPERATING ACTIVITIES</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Net Income</td>
+                                                <td><input type="number" placeholder="0" aria-label="CF Net Income 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="CF Net Income 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="CF Net Income 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="CF Net Income 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="CF Net Income 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Depreciation & Amortization</td>
+                                                <td><input type="number" placeholder="0" aria-label="D&A 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="D&A 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="D&A 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="D&A 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="D&A 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Changes in Working Capital</td>
+                                                <td><input type="number" placeholder="0" aria-label="WC Changes 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="WC Changes 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="WC Changes 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="WC Changes 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="WC Changes 2021"></td>
+                                            </tr>
+                                            <tr class="section-header">
+                                                <td colspan="6">INVESTING ACTIVITIES</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Capital Expenditures</td>
+                                                <td><input type="number" placeholder="0" aria-label="CapEx 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="CapEx 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="CapEx 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="CapEx 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="CapEx 2021"></td>
+                                            </tr>
+                                            <tr class="section-header">
+                                                <td colspan="6">FINANCING ACTIVITIES</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Debt Proceeds</td>
+                                                <td><input type="number" placeholder="0" aria-label="Debt Proceeds 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Debt Proceeds 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Debt Proceeds 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Debt Proceeds 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Debt Proceeds 2021"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Debt Repayment</td>
+                                                <td><input type="number" placeholder="0" aria-label="Debt Repayment 2025"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Debt Repayment 2024"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Debt Repayment 2023"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Debt Repayment 2022"></td>
+                                                <td><input type="number" placeholder="0" aria-label="Debt Repayment 2021"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- STEP 3: Projections & Forecasting -->
+                    <div class="step-panel" id="step3" data-step="3">
+                        <h3 class="mb-4" style="color: var(--primary-dark); font-weight: 700;">Step 2B: Projections & Forecasting</h3>
+                        <p class="text-muted mb-4">Define projection drivers to auto-generate forecasted financials</p>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="projectionYears" class="form-label">Projection Period (Years)</label>
+                                    <select class="form-select" id="projectionYears" aria-label="Projection years">
+                                        <option value="3" selected>3 Years</option>
+                                        <option value="5">5 Years</option>
+                                        <option value="10">10 Years</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section-card mt-4">
+                            <h5 class="mb-3" style="color: var(--primary-dark);">Projection Drivers</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="revenueGrowth" class="form-label">Revenue Growth Rate (%)</label>
+                                        <input type="number" class="form-control" id="revenueGrowth" placeholder="e.g., 8.5" step="0.1" aria-label="Revenue growth rate">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="cogsPercent" class="form-label">COGS as % of Revenue</label>
+                                        <input type="number" class="form-control" id="cogsPercent" placeholder="e.g., 65" step="0.1" aria-label="COGS percentage">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="opexGrowth" class="form-label">Operating Expense Growth (%)</label>
+                                        <input type="number" class="form-control" id="opexGrowth" placeholder="e.g., 5" step="0.1" aria-label="OpEx growth rate">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="capexPercent" class="form-label">CapEx as % of Revenue</label>
+                                        <input type="number" class="form-control" id="capexPercent" placeholder="e.g., 4" step="0.1" aria-label="CapEx percentage">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-orange mt-3" id="generateProjectionsBtn" type="button">
+                                <i class="fas fa-calculator me-2"></i>Generate Projections
+                            </button>
+                        </div>
+                        
+                        <div class="section-card mt-4" id="projectedFinancialsSection" style="display: none;">
+                            <h5 class="mb-3" style="color: var(--primary-dark);">Projected Income Statement</h5>
+                            <div class="financial-grid">
+                                <table class="financial-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Line Item</th>
+                                            <th>Year 1</th>
+                                            <th>Year 2</th>
+                                            <th>Year 3</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="projectedIncomeBody">
+                                        <!-- Dynamic content -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- STEP 4: Financial Ratios -->
+                    <div class="step-panel" id="step4" data-step="4">
+                        <h3 class="mb-4" style="color: var(--primary-dark); font-weight: 700;">Step 3: Financial Ratios</h3>
+                        <p class="text-muted mb-4">Auto-calculated ratios based on financial data (real-time updates)</p>
+                        
+                        <div class="alert alert-info" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Real-Time Calculation:</strong> Ratios update automatically when you modify financial data in Step 2.
+                        </div>
+                        
+                        <h5 class="mt-4 mb-3" style="color: var(--primary-dark);">Liquidity Ratios</h5>
+                        <div class="ratio-grid">
+                            <div class="ratio-card">
+                                <div class="ratio-name">Current Ratio</div>
+                                <div class="ratio-value" id="currentRatio">2.45</div>
+                                <div class="ratio-formula">Current Assets ÷ Current Liabilities</div>
+                            </div>
+                            <div class="ratio-card">
+                                <div class="ratio-name">Quick Ratio</div>
+                                <div class="ratio-value" id="quickRatio">1.87</div>
+                                <div class="ratio-formula">(Current Assets - Inventory) ÷ Current Liabilities</div>
+                            </div>
+                            <div class="ratio-card">
+                                <div class="ratio-name">Cash Ratio</div>
+                                <div class="ratio-value" id="cashRatio">0.95</div>
+                                <div class="ratio-formula">Cash & Equivalents ÷ Current Liabilities</div>
+                            </div>
+                        </div>
+                        
+                        <h5 class="mt-4 mb-3" style="color: var(--primary-dark);">Profitability Ratios</h5>
+                        <div class="ratio-grid">
+                            <div class="ratio-card">
+                                <div class="ratio-name">Gross Profit Margin</div>
+                                <div class="ratio-value" id="grossMargin">34.5%</div>
+                                <div class="ratio-formula">Gross Profit ÷ Revenue × 100</div>
+                            </div>
+                            <div class="ratio-card">
+                                <div class="ratio-name">Net Profit Margin</div>
+                                <div class="ratio-value" id="netMargin">12.3%</div>
+                                <div class="ratio-formula">Net Income ÷ Revenue × 100</div>
+                            </div>
+                            <div class="ratio-card">
+                                <div class="ratio-name">Return on Assets (ROA)</div>
+                                <div class="ratio-value" id="roa">8.7%</div>
+                                <div class="ratio-formula">Net Income ÷ Total Assets × 100</div>
+                            </div>
+                            <div class="ratio-card">
+                                <div class="ratio-name">Return on Equity (ROE)</div>
+                                <div class="ratio-value" id="roe">15.4%</div>
+                                <div class="ratio-formula">Net Income ÷ Shareholders' Equity × 100</div>
+                            </div>
+                        </div>
+                        
+                        <h5 class="mt-4 mb-3" style="color: var(--primary-dark);">Leverage Ratios</h5>
+                        <div class="ratio-grid">
+                            <div class="ratio-card">
+                                <div class="ratio-name">Debt-to-Equity Ratio</div>
+                                <div class="ratio-value" id="debtEquity">1.23</div>
+                                <div class="ratio-formula">Total Debt ÷ Total Equity</div>
+                            </div>
+                            <div class="ratio-card">
+                                <div class="ratio-name">Debt-to-Assets Ratio</div>
+                                <div class="ratio-value" id="debtAssets">0.54</div>
+                                <div class="ratio-formula">Total Debt ÷ Total Assets</div>
+                            </div>
+                            <div class="ratio-card">
+                                <div class="ratio-name">Interest Coverage</div>
+                                <div class="ratio-value" id="interestCoverage">4.5x</div>
+                                <div class="ratio-formula">EBIT ÷ Interest Expense</div>
+                            </div>
+                        </div>
+                        
+                        <h5 class="mt-4 mb-3" style="color: var(--primary-dark);">Projected Ratios (Based on Forecasts)</h5>
+                        <div class="ratio-grid">
+                            <div class="ratio-card">
+                                <div class="ratio-name">Projected ROE (Yr 3)</div>
+                                <div class="ratio-value" id="projectedRoe">17.2%</div>
+                                <div class="ratio-formula">Calculated from projected financials</div>
+                            </div>
+                            <div class="ratio-card">
+                                <div class="ratio-name">Projected Debt/Equity (Yr 3)</div>
+                                <div class="ratio-value" id="projectedDE">1.05</div>
+                                <div class="ratio-formula">Calculated from projected financials</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- STEP 5: Qualitative Factors -->
+                    <div class="step-panel" id="step5" data-step="5">
+                        <h3 class="mb-4" style="color: var(--primary-dark); font-weight: 700;">Step 4: Business & Qualitative Factors</h3>
+                        <p class="text-muted mb-4">Score non-financial parameters to complete the assessment</p>
+                        
+                        <!-- Management Quality -->
+                        <div class="question-group">
+                            <div class="question-group-title" onclick="toggleQuestionGroup('management')">
+                                <span><i class="fas fa-users-cog me-2"></i>Management Quality & Experience</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="question-group-content" id="managementGroup">
+                                <div class="question-item">
+                                    <label class="form-label">Years of Industry Experience</label>
+                                    <select class="form-select" aria-label="Management experience">
+                                        <option value="">Select...</option>
+                                        <option value="10">15+ years (Excellent)</option>
+                                        <option value="7">10-15 years (Good)</option>
+                                        <option value="4">5-10 years (Average)</option>
+                                        <option value="1">&lt;5 years (Poor)</option>
+                                    </select>
+                                    <textarea class="form-control mt-2" rows="2" placeholder="Analyst justification..." aria-label="Management experience comments"></textarea>
+                                </div>
+                                
+                                <div class="question-item">
+                                    <label class="form-label">Management Track Record</label>
+                                    <select class="form-select" aria-label="Management track record">
+                                        <option value="">Select...</option>
+                                        <option value="10">Outstanding (multiple successes)</option>
+                                        <option value="7">Good (consistent performance)</option>
+                                        <option value="4">Average (mixed results)</option>
+                                        <option value="1">Poor (history of failures)</option>
+                                    </select>
+                                    <textarea class="form-control mt-2" rows="2" placeholder="Analyst justification..." aria-label="Track record comments"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Market Position -->
+                        <div class="question-group">
+                            <div class="question-group-title" onclick="toggleQuestionGroup('market')">
+                                <span><i class="fas fa-chart-line me-2"></i>Market Position & Competitive Landscape</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="question-group-content" id="marketGroup">
+                                <div class="question-item">
+                                    <label class="form-label">Market Share Position</label>
+                                    <select class="form-select" aria-label="Market share">
+                                        <option value="">Select...</option>
+                                        <option value="10">Market Leader (&gt;30%)</option>
+                                        <option value="7">Major Player (15-30%)</option>
+                                        <option value="4">Mid-sized (5-15%)</option>
+                                        <option value="1">New Entrant (&lt;5%)</option>
+                                    </select>
+                                    <textarea class="form-control mt-2" rows="2" placeholder="Analyst justification..." aria-label="Market share comments"></textarea>
+                                </div>
+                                
+                                <div class="question-item">
+                                    <label class="form-label">Competitive Advantage</label>
+                                    <select class="form-select" aria-label="Competitive advantage">
+                                        <option value="">Select...</option>
+                                        <option value="10">Strong (unique product/patent/brand)</option>
+                                        <option value="7">Moderate (some differentiation)</option>
+                                        <option value="4">Weak (commodity business)</option>
+                                        <option value="1">None (price competition only)</option>
+                                    </select>
+                                    <textarea class="form-control mt-2" rows="2" placeholder="Analyst justification..." aria-label="Competitive advantage comments"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Operations -->
+                        <div class="question-group">
+                            <div class="question-group-title" onclick="toggleQuestionGroup('operations')">
+                                <span><i class="fas fa-cogs me-2"></i>Operations & Infrastructure</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="question-group-content" id="operationsGroup">
+                                <div class="question-item">
+                                    <label class="form-label">Production/Operational Efficiency</label>
+                                    <select class="form-select" aria-label="Operational efficiency">
+                                        <option value="">Select...</option>
+                                        <option value="10">Highly Efficient (lean operations)</option>
+                                        <option value="7">Good (industry average)</option>
+                                        <option value="4">Below Average (inefficiencies)</option>
+                                        <option value="1">Poor (significant waste)</option>
+                                    </select>
+                                    <textarea class="form-control mt-2" rows="2" placeholder="Analyst justification..." aria-label="Efficiency comments"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Industry Outlook -->
+                        <div class="question-group">
+                            <div class="question-group-title" onclick="toggleQuestionGroup('industry')">
+                                <span><i class="fas fa-industry me-2"></i>Industry Outlook & Environment</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="question-group-content" id="industryGroup">
+                                <div class="question-item">
+                                    <label class="form-label">Industry Growth Prospects</label>
+                                    <select class="form-select" aria-label="Industry growth">
+                                        <option value="">Select...</option>
+                                        <option value="10">High Growth (&gt;10% CAGR)</option>
+                                        <option value="7">Moderate Growth (5-10%)</option>
+                                        <option value="4">Stable/Mature (0-5%)</option>
+                                        <option value="1">Declining (&lt;0%)</option>
+                                    </select>
+                                    <textarea class="form-control mt-2" rows="2" placeholder="Analyst justification..." aria-label="Industry growth comments"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Miscellaneous -->
+                        <div class="question-group">
+                            <div class="question-group-title" onclick="toggleQuestionGroup('miscellaneous')">
+                                <span><i class="fas fa-ellipsis-h me-2"></i>Miscellaneous Questions</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="question-group-content" id="miscellaneousGroup">
+                                <div class="question-item">
+                                    <label class="form-label">ESG (Environmental, Social, Governance) Score</label>
+                                    <select class="form-select" aria-label="ESG score">
+                                        <option value="">Select...</option>
+                                        <option value="10">Excellent (certified/recognized)</option>
+                                        <option value="7">Good (proactive measures)</option>
+                                        <option value="4">Average (basic compliance)</option>
+                                        <option value="1">Poor (violations/concerns)</option>
+                                    </select>
+                                    <textarea class="form-control mt-2" rows="2" placeholder="Analyst justification..." aria-label="ESG comments"></textarea>
+                                </div>
+                                
+                                <div class="question-item">
+                                    <label class="form-label">Related Party Transactions</label>
+                                    <select class="form-select" aria-label="Related party transactions">
+                                        <option value="">Select...</option>
+                                        <option value="10">None or fully disclosed</option>
+                                        <option value="7">Minor (arm's length)</option>
+                                        <option value="4">Significant (requires monitoring)</option>
+                                        <option value="1">Material concern</option>
+                                    </select>
+                                    <textarea class="form-control mt-2" rows="2" placeholder="Analyst justification..." aria-label="Related party comments"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Historical Comparison (if returning customer) -->
+                        <div class="alert alert-info mt-4" role="alert">
+                            <i class="fas fa-history me-2"></i>
+                            <strong>Returning Customer:</strong> <a href="#" onclick="showHistoryComparison(); return false;">View previous assessment answers</a> for comparison.
+                        </div>
+                    </div>
+                    
+                    <!-- STEP 6: Rating Result -->
+                    <div class="step-panel" id="step6" data-step="6">
+                        <h3 class="mb-4" style="color: var(--primary-dark); font-weight: 700;">Step 5: Rating Result & Final Submission</h3>
+                        
+                        <!-- Rating Display -->
+                        <div class="rating-result-card">
+                            <div>Final Credit Rating</div>
+                            <div class="rating-grade-display" id="finalRatingGrade">BBB+</div>
+                            <div class="rating-score-display">Weighted Score: <span id="finalWeightedScore">745</span> / 1000</div>
+                            <div class="rating-pd-display">Probability of Default: <span id="finalPD">2.35%</span></div>
+                        </div>
+                        
+                        <!-- Score Breakdown -->
+                        <div class="section-card">
+                            <h5 class="mb-3" style="color: var(--primary-dark);">Score Breakdown by Section</h5>
+                            <div class="rating-breakdown">
+                                <div class="breakdown-item">
+                                    <div class="breakdown-label">Financial Ratios</div>
+                                    <div class="breakdown-value">285/400</div>
+                                </div>
+                                <div class="breakdown-item">
+                                    <div class="breakdown-label">Qualitative Factors</div>
+                                    <div class="breakdown-value">210/300</div>
+                                </div>
+                                <div class="breakdown-item">
+                                    <div class="breakdown-label">Management Quality</div>
+                                    <div class="breakdown-value">85/100</div>
+                                </div>
+                                <div class="breakdown-item">
+                                    <div class="breakdown-label">Market Position</div>
+                                    <div class="breakdown-value">165/200</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Historical Comparison -->
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h5 class="mb-0" style="color: var(--primary-dark);">
+                                    <i class="fas fa-history me-2"></i>Historical Comparison
+                                </h5>
+                                <button class="btn btn-outline-custom btn-sm" onclick="showHistoricalModal()">
+                                    <i class="fas fa-expand-alt me-1"></i>View Detailed Comparison
+                                </button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Assessment Date</th>
+                                            <th>Rating Grade</th>
+                                            <th>Score</th>
+                                            <th>PD</th>
+                                            <th>Change</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Nov 20, 2025 (Current)</td>
+                                            <td><span class="rating-badge grade-b">BBB+</span></td>
+                                            <td>745</td>
+                                            <td>2.35%</td>
+                                            <td><span class="text-success"><i class="fas fa-arrow-up"></i> Upgraded</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>May 15, 2024</td>
+                                            <td><span class="rating-badge grade-b">BBB</span></td>
+                                            <td>720</td>
+                                            <td>2.85%</td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Nov 10, 2023</td>
+                                            <td><span class="rating-badge grade-b">BBB-</span></td>
+                                            <td>695</td>
+                                            <td>3.45%</td>
+                                            <td>-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Manual Adjustment (Role-based) -->
+                        <div class="section-card" id="manualAdjustmentSection">
+                            <h5 class="mb-3" style="color: var(--primary-dark);">
+                                <i class="fas fa-user-shield me-2"></i>Manual Rating Adjustment
+                                <span class="badge bg-warning text-dark ms-2">Senior Credit Officer Only</span>
+                            </h5>
+                            <div class="alert alert-warning" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Manual adjustments override computed scores and must be justified. All changes are logged for audit.
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="adjustedScore" class="form-label">Adjusted Score</label>
+                                        <input type="number" class="form-control" id="adjustedScore" placeholder="Enter adjusted score" aria-label="Adjusted score">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="adjustedGrade" class="form-label">Adjusted Grade</label>
+                                        <select class="form-select" id="adjustedGrade" aria-label="Adjusted grade">
+                                            <option value="">Keep computed grade</option>
+                                            <option value="AAA">AAA</option>
+                                            <option value="AA">AA</option>
+                                            <option value="A">A</option>
+                                            <option value="BBB">BBB</option>
+                                            <option value="BB">BB</option>
+                                            <option value="B">B</option>
+                                            <option value="CCC">CCC</option>
+                                            <option value="D">D</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Adjustment Date</label>
+                                        <input type="text" class="form-control" value="Nov 20, 2025 1:32 PM" readonly aria-label="Adjustment timestamp">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="adjustmentReason" class="form-label form-label-required">Reason for Adjustment</label>
+                                <textarea class="form-control" id="adjustmentReason" rows="3" placeholder="Provide detailed justification for manual adjustment..." aria-label="Adjustment reason"></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Audit Snapshot Confirmation -->
+                        <div class="alert alert-success" role="alert">
+                            <i class="fas fa-camera me-2"></i>
+                            <strong>Audit Snapshot:</strong> Upon submission, a complete snapshot (inputs, ratios, projections, scores) will be saved with timestamp for audit trail.
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button class="btn btn-outline-custom btn-lg" id="saveDraftBtn" type="button">
+                                <i class="fas fa-save me-2"></i>Save as Draft
+                            </button>
+                            <button class="btn btn-orange btn-lg" id="submitForApprovalBtn" type="button">
+                                <i class="fas fa-paper-plane me-2"></i>Submit for Approval
+                            </button>
+                            <button class="btn btn-outline-custom btn-lg" id="generateReportBtn" type="button">
+                                <i class="fas fa-file-pdf me-2"></i>Generate PDF Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stepper Navigation Actions -->
+                <div class="stepper-actions">
+                    <button class="btn btn-outline-custom btn-lg" id="prevStepBtn" type="button" disabled>
+                        <i class="fas fa-arrow-left me-2"></i>Previous
+                    </button>
+                    <button class="btn btn-orange btn-lg" id="nextStepBtn" type="button">
+                        Next <i class="fas fa-arrow-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Toast Container for Notifications -->
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+    
+    <!-- Modals -->
+    
+    <!-- CIF Tag Modal -->
+    <div class="modal fade" id="cifTagModal" tabindex="-1" aria-labelledby="cifTagModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cifTagModalLabel">Tag CIF Number</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="modalCifNumber" class="form-label">Enter CIF Number</label>
+                        <input type="text" class="form-control" id="modalCifNumber" placeholder="Enter CIF" aria-label="CIF number">
+                    </div>
+                    <div class="form-group">
+                        <label for="modalCustomerName" class="form-label">Customer Name (Verification)</label>
+                        <input type="text" class="form-control" id="modalCustomerName" placeholder="Enter name to verify" aria-label="Customer name">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-orange" onclick="saveCifTag()">Save & Link CIF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Historical Comparison Modal -->
+    <div class="modal fade" id="historicalModal" tabindex="-1" aria-labelledby="historicalModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="historicalModalLabel">Historical Rating Comparison</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Nov 2025 (Current)</th>
+                                    <th>May 2024</th>
+                                    <th>Nov 2023</th>
+                                    <th>Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Rating Grade</strong></td>
+                                    <td>BBB+</td>
+                                    <td>BBB</td>
+                                    <td>BBB-</td>
+                                    <td><span class="text-success"><i class="fas fa-arrow-up"></i> Improving</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Current Ratio</strong></td>
+                                    <td>2.45</td>
+                                    <td>2.20</td>
+                                    <td>1.95</td>
+                                    <td><span class="text-success"><i class="fas fa-arrow-up"></i> Improving</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Debt/Equity</strong></td>
+                                    <td>1.23</td>
+                                    <td>1.45</td>
+                                    <td>1.68</td>
+                                    <td><span class="text-success"><i class="fas fa-arrow-down"></i> Improving</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ROE</strong></td>
+                                    <td>15.4%</td>
+                                    <td>13.2%</td>
+                                    <td>11.8%</td>
+                                    <td><span class="text-success"><i class="fas fa-arrow-up"></i> Improving</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-orange" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Main Application JavaScript -->
+    <script>
+        // ============================================
+        // APPLICATION STATE & STORAGE KEYS
+        // localStorage keys for data persistence
+        // ============================================
+        const STORAGE_KEYS = {
+            assessments: 'creditAssessments',
+            theme: 'appTheme',
+            currentAssessment: 'currentAssessmentData'
+        };
+        
+        // Current application state
+        let appState = {
+            currentStep : 1,
+            sidebarOpen: false,
+            assessments: [],
+            currentAssessmentId: null
+        };
+        
+        // ============================================
+        // INITIALIZATION ON DOM LOAD
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            initializeEventListeners();
+            loadAssessments();
+            renderDashboard();
+            initializeCharts();
+            initializeTooltips();
+            
+            // Load theme from localStorage
+            loadTheme();
+        });
+        
+        // ============================================
+        // APP INITIALIZATION
+        // ============================================
+        function initializeApp() {
+            console.log('Credit Assessment System Initialized');
+            
+            // Load assessments from localStorage
+            const savedAssessments = localStorage.getItem(STORAGE_KEYS.assessments);
+            if (savedAssessments) {
+                appState.assessments = JSON.parse(savedAssessments);
+            } else {
+                // Initialize with dummy data
+                appState.assessments = generateDummyAssessments();
+                saveAssessments();
+            }
+        }
+        
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        function initializeEventListeners() {
+            // Hamburger menu toggle
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            
+            hamburgerBtn.addEventListener('click', toggleSidebar);
+            sidebarOverlay.addEventListener('click', closeSidebar);
+            
+            // Navigation links
+            const navLinks = document.querySelectorAll('.sidebar-nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', handleNavigation);
+            });
+            
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // New Assessment button
+            document.getElementById('newAssessmentBtn').addEventListener('click', startNewAssessment);
+            
+            // Stepper navigation
+            document.getElementById('nextStepBtn').addEventListener('click', nextStep);
+            document.getElementById('prevStepBtn').addEventListener('click', prevStep);
+            
+            // Search and filter
+            document.getElementById('searchInput').addEventListener('input', filterAssessments);
+            document.getElementById('statusFilter').addEventListener('change', filterAssessments);
+            document.getElementById('workflowFilter').addEventListener('change', filterAssessments);
+            
+            // CIF search
+            document.getElementById('searchCifBtn').addEventListener('click', searchCIF);
+            
+            // Upload buttons
+            document.getElementById('uploadExcelBtn').addEventListener('click', simulateExcelUpload);
+            document.getElementById('uploadOcrBtn').addEventListener('click', simulateOcrUpload);
+            
+            // Year count change
+            document.getElementById('yearCount').addEventListener('change', updateFinancialGridColumns);
+            
+            // Projection generation
+            document.getElementById('generateProjectionsBtn').addEventListener('click', generateProjections);
+            
+            // Final submission buttons
+            document.getElementById('saveDraftBtn').addEventListener('click', saveDraft);
+            document.getElementById('submitForApprovalBtn').addEventListener('click', submitForApproval);
+            document.getElementById('generateReportBtn').addEventListener('click', generateReport);
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+        }
+        
+        // ============================================
+        // SIDEBAR NAVIGATION
+        // ============================================
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const hamburger = document.getElementById('hamburgerBtn');
+            
+            appState.sidebarOpen = !appState.sidebarOpen;
+            
+            if (appState.sidebarOpen) {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                hamburger.setAttribute('aria-expanded', 'true');
+            } else {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+            }
+        }
+        
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const hamburger = document.getElementById('hamburgerBtn');
+            
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
+            appState.sidebarOpen = false;
+        }
+        
+        function handleNavigation(e) {
+            e.preventDefault();
+            
+            // Remove active class from all links
+            document.querySelectorAll('.sidebar-nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Add active class to clicked link
+            e.currentTarget.classList.add('active');
+            
+            // Get page to show
+            const page = e.currentTarget.dataset.page;
+            
+            // Switch views
+            if (page === 'dashboard') {
+                showDashboard();
+            } else if (page === 'assessment') {
+                startNewAssessment();
+            }
+            
+            // Close sidebar on mobile
+            if (window.innerWidth < 992) {
+                closeSidebar();
+            }
+        }
+        
+        // ============================================
+        // VIEW SWITCHING
+        // ============================================
+        function showDashboard() {
+            document.getElementById('dashboardView').style.display = 'block';
+            document.getElementById('assessmentView').style.display = 'none';
+            renderDashboard();
+            updateCharts();
+        }
+        
+        function startNewAssessment() {
+            document.getElementById('dashboardView').style.display = 'none';
+            document.getElementById('assessmentView').style.display = 'block';
+            
+            // Reset stepper to step 1
+            appState.currentStep = 1;
+            updateStepperUI();
+            
+            // Clear form data
+            resetAssessmentForm();
+            
+            showToast('New Assessment Started', 'Fill in the entity details to begin', 'info');
+        }
+        
+        // ============================================
+        // DASHBOARD RENDERING
+        // ============================================
+        function renderDashboard() {
+            // Update stats
+            updateDashboardStats();
+            
+            // Render assessments table
+            renderAssessmentsTable(appState.assessments);
+        }
+        
+        function updateDashboardStats() {
+            const completed = appState.assessments.filter(a => a.status === 'completed').length;
+            const pending = appState.assessments.filter(a => a.status === 'pending' || a.status === 'in-progress').length;
+            
+            document.getElementById('totalBorrowersCount').textContent = appState.assessments.length;
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('pendingCount').textContent = pending;
+            
+            // Calculate average rating (simplified)
+            const avgRating = 'BBB+';
+            document.getElementById('avgRating').textContent = avgRating;
+        }
+        
+        function renderAssessmentsTable(assessments) {
+            const tbody = document.getElementById('assessmentsTableBody');
+            
+            if (assessments.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <div class="empty-state-icon"><i class="fas fa-inbox"></i></div>
+                                <div class="empty-state-title">No Assessments Found</div>
+                                <div class="empty-state-text">Start a new assessment to get started</div>
+                                <button class="btn btn-orange" onclick="startNewAssessment()">
+                                    <i class="fas fa-plus me-2"></i>New Assessment
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = assessments.map(assessment => `
+                <tr>
+                    <td><strong>${assessment.id}</strong></td>
+                    <td>${assessment.entityName}</td>
+                    <td>${assessment.template}</td>
+                    <td>${assessment.date}</td>
+                    <td>
+                        <div class="workflow-stage">
+                            <div class="workflow-icon ${getWorkflowIconClass(assessment.workflowStage)}">
+                                <i class="fas ${getWorkflowIcon(assessment.workflowStage)}"></i>
+                            </div>
+                            <span>${assessment.workflowStage}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-badge ${assessment.status}">${capitalizeFirst(assessment.status)}</span>
+                    </td>
+                    <td>
+                        ${assessment.rating ? `<span class="rating-badge grade-${assessment.rating.toLowerCase()[0]}">${assessment.rating}</span>` : '-'}
+                    </td>
+                    <td>
+                        <button class="btn-action btn-primary-custom" onclick="editAssessment('${assessment.id}')" aria-label="Edit assessment ${assessment.id}">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn-action btn-outline-custom" onclick="tagCIF('${assessment.id}')" aria-label="Tag CIF for ${assessment.id}">
+                            <i class="fas fa-tag"></i> Tag CIF
+                        </button>
+                        <button class="btn-action btn-orange" onclick="view360('${assessment.id}')" aria-label="360 degree view of ${assessment.id}">
+                            <i class="fas fa-eye"></i> 360° View
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // ============================================
+        // CHARTS INITIALIZATION
+        // ============================================
+        let ratingChart, statusChart, trendChart;
+        
+        function initializeCharts() {
+            // Rating Distribution Chart
+            const ratingCtx = document.getElementById('ratingDistributionChart').getContext('2d');
+            ratingChart = new Chart(ratingCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['AAA', 'AA', 'A', 'BBB', 'BB', 'B', 'CCC', 'D'],
+                    datasets: [{
+                        label: 'Number of Entities',
+                        data: [12, 28, 45, 67, 34, 18, 8, 3],
+                        backgroundColor: 'rgba(248, 123, 27, 0.8)',
+                        borderColor: 'rgba(248, 123, 27, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Status Pie Chart
+            const statusCtx = document.getElementById('statusPieChart').getContext('2d');
+            statusChart = new Chart(statusCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Completed', 'Pending', 'In Progress', 'Draft'],
+                    datasets: [{
+                        data: [189, 24, 10, 24],
+                        backgroundColor: [
+                            'rgba(40, 167, 69, 0.8)',
+                            'rgba(255, 193, 7, 0.8)',
+                            'rgba(23, 162, 184, 0.8)',
+                            'rgba(108, 117, 125, 0.8)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Monthly Trend Chart
+            const trendCtx = document.getElementById('monthlyTrendChart').getContext('2d');
+            trendChart = new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+                    datasets: [{
+                        label: 'Assessments Completed',
+                        data: [28, 32, 35, 29, 38, 42],
+                        borderColor: 'rgba(17, 34, 78, 1)',
+                        backgroundColor: 'rgba(17, 34, 78, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updateCharts() {
+            // Update charts with real data when filters change
+            if (ratingChart) ratingChart.update();
+            if (statusChart) statusChart.update();
+            if (trendChart) trendChart.update();
+        }
+        
+        // ============================================
+        // SEARCH & FILTER
+        // ============================================
+        function filterAssessments() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const workflowFilter = document.getElementById('workflowFilter').value;
+            
+            let filtered = appState.assessments.filter(assessment => {
+                const matchesSearch = assessment.entityName.toLowerCase().includes(searchTerm) ||
+                                    assessment.id.toLowerCase().includes(searchTerm);
+                const matchesStatus = !statusFilter || assessment.status === statusFilter;
+                const matchesWorkflow = !workflowFilter || assessment.workflowStage === workflowFilter;
+                
+                return matchesSearch && matchesStatus && matchesWorkflow;
+            });
+            
+            renderAssessmentsTable(filtered);
+            
+            // Announce to screen readers
+            announceToScreenReader(`${filtered.length} assessments found`);
+        }
+        
+        // ============================================
+        // STEPPER NAVIGATION
+        // ============================================
+        function updateStepperUI() {
+            const totalSteps = 6;
+            
+            // Update step circles
+            for (let i = 1; i <= totalSteps; i++) {
+                const step = document.querySelector(`.stepper-step[data-step="${i}"]`);
+                const circle = step.querySelector('.stepper-step-circle');
+                
+                if (i < appState.currentStep) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                    circle.innerHTML = '<i class="fas fa-check"></i>';
+                } else if (i === appState.currentStep) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                    circle.textContent = i;
+                } else {
+                    step.classList.remove('active', 'completed');
+                    circle.textContent = i;
+                }
+            }
+            
+            // Show/hide step panels
+            document.querySelectorAll('.step-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(`step${appState.currentStep}`).classList.add('active');
+            
+            // Update button states
+            document.getElementById('prevStepBtn').disabled = appState.currentStep === 1;
+            
+            const nextBtn = document.getElementById('nextStepBtn');
+            if (appState.currentStep === totalSteps) {
+                nextBtn.textContent = 'Finish';
+                nextBtn.innerHTML = '<i class="fas fa-check me-2"></i>Finish';
+            } else {
+                nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right ms-2"></i>';
+            }
+            
+            // Scroll to top
+            document.querySelector('.stepper-container').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function nextStep() {
+            const totalSteps = 6;
+            
+            if (appState.currentStep < totalSteps) {
+                appState.currentStep++;
+                updateStepperUI();
+                showToast('Progress Saved', `Moving to step ${appState.currentStep}`, 'success');
+            } else {
+                // Finish assessment
+                showToast('Assessment Complete', 'Review the rating result before submission', 'success');
+            }
+        }
+        
+        function prevStep() {
+            if (appState.currentStep > 1) {
+                appState.currentStep--;
+                updateStepperUI();
+            }
+        }
+        
+        // ============================================
+        // CIF SEARCH & AUTO-FILL
+        // ============================================
+        function searchCIF() {
+            const cifNumber = document.getElementById('cifNumber').value.trim();
+            
+            if (!cifNumber) {
+                showToast('CIF Required', 'Please enter a CIF number to search', 'warning');
+                return;
+            }
+            
+            // Simulate CIF lookup
+            showToast('Searching CIF', 'Looking up customer data...', 'info');
+            
+            setTimeout(() => {
+                // Simulate found customer
+                document.getElementById('entityName').value = 'ABC Manufacturing Ltd.';
+                document.getElementById('entityType').value = 'corporate';
+                document.getElementById('industrySector').value = 'manufacturing';
+                document.getElementById('registrationNo').value = 'U12345MH2015PLC123456';
+                document.getElementById('taxId').value = 'AAACM1234F';
+                
+                // Show historical data alert
+                document.getElementById('historicalDataAlert').classList.remove('d-none');
+                
+                showToast('CIF Found', 'Customer data loaded successfully', 'success');
+            }, 1000);
+        }
+        
+        // ============================================
+        // FILE UPLOAD SIMULATION
+        // ============================================
+        function simulateExcelUpload() {
+            showToast('Excel Upload', 'Processing Excel file and mapping columns...', 'info');
+            
+            setTimeout(() => {
+                showToast('Upload Complete', 'Financial data imported successfully. Year columns auto-detected.', 'success');
+                // Populate some dummy values in financial tables
+                populateDummyFinancialData();
+            }, 2000);
+        }
+        
+        function simulateOcrUpload() {
+            showToast('OCR Processing', 'Extracting data from PDF/Image using OCR...', 'info');
+            
+            setTimeout(() => {
+                showToast('OCR Complete', 'Financial statements extracted. Please verify the data.', 'success');
+                populateDummyFinancialData();
+            }, 3000);
+        }
+        
+        function populateDummyFinancialData() {
+            // This would populate the financial grids with extracted data
+            // For demo purposes, we're just showing the notification
+        }
+        
+        // ============================================
+        // DYNAMIC YEAR SELECTOR
+        // ============================================
+        function updateFinancialGridColumns() {
+            const yearCount = parseInt(document.getElementById('yearCount').value);
+            
+            // This would dynamically rebuild the financial tables with the selected number of years
+            showToast('Grid Updated', `Financial grid adjusted to ${yearCount} years`, 'info');
+        }
+        
+        // ============================================
+        // PROJECTIONS & FORECASTING
+        // ============================================
+        function generateProjections() {
+            const revenueGrowth = parseFloat(document.getElementById('revenueGrowth').value);
+            const cogsPercent = parseFloat(document.getElementById('cogsPercent').value);
+            const opexGrowth = parseFloat(document.getElementById('opexGrowth').value);
+            const capexPercent = parseFloat(document.getElementById('capexPercent').value);
+            
+            if (!revenueGrowth || !cogsPercent || !opexGrowth || !capexPercent) {
+                showToast('Missing Drivers', 'Please fill in all projection drivers', 'warning');
+                return;
+            }
+            
+            showToast('Generating Projections', 'Calculating forecasted financials...', 'info');
+            
+            setTimeout(() => {
+                // Show projected financials section
+                document.getElementById('projectedFinancialsSection').style.display = 'block';
+                
+                // Populate projected income statement (dummy data)
+                const tbody = document.getElementById('projectedIncomeBody');
+                tbody.innerHTML = `
+                    <tr>
+                        <td>Revenue</td>
+                        <td>10,850,000</td>
+                        <td>11,771,750</td>
+                        <td>12,772,349</td>
+                    </tr>
+                    <tr>
+                        <td>COGS</td>
+                        <td>7,052,500</td>
+                        <td>7,651,638</td>
+                        <td>8,302,027</td>
+                    </tr>
+                    <tr>
+                        <td>Gross Profit</td>
+                        <td>3,797,500</td>
+                        <td>4,120,113</td>
+                        <td>4,470,322</td>
+                    </tr>
+                    <tr>
+                        <td>Operating Expenses</td>
+                        <td>2,100,000</td>
+                        <td>2,205,000</td>
+                        <td>2,315,250</td>
+                    </tr>
+                    <tr>
+                        <td>EBITDA</td>
+                        <td>1,697,500</td>
+                        <td>1,915,113</td>
+                        <td>2,155,072</td>
+                    </tr>
+                `;
+                
+                showToast('Projections Complete', 'Forecasted statements generated successfully', 'success');
+                
+                // Scroll to projected section
+                document.getElementById('projectedFinancialsSection').scrollIntoView({ behavior: 'smooth' });
+            }, 1500);
+        }
+        
+        // ============================================
+        // QUALITATIVE FACTORS
+        // ============================================
+        function toggleQuestionGroup(groupId) {
+            const content = document.getElementById(`${groupId}Group`);
+            const isVisible = content.style.display !== 'none';
+            
+            content.style.display = isVisible ? 'none' : 'block';
+        }
+        
+        function showHistoryComparison() {
+            showToast('Loading History', 'Fetching previous assessment answers...', 'info');
+            
+            setTimeout(() => {
+                // Would show a modal or side-panel with historical answers
+                showToast('History Loaded', 'Previous answers displayed for comparison', 'success');
+            }, 1000);
+        }
+        
+        // ============================================
+        // FINAL SUBMISSION ACTIONS
+        // ============================================
+        function saveDraft() {
+            showToast('Saving Draft', 'Assessment saved to drafts', 'info');
+            
+            // Save current form data to localStorage
+            const draftData = captureFormData();
+            localStorage.setItem(STORAGE_KEYS.currentAssessment, JSON.stringify(draftData));
+            
+            setTimeout(() => {
+                showToast('Draft Saved', 'You can continue this assessment later', 'success');
+            }, 1000);
+        }
+        
+        function submitForApproval() {
+            // Show confirmation
+            if (!confirm('Are you sure you want to submit this assessment for approval? This will trigger the workflow to the next stage.')) {
+                return;
+            }
+            
+            showToast('Submitting Assessment', 'Creating audit snapshot and routing to workflow...', 'info');
+            
+            setTimeout(() => {
+                // Create new assessment record
+                const newAssessment = {
+                    id: `CRA-${Date.now().toString().slice(-6)}`,
+                    entityName: document.getElementById('entityName').value || 'New Entity',
+                    template: document.getElementById('ratingTemplate').value || 'Corporate Standard',
+                    date: new Date().toLocaleDateString(),
+                    workflowStage: 'Business Checker',
+                    status: 'pending',
+                    rating: 'BBB+',
+                    cifNumber: document.getElementById('cifNumber').value
+                };
+                
+                appState.assessments.unshift(newAssessment);
+                saveAssessments();
+                
+                showToast('Submission Complete', 'Assessment submitted to Business Checker', 'success');
+                
+                // Return to dashboard
+                setTimeout(() => {
+                    showDashboard();
+                }, 2000);
+            }, 2000);
+        }
+        
+        function generateReport() {
+            showToast('Generating Report', 'Creating PDF report with all assessment details...', 'info');
+            
+            setTimeout(() => {
+                showToast('Report Ready', 'PDF report generated successfully. Download started.', 'success');
+                // Would trigger actual PDF download
+            }, 2000);
+        }
+        
+        // ============================================
+        // HISTORICAL COMPARISON MODAL
+        // ============================================
+        function showHistoricalModal() {
+            const modal = new bootstrap.Modal(document.getElementById('historicalModal'));
+            modal.show();
+        }
+        
+        // ============================================
+        // CIF TAG MODAL
+        // ============================================
+        function tagCIF(assessmentId) {
+            appState.currentAssessmentId = assessmentId;
+            const modal = new bootstrap.Modal(document.getElementById('cifTagModal'));
+            modal.show();
+        }
+        
+        function saveCifTag() {
+            const cifNumber = document.getElementById('modalCifNumber').value;
+            const customerName = document.getElementById('modalCustomerName').value;
+            
+            if (!cifNumber || !customerName) {
+                showToast('Missing Information', 'Please fill in both CIF and customer name', 'warning');
+                return;
+            }
+            
+            // Update assessment with CIF
+            const assessment = appState.assessments.find(a => a.id === appState.currentAssessmentId);
+            if (assessment) {
+                assessment.cifNumber = cifNumber;
+                saveAssessments();
+                renderDashboard();
+            }
+            
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('cifTagModal'));
+            modal.hide();
+            
+            showToast('CIF Tagged', `CIF ${cifNumber} linked successfully`, 'success');
+        }
+        
+        // ============================================
+        // 360 DEGREE VIEW
+        // ============================================
+        function view360(assessmentId) {
+            showToast('Loading 360° View', 'Preparing comprehensive assessment view...', 'info');
+            
+            setTimeout(() => {
+                showToast('View Loaded', 'Complete assessment details displayed', 'success');
+                // Would open a comprehensive view modal or page
+            }, 1000);
+        }
+        
+        // ============================================
+        // EDIT ASSESSMENT
+        // ============================================
+        function editAssessment(assessmentId) {
+            const assessment = appState.assessments.find(a => a.id === assessmentId);
+            
+            if (!assessment) {
+                showToast('Not Found', 'Assessment not found', 'error');
+                return;
+            }
+            
+            // Load assessment data into form
+            startNewAssessment();
+            
+            // Populate form fields (would load actual saved data)
+            showToast('Assessment Loaded', `Editing ${assessment.entityName}`, 'info');
+        }
+        
+        // ============================================
+        // THEME TOGGLE
+        // ============================================
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.querySelector('#themeToggle i');
+            
+            body.classList.toggle('dark-theme');
+            
+            if (body.classList.contains('dark-theme')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem(STORAGE_KEYS.theme, 'dark');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem(STORAGE_KEYS.theme, 'light');
+            }
+        }
+        
+        function loadTheme() {
+            const savedTheme = localStorage.getItem(STORAGE_KEYS.theme);
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.querySelector('#themeToggle i').classList.replace('fa-moon', 'fa-sun');
+            }
+        }
+        
+        // ============================================
+        // TOAST NOTIFICATIONS
+        // ============================================
+        function showToast(title, message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toastId = `toast-${Date.now()}`;
+            
+            const iconMap = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            
+            const colorMap = {
+                success: 'success',
+                error: 'danger',
+                warning: 'warning',
+                info: 'info'
+            };
+            
+            const toastHTML = `
+                <div class="toast align-items-center text-white bg-${colorMap[type]} border-0" role="alert" aria-live="assertive" aria-atomic="true" id="${toastId}">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas ${iconMap[type]} me-2"></i>
+                            <strong>${title}</strong><br>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+            
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+            
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { delay: 4000 });
+            toast.show();
+            
+            // Remove from DOM after hidden
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
+            });
+        }
+        
+        // ============================================
+        // ACCESSIBILITY HELPERS
+        // ============================================
+        function announceToScreenReader(message) {
+            const announcement = document.createElement('div');
+            announcement.setAttribute('role', 'status');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.className = 'visually-hidden';
+            announcement.textContent = message;
+            document.body.appendChild(announcement);
+            
+            setTimeout(() => {
+                announcement.remove();
+            }, 1000);
+        }
+        
+        function initializeTooltips() {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+        
+        // ============================================
+        // KEYBOARD SHORTCUTS
+        // ============================================
+        function handleKeyboardShortcuts(e) {
+            // Ctrl/Cmd + K: Focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+            
+            // Ctrl/Cmd + N: New assessment
+            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                e.preventDefault();
+                startNewAssessment();
+            }
+            
+            // Escape: Close sidebar
+            if (e.key === 'Escape' && appState.sidebarOpen) {
+                closeSidebar();
+            }
+        }
+        
+        // ============================================
+        // DATA PERSISTENCE
+        // ============================================
+        function saveAssessments() {
+            localStorage.setItem(STORAGE_KEYS.assessments, JSON.stringify(appState.assessments));
+        }
+        
+        function loadAssessments() {
+            const saved = localStorage.getItem(STORAGE_KEYS.assessments);
+            if (saved) {
+                appState.assessments = JSON.parse(saved);
+            }
+        }
+        
+        function captureFormData() {
+            return {
+                step: appState.currentStep,
+                entityDetails: {
+                    cifNumber: document.getElementById('cifNumber').value,
+                    entityName: document.getElementById('entityName').value,
+                    entityType: document.getElementById('entityType').value,
+                    industrySector: document.getElementById('industrySector').value,
+                    businessActivity: document.getElementById('businessActivity').value,
+                    cinetNumber: document.getElementById('cinetNumber').value,
+                    ratingTemplate: document.getElementById('ratingTemplate').value,
+                    financialYear: document.getElementById('financialYear').value
+                },
+                timestamp: new Date().toISOString()
+            };
+        }
+        
+        function resetAssessmentForm() {
+            // Reset all form inputs
+            document.querySelectorAll('.step-panel input, .step-panel select, .step-panel textarea').forEach(input => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    input.checked = false;
+                } else {
+                    input.value = '';
+                }
+            });
+            
+            document.getElementById('historicalDataAlert').classList.add('d-none');
+            document.getElementById('projectedFinancialsSection').style.display = 'none';
+        }
+        
+        // ============================================
+        // DUMMY DATA GENERATION
+        // ============================================
+        function generateDummyAssessments() {
+            const entities = [
+                'ABC Manufacturing Ltd.',
+                'XYZ Tech Solutions Pvt Ltd',
+                'Global Trading Co.',
+                'Prime Infrastructure Ltd.',
+                'Metro Retail Chain',
+                'Sunrise Pharmaceuticals',
+                'Green Energy Systems',
+                'Digital Finance Corp'
+            ];
+            
+            const templates = ['Corporate Standard', 'Corporate Advanced', 'SME Simplified', 'SME Comprehensive'];
+            const statuses = ['completed', 'pending', 'in-progress', 'draft'];
+            const stages = ['Business Maker', 'Business Checker', 'Risk Maker', 'Risk Checker', 'Final Approval'];
+            const ratings = ['AAA', 'AA', 'A+', 'A', 'BBB+', 'BBB', 'BB', 'B'];
+            
+            return entities.map((entity, idx) => ({
+                id: `CRA-${100001 + idx}`,
+                entityName: entity,
+                template: templates[Math.floor(Math.random() * templates.length)],
+                date: new Date(2025, 10 - Math.floor(Math.random() * 6), Math.floor(Math.random() * 28) + 1).toLocaleDateString(),
+                workflowStage: stages[Math.floor(Math.random() * stages.length)],
+                status: statuses[Math.floor(Math.random() * statuses.length)],
+                rating: Math.random() > 0.3 ? ratings[Math.floor(Math.random() * ratings.length)] : null,
+                cifNumber: Math.random() > 0.5 ? `CIF${100000 + idx}` : null
+            }));
+        }
+        
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function getWorkflowIcon(stage) {
+            const iconMap = {
+                'Business Maker': 'fa-user-edit',
+                'Business Checker': 'fa-user-check',
+                'Risk Maker': 'fa-shield-alt',
+                'Risk Checker': 'fa-clipboard-check',
+                'Final Approval': 'fa-stamp'
+            };
+            return iconMap[stage] || 'fa-circle';
+        }
+        
+        function getWorkflowIconClass(stage) {
+            if (stage.includes('Business')) return 'business';
+            if (stage.includes('Risk')) return 'risk';
+            if (stage.includes('Approval')) return 'approval';
+            return 'business';
+        }
+        
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1).replace('-', ' ');
+        }
+        
+        // ============================================
+        // WINDOW RESIZE HANDLER
+        // ============================================
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 992 && appState.sidebarOpen) {
+                // Auto-close sidebar on larger screens if open
+                closeSidebar();
+            }
+            
+            // Update charts on resize
+            if (ratingChart) ratingChart.resize();
+            if (statusChart) statusChart.resize();
+            if (trendChart) trendChart.resize();
+        });
+    </script>
+</body>
+</html>

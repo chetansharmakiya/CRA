@@ -1,0 +1,86 @@
+Financial Input
+
+API : /financial-input/create
+METHOD : POST
+REQUEST :
+{
+    auditId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+    financialInputId :  "FF-1",
+    financialInputName : "Current Liabilities",
+    status : "Pending",
+    category : "Liabilities",
+    controlName : "currentLiabilities",
+    fieldType : "decimal",
+    unit : "currency",
+    validationRule : "/^(?:[1-9]\d*|0?\.\d+)$/",
+    description : "Some Description",
+    isRequired : true,
+    activeInStepper : true,
+    version : 1,
+    actionBy : "Chetan Sharma",
+    actionDate : "",
+}
+
+API : /financial-input/update/{financialInputId}
+METHOD : PUT
+REQUEST :
+{
+    auditId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+    financialInputId : "Current Liabilities",
+    status : "Pending",
+    category : "Liabilities",
+    controlName : "currentLiabilities",
+    fieldType : "decimal",
+    unit : "currency",
+    validationRule : "/^(?:[1-9]\d*|0?\.\d+)$/",
+    description : "Some Description",
+    isRequired : true,
+    activeInStepper : true,
+    version : 1,
+
+    actionBy : "Chetan Sharma",
+    actionDate : "",
+}
+
+API : /financial-input/patch/status/{financialInputId}
+METHOD : PATCH
+REQUEST :
+{
+    auditId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+    status : "Approved",
+    actionBy : "Chetan Sharma",
+    actionDate : "",
+}
+
+API : /financial-input/view/{financialInputId}
+METHOD : GET
+RESPONSE : 
+{
+    financialInputId : "Current Liabilities",
+    status : "Pending",
+    category : "Liabilities",
+    controlName : "currentLiabilities",
+    fieldType : "decimal",
+    unit : "currency",
+    validationRule : "/^(?:[1-9]\d*|0?\.\d+)$/",
+    description : "Some Description",
+    isRequired : true,
+    activeInStepper : true,
+    version : 1,
+    actionByUserId : 1,
+    actionBy : "Chetan Sharma",
+    actionDate : "",
+}
+
+API : /financial-input/delete/{financialInputId}
+METHOD : DELETE
+
+API : /financial-input/all
+METHOD : GET
+

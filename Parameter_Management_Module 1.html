@@ -1,0 +1,1748 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parameter Management</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-dark: #11224E;
+            --primary-orange: #F87B1B;
+            --accent-green: #CBD99B;
+            --background-light: #EEEEEE;
+            --text-dark: #1a1a1a;
+            --text-light: #6c757d;
+            --border-color: #dee2e6;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --header-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            padding-top: var(--header-height);
+        }
+
+        /* Header */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1040;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .header-brand {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Cards */
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 3px solid var(--primary-orange);
+            padding-bottom: 0.75rem;
+        }
+
+        /* Tabs */
+        .nav-tabs {
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--text-dark);
+            font-weight: 600;
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 1rem 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-orange);
+            border-bottom-color: var(--primary-orange);
+            background: transparent;
+        }
+
+        .nav-tabs .nav-link:hover {
+            border-bottom-color: var(--primary-orange);
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+
+        .data-table thead {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .data-table th {
+            font-weight: 600;
+            padding: 1rem 0.75rem;
+            border: none;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 0.875rem 0.75rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tbody tr:hover {
+            background-color: rgba(17, 34, 78, 0.04);
+        }
+
+        /* Badges */
+        .badge-custom {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-financial {
+            background: rgba(23, 162, 184, 0.2);
+            color: #0c5460;
+        }
+
+        .badge-qualitative {
+            background: rgba(248, 123, 27, 0.2);
+            color: #e06a0a;
+        }
+
+        .badge-ratio {
+            background: rgba(40, 167, 69, 0.2);
+            color: #155724;
+        }
+
+        /* Buttons */
+        .btn-primary-custom {
+            background: var(--primary-dark);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary-custom:hover {
+            background: #1a3570;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(17, 34, 78, 0.3);
+            color: white;
+        }
+
+        .btn-orange {
+            background: var(--primary-orange);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-orange:hover {
+            background: #e06a0a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(248, 123, 27, 0.3);
+            color: white;
+        }
+
+        .btn-action {
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0 0.25rem;
+            min-width: 36px;
+        }
+
+        /* Forms */
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-label-required::after {
+            content: ' *';
+            color: var(--danger);
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.2rem rgba(248, 123, 27, 0.25);
+        }
+
+        /* Range Configuration */
+        .range-config-section {
+            background: var(--background-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .range-row {
+            display: grid;
+            grid-template-columns: 2fr 2fr 2fr 2fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .range-row-header {
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal-header {
+            background: var(--primary-dark);
+            color: white;
+            border-bottom: none;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .modal-header .btn-close {
+            filter: invert(1);
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .modal-xl {
+            max-width: 1400px;
+        }
+
+        /* Stats Cards */
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 4px solid var(--primary-orange);
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .stats-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: calc(var(--header-height) + 1rem);
+            right: 1rem;
+            z-index: 1050;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-header {
+                padding: 0 1rem;
+            }
+
+            .header-brand {
+                font-size: 1.1rem;
+            }
+
+            .range-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .section-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="top-header">
+        <div class="header-brand">
+            <i class="fas fa-cogs"></i>
+            Parameter Management
+        </div>
+    </header>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Main Content -->
+    <main class="container-fluid px-4 py-4">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h1 class="h2 mb-2" style="color: var(--primary-dark); font-weight: 700;">
+                    Template Configuration
+                </h1>
+                <p class="text-muted">Configure scoring parameters, ranges, adjustments, and overrides for credit assessment</p>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number" id="totalParametersCount">24</div>
+                    <div class="stats-label">Total Parameters</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number" id="financialParamsCount">8</div>
+                    <div class="stats-label">Financial Ratios</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number" id="qualitativeParamsCount">11</div>
+                    <div class="stats-label">Qualitative Factors</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number" id="totalWeightCount">100%</div>
+                    <div class="stats-label">Total Weight</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Navigation Tabs -->
+        <div class="section-card">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" id="financialTab" data-bs-toggle="tab" data-bs-target="#financialView" type="button">
+                        <i class="fas fa-chart-line me-2"></i>Financial Ratios
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="qualitativeTab" data-bs-toggle="tab" data-bs-target="#qualitativeView" type="button">
+                        <i class="fas fa-list-check me-2"></i>Qualitative Factors
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="adjustmentsTab" data-bs-toggle="tab" data-bs-target="#adjustmentsView" type="button">
+                        <i class="fas fa-sliders-h me-2"></i>Mandatory Adjustments
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="overridesTab" data-bs-toggle="tab" data-bs-target="#overridesView" type="button">
+                        <i class="fas fa-shield-alt me-2"></i>Discretionary Overrides
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content mt-4">
+                <!-- Financial Ratios Tab -->
+                <div class="tab-pane fade show active" id="financialView">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-calculator me-2 text-primary"></i>
+                            Financial Ratio Parameters
+                        </h4>
+                        <button class="btn btn-orange" onclick="openParameterModal('financial')">
+                            <i class="fas fa-plus me-2"></i>Add Financial Ratio
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Sr. No</th>
+                                    <th>Parameter Name</th>
+                                    <th>Formula</th>
+                                    <th>Weight (%)</th>
+                                    <th>Ranges Configured</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="financialTableBody">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Qualitative Factors Tab -->
+                <div class="tab-pane fade" id="qualitativeView">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-clipboard-list me-2 text-warning"></i>
+                            Qualitative Factor Parameters
+                        </h4>
+                        <button class="btn btn-orange" onclick="openParameterModal('qualitative')">
+                            <i class="fas fa-plus me-2"></i>Add Qualitative Factor
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Factor ID</th>
+                                    <th>Parameter Name</th>
+                                    <th>Weight (%)</th>
+                                    <th>Options Configured</th>
+                                    <th>Score Range</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="qualitativeTableBody">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Mandatory Adjustments Tab -->
+                <div class="tab-pane fade" id="adjustmentsView">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-exclamation-triangle me-2 text-danger"></i>
+                            Mandatory Adjustments
+                        </h4>
+                        <button class="btn btn-orange" onclick="openAdjustmentModal()">
+                            <i class="fas fa-plus me-2"></i>Add Adjustment
+                        </button>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Mandatory Adjustments</strong> are system-enforced score deductions based on data quality, audit reports, and account performance.
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Parameter Category</th>
+                                    <th>Option Label</th>
+                                    <th>Score Adjustment</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adjustmentsTableBody">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Discretionary Overrides Tab -->
+                <div class="tab-pane fade" id="overridesView">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-user-shield me-2 text-success"></i>
+                            Discretionary Overrides
+                        </h4>
+                        <button class="btn btn-orange" onclick="openOverrideModal()">
+                            <i class="fas fa-plus me-2"></i>Add Override Rule
+                        </button>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Discretionary Overrides</strong> allow senior officers to manually adjust final rating grades (notches) based on qualitative judgment.
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Override Reason</th>
+                                    <th>Max Upgrade (Notches)</th>
+                                    <th>Max Downgrade (Notches)</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="overridesTableBody">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Parameter Modal (Financial & Qualitative) -->
+    <div class="modal fade" id="parameterModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="parameterModalTitle">Add Parameter</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editParameterId">
+                    <input type="hidden" id="parameterType">
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="parameterName" class="form-label form-label-required">Parameter Name</label>
+                                <input type="text" class="form-control" id="parameterName" placeholder="e.g., Current Ratio">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="parameterWeight" class="form-label form-label-required">Weight (%)</label>
+                                <input type="number" class="form-control" id="parameterWeight" placeholder="0.00" step="0.01" min="0" max="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Ratio Specific -->
+                    <div id="financialSection" style="display: none;">
+                        <div class="mb-3">
+                            <label for="parameterFormula" class="form-label form-label-required">Formula</label>
+                            <input type="text" class="form-control" id="parameterFormula" placeholder="e.g., currentAssets / currentLiabilities">
+                            <small class="text-muted">Use field variables: currentAssets, currentLiabilities, totalDebt, netWorth, revenue, etc.</small>
+                        </div>
+
+                        <div class="range-config-section">
+                            <h6 class="mb-3">
+                                <i class="fas fa-sliders-h me-2"></i>
+                                Scoring Ranges Configuration
+                            </h6>
+
+                            <div class="range-row range-row-header">
+                                <div>Label / Description</div>
+                                <div>Min Value (From)</div>
+                                <div>Max Value (To)</div>
+                                <div>Score (Points)</div>
+                                <div>Action</div>
+                            </div>
+
+                            <div id="rangesContainer">
+                                <!-- Dynamic ranges -->
+                            </div>
+
+                            <button type="button" class="btn btn-primary-custom btn-sm mt-2" onclick="addRangeRow()">
+                                <i class="fas fa-plus me-2"></i>Add Range
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Qualitative Specific -->
+                    <div id="qualitativeSection" style="display: none;">
+                        <div class="mb-3">
+                            <label for="parameterDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="parameterDescription" rows="2" placeholder="Brief description of what this factor measures"></textarea>
+                        </div>
+
+                        <div class="range-config-section">
+                            <h6 class="mb-3">
+                                <i class="fas fa-list-ol me-2"></i>
+                                Qualitative Options & Scores
+                            </h6>
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 15%">Relative Risk Order</th>
+                                            <th style="width: 45%">Option Label / Range Description</th>
+                                            <th style="width: 25%">Score</th>
+                                            <th style="width: 15%">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="qualitativeOptionsContainer">
+                                        <!-- Dynamic options -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <button type="button" class="btn btn-primary-custom btn-sm" onclick="addQualitativeOption()">
+                                <i class="fas fa-plus me-2"></i>Add Option
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-orange" onclick="saveParameter()">
+                        <i class="fas fa-save me-2"></i>Save Parameter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adjustment Modal -->
+    <div class="modal fade" id="adjustmentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adjustmentModalTitle">Add Mandatory Adjustment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editAdjustmentId">
+
+                    <div class="mb-3">
+                        <label for="adjustmentCategory" class="form-label form-label-required">Parameter Category</label>
+                        <input type="text" class="form-control" id="adjustmentCategory" placeholder="e.g., Age of Financial Information">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="adjustmentOption" class="form-label form-label-required">Option Label</label>
+                        <input type="text" class="form-control" id="adjustmentOption" placeholder="e.g., 12-15 Months">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="adjustmentScore" class="form-label form-label-required">Score Adjustment</label>
+                        <input type="number" class="form-control" id="adjustmentScore" placeholder="0 or negative value" step="0.1">
+                        <small class="text-muted">Enter 0 for no adjustment, or negative value for penalty (e.g., -5, -10)</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-orange" onclick="saveAdjustment()">
+                        <i class="fas fa-save me-2"></i>Save Adjustment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Override Modal -->
+    <div class="modal fade" id="overrideModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="overrideModalTitle">Add Discretionary Override</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editOverrideId">
+
+                    <div class="mb-3">
+                        <label for="overrideCategory" class="form-label form-label-required">Category</label>
+                        <select class="form-select" id="overrideCategory">
+                            <option value="">Select Category</option>
+                            <option value="GEN">GEN - General</option>
+                            <option value="FIN">FIN - Financial</option>
+                            <option value="BUSS. PERF">BUSS. PERF - Business Performance</option>
+                            <option value="LEGAL">LEGAL - Legal</option>
+                            <option value="ECONOMIC">ECONOMIC - Economic</option>
+                            <option value="POLITICAL">POLITICAL - Political</option>
+                            <option value="ASSIGNMENT">ASSIGNMENT - Assignment</option>
+                            <option value="ACCOUNT CONDUCT">ACCOUNT CONDUCT - Account Conduct</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="overrideReason" class="form-label form-label-required">Override Reason</label>
+                        <textarea class="form-control" id="overrideReason" rows="2" placeholder="Describe the reason for override"></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="maxUpgrade" class="form-label form-label-required">Max Upgrade (Notches)</label>
+                                <input type="number" class="form-control" id="maxUpgrade" placeholder="0" min="0" max="5">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="maxDowngrade" class="form-label form-label-required">Max Downgrade (Notches)</label>
+                                <input type="number" class="form-control" id="maxDowngrade" placeholder="0" min="0" max="5">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-orange" onclick="saveOverride()">
+                        <i class="fas fa-save me-2"></i>Save Override
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Main Application JavaScript -->
+    <script>
+        // ===================================
+        // APPLICATION STATE & DATA STORAGE
+        // ===================================
+        const STORAGE_KEYS = {
+            financial: 'financialParameters',
+            qualitative: 'qualitativeParameters',
+            adjustments: 'mandatoryAdjustments',
+            overrides: 'discretionaryOverrides'
+        };
+
+        let appData = {
+            financial: [],
+            qualitative: [],
+            adjustments: [],
+            overrides: []
+        };
+
+        // ===================================
+        // INITIALIZATION
+        // ===================================
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDefaultData();
+            loadAllData();
+            renderAllTables();
+            updateStats();
+        });
+
+        function initializeDefaultData() {
+            // Check if data exists, if not, create default data
+            if (!localStorage.getItem(STORAGE_KEYS.financial)) {
+                appData.financial = getDefaultFinancialParameters();
+                saveData('financial');
+            }
+
+            if (!localStorage.getItem(STORAGE_KEYS.qualitative)) {
+                appData.qualitative = getDefaultQualitativeParameters();
+                saveData('qualitative');
+            }
+
+            if (!localStorage.getItem(STORAGE_KEYS.adjustments)) {
+                appData.adjustments = getDefaultAdjustments();
+                saveData('adjustments');
+            }
+
+            if (!localStorage.getItem(STORAGE_KEYS.overrides)) {
+                appData.overrides = getDefaultOverrides();
+                saveData('overrides');
+            }
+        }
+
+        function loadAllData() {
+            Object.keys(STORAGE_KEYS).forEach(key => {
+                const stored = localStorage.getItem(STORAGE_KEYS[key]);
+                if (stored) {
+                    appData[key] = JSON.parse(stored);
+                }
+            });
+        }
+
+        function saveData(type) {
+            localStorage.setItem(STORAGE_KEYS[type], JSON.stringify(appData[type]));
+        }
+
+        // ===================================
+        // DEFAULT DATA
+        // ===================================
+        function getDefaultFinancialParameters() {
+            return [
+                {
+                    id: 'F-001',
+                    name: 'Affiliates Due to Net Worth (AffDueToNW)',
+                    formula: 'affiliatesDue / netWorth',
+                    weight: 3.3,
+                    ranges: [
+                        { label: 'AffDueToNW < 0.01', from: -9999, to: 0.01, points: 33 },
+                        { label: '0.01 ≤ AffDueToNW < 0.1', from: 0.01, to: 0.1, points: 25.6 },
+                        { label: '0.1 ≤ AffDueToNW < 0.2', from: 0.1, to: 0.2, points: 21 },
+                        { label: '0.2 ≤ AffDueToNW < 0.66', from: 0.2, to: 0.66, points: 15.5 },
+                        { label: 'AffDueToNW ≥ 0.66', from: 0.66, to: 9999, points: 13.6 }
+                    ]
+                },
+                {
+                    id: 'F-002',
+                    name: 'Current Ratio',
+                    formula: 'currentAssets / currentLiabilities',
+                    weight: 4.12,
+                    ranges: [
+                        { label: 'CurrentRatio < 0.78', from: 0, to: 0.78, points: 7.1 },
+                        { label: '0.78 ≤ CurrentRatio < 0.96', from: 0.78, to: 0.96, points: 9.5 },
+                        { label: '0.96 ≤ CurrentRatio < 1.1', from: 0.96, to: 1.1, points: 11.9 },
+                        { label: '1.1 ≤ CurrentRatio < 1.47', from: 1.1, to: 1.47, points: 15.7 },
+                        { label: '1.47 ≤ CurrentRatio < 2.96', from: 1.47, to: 2.96, points: 27.1 },
+                        { label: '2.96 ≤ CurrentRatio < 5.38', from: 2.96, to: 5.38, points: 34 },
+                        { label: 'CurrentRatio ≥ 5.38', from: 5.38, to: 9999, points: 41.2 }
+                    ]
+                },
+                {
+                    id: 'F-003',
+                    name: 'Debt Equity Ratio (DER)',
+                    formula: 'totalDebt / netWorth',
+                    weight: 4.1,
+                    ranges: [
+                        { label: 'DER < 0.16', from: -9999, to: 0.16, points: 41 },
+                        { label: '0.16 ≤ DER < 0.42', from: 0.16, to: 0.42, points: 33.9 },
+                        { label: '0.42 ≤ DER < 1.06', from: 0.42, to: 1.06, points: 21.5 },
+                        { label: '1.06 ≤ DER < 1.48', from: 1.06, to: 1.48, points: 18.9 },
+                        { label: '1.48 ≤ DER < 1.93', from: 1.48, to: 1.93, points: 14.5 },
+                        { label: '1.93 ≤ DER < 4', from: 1.93, to: 4, points: 10 },
+                        { label: 'DER ≥ 4', from: 4, to: 9999, points: 7.4 }
+                    ]
+                },
+                {
+                    id: 'F-004',
+                    name: 'Operating Revenue / External Liabilities',
+                    formula: 'operatingRevenue / externalLiabilities',
+                    weight: 4.18,
+                    ranges: [
+                        { label: '< -1.6', from: -9999, to: -1.6, points: 1.8 },
+                        { label: '-1.6 to -0.4', from: -1.6, to: -0.4, points: 6.8 },
+                        { label: '-0.4 to -0.15', from: -0.4, to: -0.15, points: 11.8 },
+                        { label: '-0.15 to -0.03', from: -0.15, to: -0.03, points: 16.8 },
+                        { label: '-0.03 to 0.03', from: -0.03, to: 0.03, points: 21.8 },
+                        { label: '0.03 to 0.13', from: 0.03, to: 0.13, points: 26.8 },
+                        { label: '0.13 to 0.45', from: 0.13, to: 0.45, points: 31.8 },
+                        { label: '0.45 to 2.1', from: 0.45, to: 2.1, points: 36.8 },
+                        { label: '≥ 2.1', from: 2.1, to: 9999, points: 41.8 }
+                    ]
+                },
+                {
+                    id: 'F-005',
+                    name: 'Investment Assets to Total Assets',
+                    formula: 'investmentAssets / totalAssets',
+                    weight: 3.1,
+                    ranges: [
+                        { label: '< 0.09', from: 0.01, to: 0.09, points: 31 },
+                        { label: '0.09 to 0.24', from: 0.09, to: 0.24, points: 19.1 },
+                        { label: '0.24 to 0.64', from: 0.24, to: 0.64, points: 10 },
+                        { label: '≥ 0.64', from: 0.64, to: 1.5, points: 6.7 }
+                    ]
+                },
+                {
+                    id: 'F-006',
+                    name: 'Net Profit Margin',
+                    formula: 'netProfit / revenue',
+                    weight: 3.52,
+                    ranges: [
+                        { label: '< 0', from: -9999, to: 0, points: 14.9 },
+                        { label: '0 to 0.06', from: 0, to: 0.06, points: 18.8 },
+                        { label: '0.06 to 0.21', from: 0.06, to: 0.21, points: 26.9 },
+                        { label: '≥ 0.21', from: 0.21, to: 9999, points: 35.2 }
+                    ]
+                },
+                {
+                    id: 'F-007',
+                    name: 'Working Capital Turnover (WCT)',
+                    formula: 'workingCapital / revenue',
+                    weight: 3.36,
+                    ranges: [
+                        { label: '< -0.48', from: -9999, to: -0.48, points: 11.8 },
+                        { label: '-0.48 to 0', from: -0.48, to: 0, points: 14.4 },
+                        { label: '0 to 0.41', from: 0, to: 0.41, points: 17 },
+                        { label: '0.41 to 1.2', from: 0.41, to: 1.2, points: 23.1 },
+                        { label: '1.2 to 1.88', from: 1.2, to: 1.88, points: 27.5 },
+                        { label: '1.88 to 4.52', from: 1.88, to: 4.52, points: 31.8 },
+                        { label: '≥ 4.52', from: 4.52, to: 9999, points: 33.6 }
+                    ]
+                },
+                {
+                    id: 'F-008',
+                    name: 'Change in Debt Ratio (d_DebtRatio)',
+                    formula: 'currentDebtRatio - previousDebtRatio',
+                    weight: 4.04,
+                    ranges: [
+                        { label: '< -0.2', from: -9999, to: -0.2, points: 40.4 },
+                        { label: '-0.2 to -0.11', from: -0.2, to: -0.11, points: 31.3 },
+                        { label: '-0.11 to 0.33', from: -0.11, to: 0.33, points: 20.5 },
+                        { label: '≥ 0.33', from: 0.33, to: 9999, points: 12.3 }
+                    ]
+                }
+            ];
+        }
+
+        function getDefaultQualitativeParameters() {
+            return [
+                {
+                    id: 'Q-001',
+                    name: 'F1 - Constitution and Establishment',
+                    description: 'Type of entity & incorporation details',
+                    weight: 2.9,
+                    options: [
+                        { order: 1, label: 'Government / Semi-government', score: 29 },
+                        { order: 2, label: 'Public Shareholding Companies', score: 22 },
+                        { order: 3, label: 'Closed Shareholding Companies', score: 15 },
+                        { order: 4, label: 'Partnership with >50% ownership / Sole Proprietorship', score: 7 },
+                        { order: 5, label: 'Other Partnership or Establishment', score: 0 }
+                    ]
+                },
+                {
+                    id: 'Q-002',
+                    name: 'F2 - Number of Years in Business',
+                    description: 'Business age and operational history',
+                    weight: 2.9,
+                    options: [
+                        { order: 1, label: 'More than 20 years', score: 29 },
+                        { order: 2, label: '10 – 20 years', score: 22 },
+                        { order: 3, label: '2 – 10 years', score: 11 },
+                        { order: 4, label: 'Less than 2 years', score: 0 }
+                    ]
+                },
+                {
+                    id: 'Q-003',
+                    name: 'F3 - Availability of Unutilized Credit Lines',
+                    description: 'Available unused credit with lenders',
+                    weight: 2.9,
+                    options: [
+                        { order: 1, label: 'Available & utilized < 20%', score: 29 },
+                        { order: 2, label: 'Available & utilized 20–70%', score: 22 },
+                        { order: 3, label: 'Sole Bank', score: 15 },
+                        { order: 4, label: 'Available & utilized > 70%', score: 7 },
+                        { order: 5, label: 'Over-utilization beyond limits', score: 0 }
+                    ]
+                },
+                {
+                    id: 'Q-004',
+                    name: 'F4 - Financial Planning & Internal Control',
+                    description: 'Risk management & internal audit practices',
+                    weight: 2.7,
+                    options: [
+                        { order: 0, label: 'Not Applicable', score: 23 },
+                        { order: 1, label: 'Good', score: 27 },
+                        { order: 2, label: 'Moderate', score: 18 },
+                        { order: 3, label: 'No financial planning & control', score: 9 }
+                    ]
+                },
+                {
+                    id: 'Q-005',
+                    name: 'F5 - Position in the Market',
+                    description: 'Competitive standing in the industry',
+                    weight: 2.9,
+                    options: [
+                        { order: 1, label: 'Market Leaders', score: 29 },
+                        { order: 2, label: 'Strong Position', score: 22 },
+                        { order: 3, label: 'Below Average', score: 11 },
+                        { order: 4, label: 'New Entrant', score: 0 }
+                    ]
+                },
+                {
+                    id: 'Q-006',
+                    name: 'F6 - Govt. / Private Sector Contracting',
+                    description: 'Type of client portfolio',
+                    weight: 2.9,
+                    options: [
+                        { order: 0, label: 'Not Applicable (Neutral Score)', score: 23 },
+                        { order: 1, label: '100% Govt. / Public Sector', score: 29 },
+                        { order: 2, label: '>75% Govt. / Public Sector', score: 22 },
+                        { order: 3, label: '>50% Govt. + strong private', score: 15 },
+                        { order: 4, label: 'Majority private – net worth known', score: 7 },
+                        { order: 5, label: 'Majority private – net worth unknown', score: 0 }
+                    ]
+                },
+                {
+                    id: 'Q-007',
+                    name: 'F7 - Sensitivity to Economic Shocks',
+                    description: 'Stability against external disruptions',
+                    weight: 2.9,
+                    options: [
+                        { order: 1, label: 'Unlikely to be affected', score: 29 },
+                        { order: 2, label: 'Minor impact', score: 22 },
+                        { order: 3, label: 'Likely to see impact', score: 11 },
+                        { order: 4, label: 'Highly sensitive', score: 0 }
+                    ]
+                },
+                {
+                    id: 'Q-008',
+                    name: 'F8 - Contractor / Subcontractor Grade',
+                    description: 'Classification/grading of contractor',
+                    weight: 2.6,
+                    options: [
+                        { order: 0, label: 'Not Applicable (Service Companies)', score: 23 },
+                        { order: 1, label: 'Grade I', score: 26 },
+                        { order: 2, label: 'Grade II', score: 22 },
+                        { order: 3, label: 'Grade III', score: 17 },
+                        { order: 4, label: 'Grade IV / Ungraded', score: 12 }
+                    ]
+                },
+                {
+                    id: 'Q-009',
+                    name: 'F9 - Past Track Record',
+                    description: 'History of service delivery',
+                    weight: 3.1,
+                    options: [
+                        { order: 0, label: 'Not Applicable', score: 23 },
+                        { order: 1, label: 'Excellent', score: 31 },
+                        { order: 2, label: 'Good', score: 21 },
+                        { order: 3, label: 'Average', score: 7 },
+                        { order: 4, label: 'Poor', score: -8 }
+                    ]
+                },
+                {
+                    id: 'Q-010',
+                    name: 'F10 - Competition & Demand',
+                    description: 'Industry competition intensity',
+                    weight: 2.9,
+                    options: [
+                        { order: 1, label: 'Low competition & high demand', score: 29 },
+                        { order: 2, label: 'High competition & high demand', score: 22 },
+                        { order: 3, label: 'Low competition & low demand', score: 11 },
+                        { order: 4, label: 'High competition & low demand', score: 0 }
+                    ]
+                },
+                {
+                    id: 'Q-011',
+                    name: 'F11 - Resource & Management Capability',
+                    description: 'Availability of qualified resources',
+                    weight: 3.3,
+                    options: [
+                        { order: 1, label: 'Well Qualified', score: 33 },
+                        { order: 2, label: 'Partially Qualified', score: 9 },
+                        { order: 3, label: 'Not adequately qualified', score: -14 }
+                    ]
+                }
+            ];
+        }
+
+        function getDefaultAdjustments() {
+            return [
+                { id: 'ADJ-001', category: 'Age of Financial Information', option: '< 12 Months (Audited & Recent)', score: 0 },
+                { id: 'ADJ-002', category: 'Age of Financial Information', option: '12-15 Months', score: -5 },
+                { id: 'ADJ-003', category: 'Age of Financial Information', option: '15-18 Months', score: -10 },
+                { id: 'ADJ-004', category: 'Age of Financial Information', option: '> 18 Months', score: -20 },
+                { id: 'ADJ-005', category: 'Quality of Financial Information', option: 'Big 4 Auditors / Top Tier', score: 0 },
+                { id: 'ADJ-006', category: 'Quality of Financial Information', option: 'Second Tier / Approved Auditors', score: -5 },
+                { id: 'ADJ-007', category: 'Quality of Financial Information', option: 'Unapproved Auditors / Management Accounts', score: -15 },
+                { id: 'ADJ-008', category: 'Historical Account Performance', option: 'Clean Repayment History', score: 0 },
+                { id: 'ADJ-009', category: 'Historical Account Performance', option: 'Occasional Delays (< 30 days)', score: -10 },
+                { id: 'ADJ-010', category: 'Historical Account Performance', option: 'Frequent Delays / Restructured Account', score: -20 },
+                { id: 'ADJ-011', category: 'Qualification of Audit Report', option: 'Clean Report (Unqualified)', score: 0 },
+                { id: 'ADJ-012', category: 'Qualification of Audit Report', option: 'Qualified (Minor Issues)', score: -10 },
+                { id: 'ADJ-013', category: 'Qualification of Audit Report', option: 'Qualified (Material Issues / Going Concern)', score: -25 }
+            ];
+        }
+
+        function getDefaultOverrides() {
+            return [
+                { id: 'OVR-001', category: 'GEN', reason: 'Management changes', upgrade: 2, downgrade: 2 },
+                { id: 'OVR-002', category: 'GEN', reason: 'Change in Regulation', upgrade: 1, downgrade: 1 },
+                { id: 'OVR-003', category: 'GEN', reason: 'Length of relationship – Strong / Weak', upgrade: 1, downgrade: 1 },
+                { id: 'OVR-004', category: 'GEN', reason: 'External Relationship (Part of strong group / troubled group)', upgrade: 1, downgrade: 1 },
+                { id: 'OVR-005', category: 'GEN', reason: 'Deposit availability / Ancillary business', upgrade: 1, downgrade: 0 },
+                { id: 'OVR-006', category: 'GEN', reason: 'Bankruptcy, Liquidation', upgrade: 0, downgrade: 3 },
+                { id: 'OVR-007', category: 'GEN', reason: 'Deterioration of group accounts exposure', upgrade: 0, downgrade: 2 },
+                { id: 'OVR-008', category: 'GEN', reason: 'Unresolved conflict between owners', upgrade: 0, downgrade: 2 },
+                { id: 'OVR-009', category: 'GEN', reason: 'Death of a key person', upgrade: 0, downgrade: 2 },
+                { id: 'OVR-010', category: 'GEN', reason: 'Non-existence of succession plan', upgrade: 0, downgrade: 1 },
+                { id: 'OVR-011', category: 'FIN', reason: 'Income Diversification', upgrade: 1, downgrade: 1 },
+                { id: 'OVR-012', category: 'BUSS. PERF', reason: 'Strategic contract signed / loss of key contract', upgrade: 2, downgrade: 2 },
+                { id: 'OVR-013', category: 'BUSS. PERF', reason: 'Change in Market Position', upgrade: 2, downgrade: 2 },
+                { id: 'OVR-014', category: 'BUSS. PERF', reason: 'Performance vs. Budget (better/worse)', upgrade: 1, downgrade: 1 },
+                { id: 'OVR-015', category: 'BUSS. PERF', reason: 'Reputation (Strong / Poor)', upgrade: 1, downgrade: 1 },
+                { id: 'OVR-016', category: 'LEGAL', reason: 'Ongoing legal dispute / Court order', upgrade: 0, downgrade: 2 },
+                { id: 'OVR-017', category: 'ECONOMIC', reason: 'Drastic fall in capital markets', upgrade: 0, downgrade: 1 },
+                { id: 'OVR-018', category: 'ECONOMIC', reason: 'Drastic fall in oil prices', upgrade: 0, downgrade: 1 },
+                { id: 'OVR-019', category: 'ECONOMIC', reason: 'Global economic deterioration', upgrade: 0, downgrade: 2 },
+                { id: 'OVR-020', category: 'POLITICAL', reason: 'Social disturbances / unrest', upgrade: 0, downgrade: 1 },
+                { id: 'OVR-021', category: 'ASSIGNMENT', reason: '100% Govt. sector contracts with legal assignment', upgrade: 2, downgrade: 0 },
+                { id: 'OVR-022', category: 'ASSIGNMENT', reason: 'Majority contracts (>75%) with strong assignment', upgrade: 1, downgrade: 0 },
+                { id: 'OVR-023', category: 'ASSIGNMENT', reason: '>50% contracts without credible assignment', upgrade: 0, downgrade: 1 },
+                { id: 'OVR-024', category: 'ACCOUNT CONDUCT', reason: 'Persistent ever-greening (>2 years)', upgrade: 0, downgrade: 1 }
+            ];
+        }
+
+        // ===================================
+        // RENDERING FUNCTIONS
+        // ===================================
+        function renderAllTables() {
+            renderFinancialTable();
+            renderQualitativeTable();
+            renderAdjustmentsTable();
+            renderOverridesTable();
+        }
+
+        function renderFinancialTable() {
+            const tbody = document.getElementById('financialTableBody');
+            if (appData.financial.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">No financial parameters configured</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = appData.financial.map((param, index) => `
+                <tr>
+                    <td><strong>${index + 1}</strong></td>
+                    <td>${param.name}</td>
+                    <td><code class="small">${param.formula}</code></td>
+                    <td><strong>${param.weight.toFixed(2)}%</strong></td>
+                    <td><span class="badge bg-info">${param.ranges.length} ranges</span></td>
+                    <td>
+                        <button class="btn btn-primary-custom btn-action" onclick="viewParameter('financial', '${param.id}')" title="View Details">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-outline-secondary btn-action" onclick="editParameter('financial', '${param.id}')" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-action" onclick="deleteParameter('financial', '${param.id}')" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderQualitativeTable() {
+            const tbody = document.getElementById('qualitativeTableBody');
+            if (appData.qualitative.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">No qualitative parameters configured</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = appData.qualitative.map(param => {
+                const scores = param.options.map(o => o.score);
+                const minScore = Math.min(...scores);
+                const maxScore = Math.max(...scores);
+
+                return `
+                    <tr>
+                        <td><strong>${param.id}</strong></td>
+                        <td>${param.name}</td>
+                        <td><strong>${param.weight.toFixed(2)}%</strong></td>
+                        <td><span class="badge bg-success">${param.options.length} options</span></td>
+                        <td>${minScore} to ${maxScore}</td>
+                        <td>
+                            <button class="btn btn-primary-custom btn-action" onclick="viewParameter('qualitative', '${param.id}')" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-action" onclick="editParameter('qualitative', '${param.id}')" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-action" onclick="deleteParameter('qualitative', '${param.id}')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderAdjustmentsTable() {
+            const tbody = document.getElementById('adjustmentsTableBody');
+            if (appData.adjustments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">No adjustments configured</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = appData.adjustments.map(adj => `
+                <tr>
+                    <td><strong>${adj.category}</strong></td>
+                    <td>${adj.option}</td>
+                    <td><span class="${adj.score >= 0 ? 'text-success' : 'text-danger'} fw-bold">${adj.score}</span></td>
+                    <td>
+                        <button class="btn btn-outline-secondary btn-action" onclick="editAdjustment('${adj.id}')" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-action" onclick="deleteAdjustment('${adj.id}')" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderOverridesTable() {
+            const tbody = document.getElementById('overridesTableBody');
+            if (appData.overrides.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-4">No overrides configured</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = appData.overrides.map(ovr => `
+                <tr>
+                    <td><span class="badge badge-custom badge-qualitative">${ovr.category}</span></td>
+                    <td>${ovr.reason}</td>
+                    <td><span class="text-success fw-bold">+${ovr.upgrade}</span></td>
+                    <td><span class="text-danger fw-bold">-${ovr.downgrade}</span></td>
+                    <td>
+                        <button class="btn btn-outline-secondary btn-action" onclick="editOverride('${ovr.id}')" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-action" onclick="deleteOverride('${ovr.id}')" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ===================================
+        // STATS UPDATE
+        // ===================================
+        function updateStats() {
+            const totalParams = appData.financial.length + appData.qualitative.length;
+            const financialCount = appData.financial.length;
+            const qualitativeCount = appData.qualitative.length;
+            const totalWeight = [...appData.financial, ...appData.qualitative]
+                .reduce((sum, p) => sum + p.weight, 0);
+
+            document.getElementById('totalParametersCount').textContent = totalParams;
+            document.getElementById('financialParamsCount').textContent = financialCount;
+            document.getElementById('qualitativeParamsCount').textContent = qualitativeCount;
+            document.getElementById('totalWeightCount').textContent = totalWeight.toFixed(2) + '%';
+        }
+
+        // ===================================
+        // PARAMETER MODAL FUNCTIONS
+        // ===================================
+        function openParameterModal(type, paramId = null) {
+            const modal = new bootstrap.Modal(document.getElementById('parameterModal'));
+            const isEdit = paramId !== null;
+
+            // Set modal title
+            document.getElementById('parameterModalTitle').textContent = 
+                isEdit ? 'Edit Parameter' : `Add ${type === 'financial' ? 'Financial Ratio' : 'Qualitative Factor'}`;
+
+            // Set parameter type
+            document.getElementById('parameterType').value = type;
+
+            // Show/hide relevant sections
+            if (type === 'financial') {
+                document.getElementById('financialSection').style.display = 'block';
+                document.getElementById('qualitativeSection').style.display = 'none';
+            } else {
+                document.getElementById('financialSection').style.display = 'none';
+                document.getElementById('qualitativeSection').style.display = 'block';
+            }
+
+            // If editing, populate form
+            if (isEdit) {
+                const param = appData[type].find(p => p.id === paramId);
+                if (param) {
+                    document.getElementById('editParameterId').value = param.id;
+                    document.getElementById('parameterName').value = param.name;
+                    document.getElementById('parameterWeight').value = param.weight;
+
+                    if (type === 'financial') {
+                        document.getElementById('parameterFormula').value = param.formula;
+                        // Populate ranges
+                        document.getElementById('rangesContainer').innerHTML = '';
+                        param.ranges.forEach(range => {
+                            addRangeRow(range);
+                        });
+                    } else {
+                        document.getElementById('parameterDescription').value = param.description || '';
+                        // Populate options
+                        document.getElementById('qualitativeOptionsContainer').innerHTML = '';
+                        param.options.forEach(option => {
+                            addQualitativeOption(option);
+                        });
+                    }
+                }
+            } else {
+                // Clear form for new entry
+                document.getElementById('editParameterId').value = '';
+                document.getElementById('parameterName').value = '';
+                document.getElementById('parameterWeight').value = '';
+                document.getElementById('parameterFormula').value = '';
+                document.getElementById('parameterDescription').value = '';
+                document.getElementById('rangesContainer').innerHTML = '';
+                document.getElementById('qualitativeOptionsContainer').innerHTML = '';
+
+                // Add one empty range/option by default
+                if (type === 'financial') {
+                    addRangeRow();
+                } else {
+                    addQualitativeOption();
+                }
+            }
+
+            modal.show();
+        }
+
+        function addRangeRow(range = null) {
+            const container = document.getElementById('rangesContainer');
+            const id = 'range-' + Date.now() + Math.random();
+
+            const row = document.createElement('div');
+            row.className = 'range-row';
+            row.id = id;
+            row.innerHTML = `
+                <input type="text" class="form-control" placeholder="e.g., DER < 0.16" value="${range ? range.label : ''}">
+                <input type="number" class="form-control" placeholder="From" step="0.01" value="${range ? range.from : ''}">
+                <input type="number" class="form-control" placeholder="To" step="0.01" value="${range ? range.to : ''}">
+                <input type="number" class="form-control" placeholder="Points" step="0.1" value="${range ? range.points : ''}">
+                <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteRangeRow('${id}')">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+
+            container.appendChild(row);
+        }
+
+        function deleteRangeRow(id) {
+            document.getElementById(id).remove();
+        }
+
+        function addQualitativeOption(option = null) {
+            const container = document.getElementById('qualitativeOptionsContainer');
+            const id = 'option-' + Date.now() + Math.random();
+
+            const row = document.createElement('tr');
+            row.id = id;
+            row.innerHTML = `
+                <td><input type="number" class="form-control" placeholder="1" min="0" value="${option ? option.order : ''}"></td>
+                <td><input type="text" class="form-control" placeholder="Option description" value="${option ? option.label : ''}"></td>
+                <td><input type="number" class="form-control" placeholder="Score" step="0.1" value="${option ? option.score : ''}"></td>
+                <td>
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteQualitativeOption('${id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+
+            container.appendChild(row);
+        }
+
+        function deleteQualitativeOption(id) {
+            document.getElementById(id).remove();
+        }
+
+        function saveParameter() {
+            const type = document.getElementById('parameterType').value;
+            const editId = document.getElementById('editParameterId').value;
+            const name = document.getElementById('parameterName').value.trim();
+            const weight = parseFloat(document.getElementById('parameterWeight').value);
+
+            // Validation
+            if (!name || isNaN(weight)) {
+                showToast('Error', 'Please fill in all required fields', 'danger');
+                return;
+            }
+
+            const isEdit = editId !== '';
+            let paramData;
+
+            if (type === 'financial') {
+                const formula = document.getElementById('parameterFormula').value.trim();
+                if (!formula) {
+                    showToast('Error', 'Please enter a formula', 'danger');
+                    return;
+                }
+
+                // Collect ranges
+                const ranges = [];
+                document.querySelectorAll('#rangesContainer .range-row').forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    ranges.push({
+                        label: inputs[0].value,
+                        from: parseFloat(inputs[1].value),
+                        to: parseFloat(inputs[2].value),
+                        points: parseFloat(inputs[3].value)
+                    });
+                });
+
+                if (ranges.length === 0) {
+                    showToast('Error', 'Please add at least one scoring range', 'danger');
+                    return;
+                }
+
+                paramData = {
+                    id: isEdit ? editId : 'F-' + String(appData.financial.length + 1).padStart(3, '0'),
+                    name,
+                    formula,
+                    weight,
+                    ranges
+                };
+            } else {
+                const description = document.getElementById('parameterDescription').value.trim();
+
+                // Collect options
+                const options = [];
+                document.querySelectorAll('#qualitativeOptionsContainer tr').forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    options.push({
+                        order: parseInt(inputs[0].value) || 0,
+                        label: inputs[1].value,
+                        score: parseFloat(inputs[2].value)
+                    });
+                });
+
+                if (options.length === 0) {
+                    showToast('Error', 'Please add at least one option', 'danger');
+                    return;
+                }
+
+                paramData = {
+                    id: isEdit ? editId : 'Q-' + String(appData.qualitative.length + 1).padStart(3, '0'),
+                    name,
+                    description,
+                    weight,
+                    options
+                };
+            }
+
+            if (isEdit) {
+                // Update existing
+                const index = appData[type].findIndex(p => p.id === editId);
+                if (index !== -1) {
+                    appData[type][index] = paramData;
+                }
+            } else {
+                // Add new
+                appData[type].push(paramData);
+            }
+
+            saveData(type);
+            renderAllTables();
+            updateStats();
+
+            bootstrap.Modal.getInstance(document.getElementById('parameterModal')).hide();
+            showToast('Success', `Parameter ${isEdit ? 'updated' : 'added'} successfully`, 'success');
+        }
+
+        function editParameter(type, id) {
+            openParameterModal(type, id);
+        }
+
+        function viewParameter(type, id) {
+            const param = appData[type].find(p => p.id === id);
+            if (!param) return;
+
+            let content = `
+                <h5>${param.name}</h5>
+                <p class="text-muted mb-3">${type === 'qualitative' && param.description ? param.description : ''}</p>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Parameter ID:</strong> ${param.id}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Weight:</strong> ${param.weight.toFixed(2)}%
+                    </div>
+                </div>
+            `;
+
+            if (type === 'financial') {
+                content += `
+                    <div class="mb-3">
+                        <strong>Formula:</strong> <code>${param.formula}</code>
+                    </div>
+                    <h6 class="mt-4 mb-3">Scoring Ranges</h6>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Label</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${param.ranges.map(r => `
+                                <tr>
+                                    <td>${r.label}</td>
+                                    <td>${r.from}</td>
+                                    <td>${r.to}</td>
+                                    <td><strong>${r.points}</strong></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } else {
+                content += `
+                    <h6 class="mt-4 mb-3">Options & Scores</h6>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Option</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${param.options.map(o => `
+                                <tr>
+                                    <td>${o.order}</td>
+                                    <td>${o.label}</td>
+                                    <td><strong>${o.score}</strong></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            alert(content); // In production, use a proper modal
+        }
+
+        function deleteParameter(type, id) {
+            if (!confirm('Are you sure you want to delete this parameter?')) return;
+
+            appData[type] = appData[type].filter(p => p.id !== id);
+            saveData(type);
+            renderAllTables();
+            updateStats();
+            showToast('Success', 'Parameter deleted successfully', 'success');
+        }
+
+        // ===================================
+        // ADJUSTMENT MODAL FUNCTIONS
+        // ===================================
+        function openAdjustmentModal(adjId = null) {
+            const modal = new bootstrap.Modal(document.getElementById('adjustmentModal'));
+            const isEdit = adjId !== null;
+
+            document.getElementById('adjustmentModalTitle').textContent = 
+                isEdit ? 'Edit Mandatory Adjustment' : 'Add Mandatory Adjustment';
+
+            if (isEdit) {
+                const adj = appData.adjustments.find(a => a.id === adjId);
+                if (adj) {
+                    document.getElementById('editAdjustmentId').value = adj.id;
+                    document.getElementById('adjustmentCategory').value = adj.category;
+                    document.getElementById('adjustmentOption').value = adj.option;
+                    document.getElementById('adjustmentScore').value = adj.score;
+                }
+            } else {
+                document.getElementById('editAdjustmentId').value = '';
+                document.getElementById('adjustmentCategory').value = '';
+                document.getElementById('adjustmentOption').value = '';
+                document.getElementById('adjustmentScore').value = '';
+            }
+
+            modal.show();
+        }
+
+        function saveAdjustment() {
+            const editId = document.getElementById('editAdjustmentId').value;
+            const category = document.getElementById('adjustmentCategory').value.trim();
+            const option = document.getElementById('adjustmentOption').value.trim();
+            const score = parseFloat(document.getElementById('adjustmentScore').value);
+
+            if (!category || !option || isNaN(score)) {
+                showToast('Error', 'Please fill in all fields', 'danger');
+                return;
+            }
+
+            const isEdit = editId !== '';
+            const adjData = {
+                id: isEdit ? editId : 'ADJ-' + String(appData.adjustments.length + 1).padStart(3, '0'),
+                category,
+                option,
+                score
+            };
+
+            if (isEdit) {
+                const index = appData.adjustments.findIndex(a => a.id === editId);
+                if (index !== -1) {
+                    appData.adjustments[index] = adjData;
+                }
+            } else {
+                appData.adjustments.push(adjData);
+            }
+
+            saveData('adjustments');
+            renderAdjustmentsTable();
+            bootstrap.Modal.getInstance(document.getElementById('adjustmentModal')).hide();
+            showToast('Success', `Adjustment ${isEdit ? 'updated' : 'added'} successfully`, 'success');
+        }
+
+        function editAdjustment(id) {
+            openAdjustmentModal(id);
+        }
+
+        function deleteAdjustment(id) {
+            if (!confirm('Are you sure you want to delete this adjustment?')) return;
+
+            appData.adjustments = appData.adjustments.filter(a => a.id !== id);
+            saveData('adjustments');
+            renderAdjustmentsTable();
+            showToast('Success', 'Adjustment deleted successfully', 'success');
+        }
+
+        // ===================================
+        // OVERRIDE MODAL FUNCTIONS
+        // ===================================
+        function openOverrideModal(ovrId = null) {
+            const modal = new bootstrap.Modal(document.getElementById('overrideModal'));
+            const isEdit = ovrId !== null;
+
+            document.getElementById('overrideModalTitle').textContent = 
+                isEdit ? 'Edit Discretionary Override' : 'Add Discretionary Override';
+
+            if (isEdit) {
+                const ovr = appData.overrides.find(o => o.id === ovrId);
+                if (ovr) {
+                    document.getElementById('editOverrideId').value = ovr.id;
+                    document.getElementById('overrideCategory').value = ovr.category;
+                    document.getElementById('overrideReason').value = ovr.reason;
+                    document.getElementById('maxUpgrade').value = ovr.upgrade;
+                    document.getElementById('maxDowngrade').value = ovr.downgrade;
+                }
+            } else {
+                document.getElementById('editOverrideId').value = '';
+                document.getElementById('overrideCategory').value = '';
+                document.getElementById('overrideReason').value = '';
+                document.getElementById('maxUpgrade').value = '';
+                document.getElementById('maxDowngrade').value = '';
+            }
+
+            modal.show();
+        }
+
+        function saveOverride() {
+            const editId = document.getElementById('editOverrideId').value;
+            const category = document.getElementById('overrideCategory').value;
+            const reason = document.getElementById('overrideReason').value.trim();
+            const upgrade = parseInt(document.getElementById('maxUpgrade').value);
+            const downgrade = parseInt(document.getElementById('maxDowngrade').value);
+
+            if (!category || !reason || isNaN(upgrade) || isNaN(downgrade)) {
+                showToast('Error', 'Please fill in all fields', 'danger');
+                return;
+            }
+
+            const isEdit = editId !== '';
+            const ovrData = {
+                id: isEdit ? editId : 'OVR-' + String(appData.overrides.length + 1).padStart(3, '0'),
+                category,
+                reason,
+                upgrade,
+                downgrade
+            };
+
+            if (isEdit) {
+                const index = appData.overrides.findIndex(o => o.id === editId);
+                if (index !== -1) {
+                    appData.overrides[index] = ovrData;
+                }
+            } else {
+                appData.overrides.push(ovrData);
+            }
+
+            saveData('overrides');
+            renderOverridesTable();
+            bootstrap.Modal.getInstance(document.getElementById('overrideModal')).hide();
+            showToast('Success', `Override ${isEdit ? 'updated' : 'added'} successfully`, 'success');
+        }
+
+        function editOverride(id) {
+            openOverrideModal(id);
+        }
+
+        function deleteOverride(id) {
+            if (!confirm('Are you sure you want to delete this override?')) return;
+
+            appData.overrides = appData.overrides.filter(o => o.id !== id);
+            saveData('overrides');
+            renderOverridesTable();
+            showToast('Success', 'Override deleted successfully', 'success');
+        }
+
+        // ===================================
+        // TOAST NOTIFICATIONS
+        // ===================================
+        function showToast(title, message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toastId = 'toast-' + Date.now();
+
+            const colorMap = {
+                success: 'bg-success',
+                danger: 'bg-danger',
+                warning: 'bg-warning',
+                info: 'bg-info'
+            };
+
+            const iconMap = {
+                success: 'fa-check-circle',
+                danger: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+
+            const toastHTML = `
+                <div class="toast align-items-center text-white ${colorMap[type]} border-0" role="alert" id="${toastId}">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas ${iconMap[type]} me-2"></i>
+                            <strong>${title}</strong><br>${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { delay: 4000 });
+            toast.show();
+
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
+            });
+        }
+    </script>
+</body>
+</html>

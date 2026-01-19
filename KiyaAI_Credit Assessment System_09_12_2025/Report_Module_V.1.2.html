@@ -1,0 +1,2566 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Credit Rating Portfolio Reports - All Templates">
+    <title>Portfolio Reports | Credit Assessment System</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- SheetJS (xlsx.full.min.js) -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-dark: #11224E;
+            --primary-orange: #F87B1B;
+            --accent-green: #CBD99B;
+            --background-light: #EEEEEE;
+            --text-dark: #1a1a1a;
+            --text-light: #6c757d;
+            --border-color: #dee2e6;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --sidebar-width: 280px;
+            --header-height: 60px;
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+        
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 1040;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+        }
+        
+        .hamburger-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-right: 1rem;
+            transition: transform var(--transition-speed);
+        }
+        
+        .hamburger-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .header-brand {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .theme-toggle {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: white;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            z-index: 1030;
+            transform: translateX(-100%);
+            transition: transform var(--transition-speed) ease-in-out;
+            overflow-y: auto;
+        }
+        
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: 100%;
+            height: calc(100vh - var(--header-height));
+            background: rgba(0,0,0,0.5);
+            z-index: 1020;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed), visibility var(--transition-speed);
+        }
+        
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 1rem 0;
+        }
+        
+        .sidebar-nav-item {
+            margin: 0.25rem 0.75rem;
+        }
+        
+        .sidebar-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all var(--transition-speed);
+            font-weight: 500;
+        }
+        
+        .sidebar-nav-link:hover,
+        .sidebar-nav-link.active {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a3570 100%);
+            color: white;
+        }
+        
+        .sidebar-nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+        
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 1rem 0.75rem;
+        }
+        
+        .main-content {
+            margin-top: var(--header-height);
+            padding: 2rem 1rem;
+            min-height: calc(100vh - var(--header-height));
+        }
+        
+        @media (min-width: 992px) {
+            .main-content {
+                padding: 2rem 3rem;
+            }
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--background-light);
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .report-preview {
+            overflow-x: auto;
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            background: white;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+        }
+        
+        .report-table th,
+        .report-table td {
+            padding: 0.5rem 0.3rem;
+            text-align: center;
+            border: 1px solid #d0d0d0;
+            white-space: nowrap;
+        }
+        
+        .report-table thead tr:first-child th {
+            background: #4472C4;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .report-table thead tr:nth-child(2) th {
+            background: #5B9BD5;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 30px;
+            z-index: 9;
+        }
+        
+        .report-table thead tr:nth-child(3) th {
+            background: #BDD7EE;
+            color: #1F4E78;
+            font-weight: 600;
+            font-size: 0.7rem;
+            position: sticky;
+            top: 60px;
+            z-index: 8;
+        }
+        
+        .report-table tbody tr:nth-child(odd) {
+            background: #F2F2F2;
+        }
+        
+        .report-table tbody tr:nth-child(even) {
+            background: white;
+        }
+        
+        .report-table tbody td:first-child,
+        .report-table tbody td:nth-child(2) {
+            font-weight: 600;
+            background: #E7E6E6;
+            position: sticky;
+            left: 0;
+            z-index: 5;
+        }
+        
+        .report-table tbody td:nth-child(2) {
+            left: 80px;
+        }
+        
+        .report-table tbody td:last-child {
+            background: #FFF2CC;
+            font-weight: 700;
+            color: #C65911;
+        }
+        
+        .report-table tbody td.na-cell {
+            background: #D3D3D3;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .report-table tbody tr.blank-cif-row {
+            background: #FFF9E6 !important;
+            border-left: 4px solid var(--warning);
+        }
+        
+        .report-table tbody tr.blank-cif-row td {
+            background: #FFF9E6 !important;
+        }
+        
+        .report-table tbody tr.defaulted-row {
+            background: #ffcccc !important;
+        }
+        
+        .report-table tbody tr.defaulted-row td {
+            background: #ffcccc !important;
+            color: #dc3545;
+            font-weight: 700;
+        }
+        
+        .btn-action {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.875rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            margin: 0 0.25rem;
+            font-weight: 600;
+        }
+        
+        .btn-primary-custom {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .btn-primary-custom:hover {
+            background: #1a3570;
+            transform: translateY(-2px);
+        }
+        
+        .btn-orange {
+            background: var(--primary-orange);
+            color: white;
+        }
+        
+        .btn-orange:hover {
+            background: #e06a0a;
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        .btn-success-custom {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success-custom:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .form-control,
+        .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            transition: all var(--transition-speed);
+        }
+        
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.2rem rgba(248, 123, 27, 0.25);
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: calc(var(--header-height) + 1rem);
+            right: 1rem;
+            z-index: 1050;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(248, 123, 27, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-orange);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .header-brand {
+                font-size: 1rem;
+            }
+            
+            .user-profile .user-name {
+                display: none;
+            }
+            
+            .btn-action {
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+            }
+        }
+        
+        *:focus {
+            outline: 2px solid var(--primary-orange);
+            outline-offset: 2px;
+        }
+        
+        button:focus,
+        a:focus {
+            outline-width: 3px;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+		
+		.score-cell {
+		background-color: #FFF4E0 !important;
+		color: #856404 !important;
+		font-weight: 600;
+		text-align: center;
+		}
+
+    </style>
+</head>
+<body>
+    <header class="top-header" role="banner">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation menu">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <a href="#" class="header-brand">
+            <i class="fas fa-file-excel"></i>
+            Portfolio Reports - All Templates
+        </a>
+        
+        <div class="header-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+            
+            <div class="user-profile" role="button" tabindex="0" aria-label="User profile menu">
+                <div class="user-avatar">AD</div>
+                <span class="user-name d-none d-md-inline">Admin</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </header>
+    
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+    
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+        <nav>
+            <ul class="sidebar-nav">
+                <li class="sidebar-nav-item">
+                    <a href="#reports" class="sidebar-nav-link active" data-page="reports">
+                        <i class="fas fa-file-excel"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <main class="main-content" id="mainContent" role="main">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+            <div>
+                <h1 class="h2 mb-1" style="color: var(--primary-dark); font-weight: 700;">Comprehensive Portfolio Report</h1>
+                <p class="text-muted mb-0">All 4 rating templates with detailed scoring breakdown (23 customers - including 3 Blank CIF)</p>
+            </div>
+            <div class="d-flex gap-2 mt-2 mt-md-0">
+                <button class="btn btn-action btn-success-custom" id="generateReportBtn">
+                    <i class="fas fa-sync me-2"></i>Generate Report
+                </button>
+                <button class="btn btn-action btn-orange" id="downloadExcelBtn">
+                    <i class="fas fa-download me-2"></i>Download Excel
+                </button>
+            </div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="section-card text-center">
+                    <h3 class="text-primary" style="font-size: 2rem;">23</h3>
+                    <p class="text-muted mb-0">Total Customers</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="section-card text-center">
+                    <h3 class="text-success" style="font-size: 2rem;">4</h3>
+                    <p class="text-muted mb-0">Rating Templates</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="section-card text-center">
+                    <h3 class="text-warning" style="font-size: 2rem;">3</h3>
+                    <p class="text-muted mb-0">Blank CIF (New)</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="section-card text-center">
+                    <h3 class="text-danger" style="font-size: 2rem;">20</h3>
+                    <p class="text-muted mb-0">With CIF</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-card">
+            <h5 style="color: var(--primary-dark); margin-bottom: 1rem;">
+                <i class="fas fa-filter me-2"></i>Report Filters & Options
+            </h5>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="reportTypeFilter" class="form-label">Report Type</label>
+                        <select class="form-select" id="reportTypeFilter">
+                            <option value="portfolio" selected>Portfolio Assessment</option>
+                            <option value="historical">Historical Rating Report</option>
+                            <option value="comparison">Historical Comparison</option>
+                            <option value="blankcif">Blank CIF Report</option>
+                            <option value="ifrs9">IFRS9 Latest Rating</option>
+                            <option value="cifbased">CIF-Based (Latest Rating Only)</option>
+                            <option value="intervalbased">Interval-Based (All Entries)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="cifFilter" class="form-label">CIF Filter</label>
+                        <input type="text" class="form-control" id="cifFilter" placeholder="e.g., CIF-001 or BLANK">
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="templateFilter" class="form-label">Template Filter</label>
+                        <select class="form-select" id="templateFilter">
+                            <option value="all" selected>All Templates</option>
+                            <option value="contracting">Contracting & Services</option>
+                            <option value="trading">Trading & Manufacturing</option>
+                            <option value="realEstate">Investment Real Estate</option>
+                            <option value="personal">Personal Net Worth</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="ratioFilter" class="form-label">Ratio Filter</label>
+                        <input type="text" class="form-control" id="ratioFilter" placeholder="e.g., Current Ratio < 1">
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="dateFrom" class="form-label">Date From</label>
+                        <input type="date" class="form-control" id="dateFrom" value="2025-05-01">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="dateTo" class="form-label">Date To</label>
+                        <input type="date" class="form-control" id="dateTo" value="2025-11-26">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="statusFilter" class="form-label">Status</label>
+                        <select class="form-select" id="statusFilter">
+                            <option value="all">All Status</option>
+                            <option value="completed" selected>Completed</option>
+                            <option value="pending">Pending</option>
+                            <option value="defaulted">Defaulted (D)</option>
+                            <option value="blankcif">Blank CIF (New)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 d-flex align-items-end">
+                    <button class="btn btn-primary-custom w-100" id="applyFiltersBtn">
+                        <i class="fas fa-search me-2"></i>Apply Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-card">
+            <div class="section-header">
+                <h5 class="section-title">
+                    <i class="fas fa-table"></i>
+                    <span id="reportTitleText">Report Preview - All Templates</span>
+                </h5>
+                <div>
+                    <span class="badge bg-primary" id="customerCount">23 Customers</span>
+                    <span class="badge bg-success ms-2">4 Templates</span>
+                    <span class="badge bg-warning ms-2">3 Blank CIF</span>
+                </div>
+            </div>
+            
+            <div class="alert alert-info" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Note:</strong> <span id="reportInfoText">20 customers have assigned CIF. 3 customers are NEW to the bank and under assessment (Blank CIF - highlighted in yellow). 2 customers (Ahmed Al-Rashid, Sultan Trading Co.) are assessed across multiple templates.</span>
+            </div>
+            
+            <div class="report-preview" id="reportPreview">
+                <!-- Report table will be generated here -->
+            </div>
+        </div>
+    </main>
+    
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const STORAGE_KEYS = {
+            theme: 'appTheme',
+            ratingHistory: 'ratingHistory'
+        };
+
+        let appState = {
+            sidebarOpen: false,
+            reportData: [],
+            ratingHistory: [],
+            selectedCIF: null
+        };
+
+        // MASTER SCORE CONFIGURATION - Added for Assigned Score columns
+        const MASTER_SCORES = {
+            contracting: {
+                qualitative: {
+                    'Constitution and Establishment': 35,
+                    'Number of Years in Business': 30,
+                    'Availability of un-utilized Credit Limits': 25,
+                    'Existence of financial planning and Control': 30,
+                    'Position in the Market': 35,
+                    'Govt./private sector contracting': 30,
+                    'Sensitivity to Economic Shocks': 25,
+                    'Contractor Grade': 35,
+                    'Past track record': 30,
+                    'Competition & Demand': 25,
+                    'Qualified Resources': 30
+                },
+                quantitative: {
+                    'Affiliates due to Net Worth': 40,
+                    'Current Ratio': 45,
+                    'Debt to Equity Ratio': 45,
+                    'Operating Revenue to Ext. Liabilities': 40,
+                    'Inv Assets To Total Assets': 35,
+                    'Net Profit Margin': 45,
+                    'Working Capital Turnover': 40,
+                    'Change in Debt Ratio': 35
+                },
+                miscellaneous: {
+                    'Account Conduct - Persistent ever-greening': -20,
+                    'Drastic fall in Capital markets': -15,
+                    'Deteriorating Global Economic sentiments': -15,
+                    '# of Notches': -3
+                },
+                mandatory: {
+                    'Age of Financial Information': -25,
+                    'Quality of Financial Information': -20,
+                    'Historical Account Performance': -25,
+                    'Qualification of Audit Report': -20
+                }
+            },
+            trading: {
+                qualitative: {
+                    'Constitution & Establishment': 35,
+                    'Years in Business': 30,
+                    'Unutilized Credit Limits': 25,
+                    'Financial Planning & Control': 30,
+                    'Position in Market': 35,
+                    'Competition/Supply & Demand': 30,
+                    'Economic Sensitivity': 25,
+                    'Customer Base': 30,
+                    'Quality of Receivables': 35,
+                    'Distribution Channel': 25,
+                    'Price Volatility Management': 30
+                },
+                quantitative: {
+                    'Affiliates to Net Worth': 40,
+                    'Current Ratio': 45,
+                    'Debt Equity Ratio': 45,
+                    'Ops Revenue / Ext Liabilities': 40,
+                    'Investment Assets to Total Assets': 35,
+                    'Net Profit Margin (NPM)': 45,
+                    'Working Capital Turnover (WCT)': 40,
+                    'Change in Debt Ratio': 35
+                },
+                miscellaneous: {
+                    'Management changes': -20,
+                    'Market position change': -15,
+                    'Legal disputes': -15,
+                    '# of Notches': -3
+                },
+                mandatory: {
+                    'Age of Financial Info': -25,
+                    'Quality of Financial Info': -20,
+                    'Historical Account Performance': -25,
+                    'Audit Report Qualification': -20
+                }
+            },
+            realEstate: {
+                qualitative: {
+                    'Constitution & Establishment': 35,
+                    'Management Character': 35,
+                    'Years in Business': 30,
+                    'Unutilized Credit Lines': 25,
+                    'Financial Planning & Control': 30,
+                    'Asset Quality (Diversification)': 35,
+                    'Asset Quality (Risk)': 35,
+                    'Real Estate Concentration': 30
+                },
+                quantitative: {
+                    'Current Debt to Total Debt': 40,
+                    'Debt Equity Ratio (DER)': 45,
+                    'Interest Coverage (ICR)': 45,
+                    'Return on Assets (ROA)': 45,
+                    'Change in DER': 35,
+                    'Change in Quick Ratio': 35,
+                    'Change in ROA': 35,
+                    'Unrealized Gains to Net Profit': 40,
+                    'Unquoted Assets to Total Assets': 40,
+                    'Ops Cash / Ext Liabilities': 40
+                },
+                miscellaneous: {
+                    'Diversification Risk': -20,
+                    'Real Estate Market Volatility': -15,
+                    'Regulatory Changes': -15,
+                    '# of Notches': -3
+                },
+                mandatory: {
+                    'Age of Financial Info': -25,
+                    'Quality of Financial Info': -20,
+                    'Historical Account Performance': -25,
+                    'Audit Report Qualification': -20
+                }
+            },
+            personal: {
+                qualitative: {
+                    'Years in Business': 30,
+                    'Existence of Legal Heirs': 25,
+                    'Management Character': 35,
+                    'Availability of Financial Resources': 35,
+                    'Income Diversification': 30,
+                    'Years in Relationship': 25,
+                    'Accessibility': 25,
+                    'Credit History': 35,
+                    'Unquoted Assets': 30
+                },
+                quantitative: {
+                    'Debt Equity Ratio': 45,
+                    'Cash / Current Liabilities': 45,
+                    'Interest Coverage (ICR)': 45,
+                    'EBIT / Total Current Liabilities': 40,
+                    'LN(Networth)': 40,
+                    'Growth in Net Worth': 40
+                },
+                miscellaneous: {
+                    'Succession Risk': -20,
+                    'Key Person Risk': -15,
+                    'Estate Planning Issues': -15,
+                    '# of Notches': -3
+                },
+                mandatory: {
+                    'Age of Financial Info': -25,
+                    'Quality of Financial Info': -20,
+                    'Historical Account Performance': -25
+                }
+            }
+        };
+
+        // Helper function to get assigned score
+        function getAssignedScore(templateKey, category, paramName) {
+            try {
+                if (MASTER_SCORES[templateKey] && MASTER_SCORES[templateKey][category]) {
+                    return MASTER_SCORES[templateKey][category][paramName] || 'N/A';
+                }
+                return 'N/A';
+            } catch (e) {
+                return 'N/A';
+            }
+        }
+
+        const TEMPLATE_COLUMNS = {
+            contracting: {
+                name: 'Contracting & Services',
+                qualitative: [
+                    'Constitution and Establishment',
+                    'Number of Years in Business',
+                    'Availability of un-utilized Credit Limits',
+                    'Existence of financial planning and Control',
+                    'Position in the Market',
+                    'Govt./private sector contracting',
+                    'Sensitivity to Economic Shocks',
+                    'Contractor Grade',
+                    'Past track record',
+                    'Competition & Demand',
+                    'Qualified Resources'
+                ],
+                quantitative: [
+                    'Affiliates due to Net Worth',
+                    'Current Ratio',
+                    'Debt to Equity Ratio',
+                    'Operating Revenue to Ext. Liabilities',
+                    'Inv Assets To Total Assets',
+                    'Net Profit Margin',
+                    'Working Capital Turnover',
+                    'Change in Debt Ratio'
+                ],
+                miscellaneous: [
+                    'Account Conduct - Persistent ever-greening',
+                    'Drastic fall in Capital markets',
+                    'Deteriorating Global Economic sentiments',
+                    '# of Notches'
+                ],
+                mandatory: [
+                    'Age of Financial Information',
+                    'Quality of Financial Information',
+                    'Historical Account Performance',
+                    'Qualification of Audit Report'
+                ]
+            },
+            trading: {
+                name: 'Trading & Manufacturing',
+                qualitative: [
+                    'Constitution & Establishment',
+                    'Years in Business',
+                    'Unutilized Credit Limits',
+                    'Financial Planning & Control',
+                    'Position in Market',
+                    'Competition/Supply & Demand',
+                    'Economic Sensitivity',
+                    'Customer Base',
+                    'Quality of Receivables',
+                    'Distribution Channel',
+                    'Price Volatility Management'
+                ],
+                quantitative: [
+                    'Affiliates to Net Worth',
+                    'Current Ratio',
+                    'Debt Equity Ratio',
+                    'Ops Revenue / Ext Liabilities',
+                    'Investment Assets to Total Assets',
+                    'Net Profit Margin (NPM)',
+                    'Working Capital Turnover (WCT)',
+                    'Change in Debt Ratio'
+                ],
+                miscellaneous: [
+                    'Management changes',
+                    'Market position change',
+                    'Legal disputes',
+                    '# of Notches'
+                ],
+                mandatory: [
+                    'Age of Financial Info',
+                    'Quality of Financial Info',
+                    'Historical Account Performance',
+                    'Audit Report Qualification'
+                ]
+            },
+            realEstate: {
+                name: 'Investment Real Estate & Finance',
+                qualitative: [
+                    'Constitution & Establishment',
+                    'Management Character',
+                    'Years in Business',
+                    'Unutilized Credit Lines',
+                    'Financial Planning & Control',
+                    'Asset Quality (Diversification)',
+                    'Asset Quality (Risk)',
+                    'Real Estate Concentration'
+                ],
+                quantitative: [
+                    'Current Debt to Total Debt',
+                    'Debt Equity Ratio (DER)',
+                    'Interest Coverage (ICR)',
+                    'Return on Assets (ROA)',
+                    'Change in DER',
+                    'Change in Quick Ratio',
+                    'Change in ROA',
+                    'Unrealized Gains to Net Profit',
+                    'Unquoted Assets to Total Assets',
+                    'Ops Cash / Ext Liabilities'
+                ],
+                miscellaneous: [
+                    'Diversification Risk',
+                    'Real Estate Market Volatility',
+                    'Regulatory Changes',
+                    '# of Notches'
+                ],
+                mandatory: [
+                    'Age of Financial Info',
+                    'Quality of Financial Info',
+                    'Historical Account Performance',
+                    'Audit Report Qualification'
+                ]
+            },
+            personal: {
+                name: 'Personal Net Worth Declaration',
+                qualitative: [
+                    'Years in Business',
+                    'Existence of Legal Heirs',
+                    'Management Character',
+                    'Availability of Financial Resources',
+                    'Income Diversification',
+                    'Years in Relationship',
+                    'Accessibility',
+                    'Credit History',
+                    'Unquoted Assets'
+                ],
+                quantitative: [
+                    'Debt Equity Ratio',
+                    'Cash / Current Liabilities',
+                    'Interest Coverage (ICR)',
+                    'EBIT / Total Current Liabilities',
+                    'LN(Networth)',
+                    'Growth in Net Worth'
+                ],
+                miscellaneous: [
+                    'Succession Risk',
+                    'Key Person Risk',
+                    'Estate Planning Issues',
+                    '# of Notches'
+                ],
+                mandatory: [
+                    'Age of Financial Info',
+                    'Quality of Financial Info',
+                    'Historical Account Performance'
+                ]
+            }
+        };
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            initializeEventListeners();
+            loadHistoricalRatings();
+            generateReport();
+            loadTheme();
+        });
+
+        function initializeApp() {
+            console.log('Comprehensive Reports Module Initialized - With Assigned Score Columns');
+            appState.reportData = generateComprehensiveReportData();
+        }
+
+        function initializeEventListeners() {
+            document.getElementById('hamburgerBtn').addEventListener('click', toggleSidebar);
+            document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            document.getElementById('generateReportBtn').addEventListener('click', generateReport);
+            document.getElementById('downloadExcelBtn').addEventListener('click', downloadExcel);
+            document.getElementById('reportTypeFilter').addEventListener('change', applyFilters);
+            document.getElementById('applyFiltersBtn').addEventListener('click', applyFilters);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const hamburger = document.getElementById('hamburgerBtn');
+
+            appState.sidebarOpen = !appState.sidebarOpen;
+
+            if (appState.sidebarOpen) {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                hamburger.setAttribute('aria-expanded', 'true');
+            } else {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarOverlay').classList.remove('active');
+            document.getElementById('hamburgerBtn').setAttribute('aria-expanded', 'false');
+            appState.sidebarOpen = false;
+        }
+
+        function generateComprehensiveReportData() {
+            const customers = [
+                { cif: '', name: 'New Applicant - Green Valley Construction', templates: ['contracting'], isDefaulted: false, isBlankCIF: true, assessmentDate: '2025-11-20' },
+                { cif: '', name: 'New Applicant - Future Trading LLC', templates: ['trading'], isDefaulted: false, isBlankCIF: true, assessmentDate: '2025-11-22' },
+                { cif: '', name: 'New Applicant - Sarah Investment Group', templates: ['realEstate'], isDefaulted: false, isBlankCIF: true, assessmentDate: '2025-11-25' },
+
+                { cif: 'CIF-001', name: 'Ahmed Al-Rashid', templates: ['contracting', 'trading'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-002', name: 'Sultan Trading Co.', templates: ['trading', 'realEstate'], isDefaulted: false, isBlankCIF: false },
+
+                { cif: 'CIF-003', name: 'Fatima Construction', templates: ['contracting'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-004', name: 'Mohammed Engineering', templates: ['contracting'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-005', name: 'Aisha Services Ltd', templates: ['contracting'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-006', name: 'Omar Contracting', templates: ['contracting'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-007', name: 'Layla Infrastructure', templates: ['contracting'], isDefaulted: false, isBlankCIF: false },
+
+                { cif: 'CIF-008', name: 'Khalid Trading Corp', templates: ['trading'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-009', name: 'Mariam Manufacturing', templates: ['trading'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-010', name: 'Abdullah Exports', templates: ['trading'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-011', name: 'Sara Imports Ltd', templates: ['trading'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-012', name: 'Ali Wholesale Co', templates: ['trading'], isDefaulted: false, isBlankCIF: false },
+
+                { cif: 'CIF-013', name: 'Noor Real Estate', templates: ['realEstate'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-014', name: 'Youssef Properties', templates: ['realEstate'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-015', name: 'Hana Investments', templates: ['realEstate'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-016', name: 'Ibrahim Finance Co', templates: ['realEstate'], isDefaulted: false, isBlankCIF: false },
+
+                { cif: 'CIF-017', name: 'Zahra Mohammed', templates: ['personal'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-018', name: 'Hassan Abdullah', templates: ['personal'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-019', name: 'Amina Ahmed', templates: ['personal'], isDefaulted: false, isBlankCIF: false },
+                { cif: 'CIF-020', name: 'Rashid Ibrahim', templates: ['personal'], isDefaulted: false, isBlankCIF: false }
+            ];
+
+            return customers.map(customer => {
+                const row = {
+                    cif: customer.cif,
+                    name: customer.name,
+                    templates: customer.templates,
+                    isDefaulted: customer.isDefaulted,
+                    isBlankCIF: customer.isBlankCIF || false,
+                    ratingDate: customer.assessmentDate || '2025-11-26',
+                    cifStatus: customer.cif ? 'Active' : 'Blank (Under Assessment)'
+                };
+
+                ['contracting', 'trading', 'realEstate', 'personal'].forEach(templateKey => {
+                    const hasTemplate = customer.templates.includes(templateKey);
+                    const template = TEMPLATE_COLUMNS[templateKey];
+
+                    let qualScore = 0, quantScore = 0, miscScore = 0, mandScore = 0;
+
+                    // Store qualitative with assigned scores
+                    template.qualitative.forEach((param, idx) => {
+                        const key = `${templateKey}_q${idx + 1}`;
+                        const scoreKey = `${templateKey}_q${idx + 1}_score`;
+                        const val = hasTemplate ? randomInt(0, 35) : 'NA';
+                        const assignedScore = getAssignedScore(templateKey, 'qualitative', param);
+                        row[key] = val;
+                        row[scoreKey] = hasTemplate ? assignedScore : 'NA';
+                        if (val !== 'NA') qualScore += val;
+                    });
+
+                    // Store quantitative with assigned scores
+                    template.quantitative.forEach((param, idx) => {
+                        const key = `${templateKey}_r${idx + 1}`;
+                        const scoreKey = `${templateKey}_r${idx + 1}_score`;
+                        const val = hasTemplate ? randomDecimal(0, 45) : 'NA';
+                        const assignedScore = getAssignedScore(templateKey, 'quantitative', param);
+                        row[key] = val;
+                        row[scoreKey] = hasTemplate ? assignedScore : 'NA';
+                        if (val !== 'NA') quantScore += val;
+                    });
+
+                    // Store miscellaneous with assigned scores
+                    template.miscellaneous.forEach((param, idx) => {
+                        const key = `${templateKey}_m${idx + 1}`;
+                        const scoreKey = `${templateKey}_m${idx + 1}_score`;
+                        const val = hasTemplate ? (idx < 3 ? randomInt(-20, 0) : randomInt(-3, 0)) : 'NA';
+                        const assignedScore = getAssignedScore(templateKey, 'miscellaneous', param);
+                        row[key] = val;
+                        row[scoreKey] = hasTemplate ? assignedScore : 'NA';
+                        if (val !== 'NA') miscScore += val;
+                    });
+
+                    // Store mandatory with assigned scores
+                    template.mandatory.forEach((param, idx) => {
+                        const key = `${templateKey}_a${idx + 1}`;
+                        const scoreKey = `${templateKey}_a${idx + 1}_score`;
+                        const val = hasTemplate ? randomInt(-25, 0) : 'NA';
+                        const assignedScore = getAssignedScore(templateKey, 'mandatory', param);
+                        row[key] = val;
+                        row[scoreKey] = hasTemplate ? assignedScore : 'NA';
+                        if (val !== 'NA') mandScore += val;
+                    });
+
+                    if (hasTemplate && !customer.isDefaulted) {
+                        const scoreBeforeMandatory = Math.round(qualScore + quantScore + miscScore);
+                        const totalScore = scoreBeforeMandatory + mandScore;
+                        const ratingBeforeMandatory = scoreToRating(scoreBeforeMandatory);
+                        const downgradeNotches = Math.abs(Math.round(mandScore / 10));
+                        const finalRating = scoreToRating(totalScore);
+
+                        row[`${templateKey}_qualScore`] = Math.round(qualScore);
+                        row[`${templateKey}_quantScore`] = Math.round(quantScore);
+                        row[`${templateKey}_scoreBeforeMandatory`] = scoreBeforeMandatory;
+                        row[`${templateKey}_ratingBeforeMandatory`] = ratingBeforeMandatory;
+                        row[`${templateKey}_downgradeNotches`] = downgradeNotches;
+                        row[`${templateKey}_mandatoryAdjParam`] = `${mandScore} (${downgradeNotches} notches)`;
+                        row[`${templateKey}_finalScore`] = totalScore;
+                        row[`${templateKey}_finalRating`] = finalRating;
+
+                        storeRatingHistory(customer.cif || 'BLANK-' + customer.name.substring(0, 10), customer.name, templateKey, {
+                            date: row.ratingDate,
+                            qualScore: Math.round(qualScore),
+                            quantScore: Math.round(quantScore),
+                            scoreBeforeMandatory,
+                            ratingBeforeMandatory,
+                            mandatoryAdj: mandScore,
+                            downgradeNotches,
+                            finalScore: totalScore,
+                            finalRating,
+                            isDefaulted: false,
+                            isBlankCIF: customer.isBlankCIF || false
+                        });
+
+                        // Add historical entries for first 5 customers
+                        if (hasTemplate && !customer.isDefaulted && customer.cif) {
+                            const customerIndex = ['CIF-001', 'CIF-002', 'CIF-003', 'CIF-004', 'CIF-005'].indexOf(customer.cif);
+
+                            if (customerIndex !== -1) {
+                                const date6MonthsAgo = new Date();
+                                date6MonthsAgo.setMonth(date6MonthsAgo.getMonth() - 6);
+                                const prevScore1 = totalScore - randomInt(5, 15);
+
+                                storeRatingHistory(customer.cif, customer.name, templateKey, {
+                                    date: date6MonthsAgo.toISOString().split('T')[0],
+                                    qualScore: Math.round(qualScore * 0.85),
+                                    quantScore: Math.round(quantScore * 0.90),
+                                    scoreBeforeMandatory: Math.round(scoreBeforeMandatory * 0.88),
+                                    ratingBeforeMandatory: scoreToRating(Math.round(scoreBeforeMandatory * 0.88)),
+                                    mandatoryAdj: mandScore,
+                                    downgradeNotches: downgradeNotches,
+                                    finalScore: prevScore1,
+                                    finalRating: scoreToRating(prevScore1),
+                                    isDefaulted: false,
+                                    isBlankCIF: false
+                                });
+
+                                const date3MonthsAgo = new Date();
+                                date3MonthsAgo.setMonth(date3MonthsAgo.getMonth() - 3);
+                                const prevScore2 = totalScore - randomInt(2, 8);
+
+                                storeRatingHistory(customer.cif, customer.name, templateKey, {
+                                    date: date3MonthsAgo.toISOString().split('T')[0],
+                                    qualScore: Math.round(qualScore * 0.92),
+                                    quantScore: Math.round(quantScore * 0.95),
+                                    scoreBeforeMandatory: Math.round(scoreBeforeMandatory * 0.94),
+                                    ratingBeforeMandatory: scoreToRating(Math.round(scoreBeforeMandatory * 0.94)),
+                                    mandatoryAdj: mandScore,
+                                    downgradeNotches: downgradeNotches,
+                                    finalScore: prevScore2,
+                                    finalRating: scoreToRating(prevScore2),
+                                    isDefaulted: false,
+                                    isBlankCIF: false
+                                });
+                            }
+                        }
+                    } else if (customer.isDefaulted) {
+                        row[`${templateKey}_qualScore`] = 'NA';
+                        row[`${templateKey}_quantScore`] = 'NA';
+                        row[`${templateKey}_scoreBeforeMandatory`] = 'NA';
+                        row[`${templateKey}_ratingBeforeMandatory`] = 'NA';
+                        row[`${templateKey}_downgradeNotches`] = 'NA';
+                        row[`${templateKey}_mandatoryAdjParam`] = 'NA';
+                        row[`${templateKey}_finalScore`] = 0;
+                        row[`${templateKey}_finalRating`] = 'D';
+
+                        storeRatingHistory(customer.cif, customer.name, templateKey, {
+                            date: row.ratingDate,
+                            finalRating: 'D',
+                            isDefaulted: true
+                        });
+                    } else {
+                        row[`${templateKey}_qualScore`] = 'NA';
+                        row[`${templateKey}_quantScore`] = 'NA';
+                        row[`${templateKey}_scoreBeforeMandatory`] = 'NA';
+                        row[`${templateKey}_ratingBeforeMandatory`] = 'NA';
+                        row[`${templateKey}_downgradeNotches`] = 'NA';
+                        row[`${templateKey}_mandatoryAdjParam`] = 'NA';
+                        row[`${templateKey}_finalScore`] = 'NA';
+                        row[`${templateKey}_finalRating`] = 'NA';
+                    }
+                });
+
+                return row;
+            });
+        }
+		
+		function generateHistoricalFinalRatingData() {
+    const customers = [
+        { cif: 'CIF-001', name: 'Ahmed Al-Rashid', template: 'contracting' },
+        { cif: 'CIF-002', name: 'Sultan Trading Co.', template: 'trading' },
+        { cif: 'CIF-003', name: 'Fatima Construction', template: 'contracting' },
+        { cif: 'CIF-008', name: 'Khalid Trading Corp', template: 'trading' },
+        { cif: 'CIF-013', name: 'Noor Real Estate', template: 'realEstate' },
+        { cif: 'CIF-017', name: 'Zahra Mohammed', template: 'personal' },
+        { cif: 'CIF-018', name: 'Hassan Abdullah', template: 'personal' }
+    ];
+
+    // Generate quarterly dates from Dec 2012 to Sep 2025
+    const dates = [];
+    const startYear = 2012;
+    const endYear = 2025;
+    
+    // Annual dates Dec 31
+    for (let year = startYear; year <= 2016; year++) {
+        dates.push(`${year}-12-31`);
+    }
+    
+    // Quarterly dates from Mar 2017 onwards
+    for (let year = 2017; year <= endYear; year++) {
+        const quarters = year === 2025 ? ['03-31', '06-30', '09-30'] : 
+                        (year === 2017 ? ['03-31', '06-30', '09-30', '12-31'] : 
+                        ['03-31', '06-30', '09-30', '12-31']);
+        quarters.forEach(q => {
+            dates.push(`${year}-${q}`);
+        });
+    }
+
+    return customers.map(customer => {
+        const row = {
+            cif: customer.cif,
+            name: customer.name,
+            template: customer.template,
+            dates: dates,
+            ratings: {}
+        };
+
+        // Generate progressive ratings (showing improvement/decline patterns)
+        const baseRating = randomInt(3, 7);
+        dates.forEach((date, idx) => {
+            let rating = baseRating;
+            
+            // Add some variation over time
+            if (idx > 5) {
+                const change = randomInt(-2, 2);
+                rating = Math.max(1, Math.min(10, baseRating + change));
+            }
+            
+            row.ratings[date] = rating;
+        });
+
+        return row;
+    });
+}
+
+        function storeRatingHistory(cif, name, template, ratingData) {
+            const historyEntry = {
+                cif,
+                name,
+                template,
+                timestamp: new Date().toISOString(),
+                ...ratingData
+            };
+
+            appState.ratingHistory.push(historyEntry);
+            localStorage.setItem(STORAGE_KEYS.ratingHistory, JSON.stringify(appState.ratingHistory));
+        }
+
+        function loadHistoricalRatings() {
+            const stored = localStorage.getItem(STORAGE_KEYS.ratingHistory);
+            if (stored) {
+                appState.ratingHistory = JSON.parse(stored);
+            }
+        }
+
+        function scoreToRating(score) {
+            if (score >= 85) return 'AAA';
+            if (score >= 75) return 'AA';
+            if (score >= 65) return 'A';
+            if (score >= 55) return 'BBB';
+            if (score >= 45) return 'BB';
+            if (score >= 35) return 'B';
+            if (score >= 25) return 'CCC';
+            if (score >= 15) return 'CC';
+            if (score >= 5) return 'C';
+            return 'D';
+        }
+
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function randomDecimal(min, max) {
+            return parseFloat((Math.random() * (max - min) + min).toFixed(1));
+        }
+
+        function applyFilters() {
+    const reportType = document.getElementById('reportTypeFilter').value;
+    const cifFilter = document.getElementById('cifFilter').value.trim().toUpperCase();
+    const templateFilter = document.getElementById('templateFilter').value;
+    const ratioFilter = document.getElementById('ratioFilter').value.trim();
+    const statusFilter = document.getElementById('statusFilter').value;
+
+    // Apply all filters to data
+    let filteredData = applyDataFilters({
+        data: [...appState.reportData],
+        cif: cifFilter,
+        template: templateFilter,
+        status: statusFilter,
+        ratio: ratioFilter
+    });
+
+    // Update UI elements
+    updateReportHeader(reportType, filteredData);
+
+    // Render appropriate report type
+    renderReportByType(reportType, filteredData);
+
+    // Show success feedback
+    showToast(`Report updated: ${filteredData.length} customers found`, 'success');
+}
+
+// Helper: Apply all data filters
+function applyDataFilters({ data, cif, template, status, ratio }) {
+    let filtered = data;
+
+    // CIF Filter
+    if (cif) {
+        if (cif === 'BLANK') {
+            filtered = filtered.filter(row => !row.cif || row.cif === '');
+        } else {
+            filtered = filtered.filter(row => row.cif && row.cif.toUpperCase().includes(cif));
+        }
+    }
+
+    // Template Filter
+    if (template !== 'all') {
+        filtered = filtered.filter(row => row.templates && row.templates.includes(template));
+    }
+
+    // Status Filter
+    switch(status) {
+        case 'defaulted':
+            filtered = filtered.filter(row => row.isDefaulted);
+            break;
+        case 'completed':
+            filtered = filtered.filter(row => !row.isDefaulted && !row.isBlankCIF);
+            break;
+        case 'blankcif':
+            filtered = filtered.filter(row => row.isBlankCIF);
+            break;
+        case 'pending':
+            filtered = filtered.filter(row => row.status === 'pending');
+            break;
+        case 'all':
+        default:
+            break;
+    }
+
+    // Ratio Filter
+    if (ratio) {
+        filtered = applyRatioFilter(filtered, ratio);
+    }
+
+    return filtered;
+}
+
+// Helper: Update report header and badges
+function updateReportHeader(reportType, data) {
+    const reportTitle = document.getElementById('reportTitleText');
+    const customerCount = document.getElementById('customerCount');
+    const reportInfo = document.getElementById('reportInfoText');
+
+    reportTitle.textContent = getReportTitle(reportType);
+    customerCount.textContent = `${data.length} Customer${data.length !== 1 ? 's' : ''}`;
+    reportInfo.textContent = getReportInfo(reportType, data);
+}
+
+// Helper: Get report title based on type
+function getReportTitle(reportType) {
+    const titles = {
+        'portfolio': 'Portfolio Assessment Report - All Templates',
+        'historical': 'Historical Final Rating Report',
+        'comparison': 'Historical Rating Comparison',
+        'blankcif': 'Blank CIF Assessment Report',
+        'ifrs9': 'IFRS9 Latest Rating Report',
+        'cifbased': 'CIF-Based Report (Latest Rating Only)',
+        'intervalbased': 'Interval-Based Report (All Entries)'
+    };
+    return titles[reportType] || 'Portfolio Report';
+}
+
+// Helper: Get report info text
+function getReportInfo(reportType, data) {
+    const blankCIFCount = data.filter(d => d.isBlankCIF).length;
+    const withCIFCount = data.filter(d => d.cif && d.cif !== '').length;
+    const defaultedCount = data.filter(d => d.isDefaulted).length;
+
+    const infoTexts = {
+        'portfolio': `${withCIFCount} customers with CIF, ${blankCIFCount} NEW customers (Blank CIF - highlighted in yellow)${defaultedCount > 0 ? ', ' + defaultedCount + ' defaulted accounts' : ''}.`,
+        'historical': `Timeline view showing rating progression from 2012 to 2025 across ${data.length} customers.`,
+        'comparison': `Comparative analysis of rating changes over time for ${data.length} customers.`,
+        'blankcif': `${blankCIFCount} new customer applications currently under assessment (without CIF assignment).`,
+        'ifrs9': `Latest IFRS9 compliant ratings for ${data.length} active customers.`,
+        'cifbased': `Most recent rating snapshot for each customer - ${data.length} unique CIF records.`,
+        'intervalbased': `Complete assessment history including all rating intervals and revisions.`
+    };
+
+    return infoTexts[reportType] || `Displaying data for ${data.length} customers.`;
+}
+
+// Helper: Render report based on type
+function renderReportByType(reportType, filteredData) {
+    const container = document.getElementById('reportPreview');
+    
+    container.innerHTML = '<div class="loading-spinner"></div>';
+
+    setTimeout(() => {
+        switch(reportType) {
+            case 'portfolio':
+                container.innerHTML = renderComprehensiveReportTable(filteredData);
+                break;
+
+            case 'historical':
+                const historicalData = generateHistoricalFinalRatingData(filteredData);
+                container.innerHTML = renderHistoricalFinalRatingTable(historicalData);
+                break;
+
+            case 'comparison':
+                container.innerHTML = renderComparisonReport(filteredData);
+                break;
+
+            case 'blankcif':
+                const blankCIFData = filteredData.filter(d => d.isBlankCIF);
+                container.innerHTML = renderBlankCIFReport(blankCIFData);
+                break;
+
+            case 'ifrs9':
+                container.innerHTML = renderIFRS9Report(filteredData);
+                break;
+
+            case 'cifbased':
+                container.innerHTML = renderCIFBasedReport(filteredData);
+                break;
+
+            case 'intervalbased':
+                container.innerHTML = renderIntervalBasedReport(filteredData);
+                break;
+
+            default:
+                container.innerHTML = renderComprehensiveReportTable(filteredData);
+        }
+    }, 150);
+}
+
+// Helper: Apply ratio-based filters
+function applyRatioFilter(data, ratioExpression) {
+    try {
+        const match = ratioExpression.match(/([\w\s]+)(<?=?>?)([\d.]+)/);
+        if (!match) return data;
+
+        const [_, ratioName, operator, value] = match;
+        const threshold = parseFloat(value);
+
+        return data.filter(row => {
+            const ratioValue = getRatioValue(row, ratioName.trim());
+            if (ratioValue === null || ratioValue === undefined) return true;
+
+            switch(operator.trim()) {
+                case '<': return ratioValue < threshold;
+                case '>': return ratioValue > threshold;
+                case '<=': return ratioValue <= threshold;
+                case '>=': return ratioValue >= threshold;
+                case '=':
+                case '==': return ratioValue === threshold;
+                default: return true;
+            }
+        });
+    } catch (e) {
+        console.error('Ratio filter error:', e);
+        return data;
+    }
+}
+
+// Helper: Get ratio value from row data
+function getRatioValue(row, ratioName) {
+    const ratioMap = {
+        'Current Ratio': row.currentRatio,
+        'Debt Equity': row.debtEquity,
+        'ROA': row.roa,
+        'ROE': row.roe
+    };
+    return ratioMap[ratioName] || null;
+}
+
+        function applyRatioFilter(data, ratioFilter) {
+            const match = ratioFilter.match(/(.+?)\s*([<>=]+)\s*([\d.]+)/);
+            if (!match) return data;
+
+            const [, ratioName, operator, threshold] = match;
+            const thresholdVal = parseFloat(threshold);
+
+            return data.filter(row => {
+                let hasMatch = false;
+                ['contracting', 'trading', 'realEstate', 'personal'].forEach(templateKey => {
+                    const template = TEMPLATE_COLUMNS[templateKey];
+                    template.quantitative.forEach((param, idx) => {
+                        if (param.toLowerCase().includes(ratioName.toLowerCase())) {
+                            const value = row[`${templateKey}_r${idx + 1}`];
+                            if (value !== 'NA') {
+                                if (operator === '<' && value < thresholdVal) hasMatch = true;
+                                if (operator === '>' && value > thresholdVal) hasMatch = true;
+                                if (operator === '=' && value == thresholdVal) hasMatch = true;
+                            }
+                        }
+                    });
+                });
+                return hasMatch;
+            });
+        }
+
+        function getReportTitle(reportType) {
+            const titles = {
+                'portfolio': 'Portfolio Assessment Report - All Templates (With Assigned Scores)',
+                'historical': 'Historical Rating Report (All Events)',
+                'comparison': 'Historical Rating Comparison Report',
+                'blankcif': 'Blank CIF Report (New Customers Under Assessment)',
+                'ifrs9': 'IFRS9 Latest Rating Report',
+                'cifbased': 'CIF-Based Report (Latest Rating per CIF)',
+                'intervalbased': 'Interval-Based Report (All Entries in Date Range)'
+            };
+            return titles[reportType] || 'Report Preview';
+        }
+
+        function generateReport() {
+            showToast('Generating Report', 'Preparing comprehensive portfolio report...', 'info');
+
+            const container = document.getElementById('reportPreview');
+            container.innerHTML = '<div class="loading-spinner"></div>';
+
+            setTimeout(() => {
+                applyFilters();
+                showToast('Report Generated', 'Portfolio report ready for download', 'success');
+            }, 1500);
+        }
+
+
+        function renderComprehensiveReportTable(data) {
+            let totalCols = 2;
+
+            ['contracting', 'trading', 'realEstate', 'personal'].forEach(key => {
+                const template = TEMPLATE_COLUMNS[key];
+                // Each parameter now has 2 columns (Value + Assigned Score)
+                totalCols += (template.qualitative.length + template.quantitative.length + 
+                            template.miscellaneous.length + template.mandatory.length) * 2 + 7;
+            });
+
+            return `
+                <table class="report-table" id="portfolioReportTable">
+                    <thead>
+                        ${generateHeaderRow1()}
+                        ${generateHeaderRow2()}
+                        ${generateHeaderRow3()}
+                        ${generateHeaderRow4()}
+                    </thead>
+                    <tbody>
+                        ${data.map(row => generateDataRow(row)).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+		
+		function renderHistoricalFinalRatingTable(data) {
+    if (!data || data.length === 0) return '<p>No historical data available</p>';
+    
+    const dates = data[0].dates;
+    
+    let html = `
+        <table class="report-table" id="historicalRatingTable">
+            <thead>
+                <tr>
+                    <th colspan="${dates.length + 2}" style="background: #4472C4; color: white; font-size: 1.1rem;">
+                        Historical Final Rating
+                    </th>
+                </tr>
+                <tr>
+                    <th rowspan="1" style="background: #5B9BD5; color: white;">CIF</th>
+                    <th rowspan="1" style="background: #5B9BD5; color: white;">Name</th>
+                    ${dates.map(date => {
+                        const dateObj = new Date(date);
+                        const formatted = dateObj.toLocaleDateString('en-GB', { 
+                            day: '2-digit', 
+                            month: 'short', 
+                            year: '2-digit' 
+                        });
+                        return `<th style="background: #BDD7EE; color: #1F4E78; font-size: 0.7rem;">${formatted}</th>`;
+                    }).join('')}
+                </tr>
+            </thead>
+            <tbody>
+                ${data.map(row => `
+                    <tr>
+                        <td style="background: #E7E6E6; font-weight: 600;">${row.cif}</td>
+                        <td style="background: #E7E6E6; font-weight: 600; text-align: left;">${row.name}</td>
+                        ${dates.map(date => {
+                            const rating = row.ratings[date];
+                            const bgColor = rating <= 3 ? '#D4EDDA' : 
+                                          (rating <= 6 ? '#FFF3CD' : '#F8D7DA');
+                            return `<td style="background: ${bgColor};">${rating}</td>`;
+                        }).join('')}
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+    
+    return html;
+}
+
+        function generateHeaderRow1() {
+            return `
+                <tr>
+                    <th colspan="2">Customer Info</th>
+                    ${generateTemplateHeader('contracting')}
+                    ${generateTemplateHeader('trading')}
+                    ${generateTemplateHeader('realEstate')}
+                    ${generateTemplateHeader('personal')}
+                </tr>
+            `;
+        }
+
+        function generateTemplateHeader(templateKey) {
+            const template = TEMPLATE_COLUMNS[templateKey];
+            // Each parameter has 2 columns (Value + Score)
+            const totalCols = (template.qualitative.length + template.quantitative.length + 
+                            template.miscellaneous.length + template.mandatory.length) * 2 + 7;
+            return `<th colspan="${totalCols}">${template.name}</th>`;
+        }
+
+        function generateHeaderRow2() {
+            return `
+                <tr>
+                    <th rowspan="3">CIF</th>
+                    <th rowspan="3">Name</th>
+                    ${generateTemplateSections('contracting')}
+                    ${generateTemplateSections('trading')}
+                    ${generateTemplateSections('realEstate')}
+                    ${generateTemplateSections('personal')}
+                </tr>
+            `;
+        }
+
+        function generateTemplateSections(templateKey) {
+            const template = TEMPLATE_COLUMNS[templateKey];
+            return `
+                <th colspan="${template.qualitative.length * 2}">Qualitative</th>
+                <th colspan="${template.quantitative.length * 2}">Quantitative</th>
+                <th colspan="${template.miscellaneous.length * 2}">Miscellaneous</th>
+                <th colspan="${template.mandatory.length * 2}">Mandatory Adjustments</th>
+                <th rowspan="3">Qual Score</th>
+                <th rowspan="3">Quant Score</th>
+                <th rowspan="3">Score Before Adj</th>
+                <th rowspan="3">Rating Before Adj</th>
+                <th rowspan="3">Mandatory Adj</th>
+                <th rowspan="3">Final Score</th>
+                <th rowspan="3">Final Rating</th>
+            `;
+        }
+
+        function generateHeaderRow3() {
+            return `
+                <tr>
+                    ${generateColumnHeaders('contracting')}
+                    ${generateColumnHeaders('trading')}
+                    ${generateColumnHeaders('realEstate')}
+                    ${generateColumnHeaders('personal')}
+                </tr>
+            `;
+        }
+
+        function generateColumnHeaders(templateKey) {
+            const template = TEMPLATE_COLUMNS[templateKey];
+            let headers = '';
+
+            // Each parameter gets a colspan of 2 (Value + Assigned Score)
+            template.qualitative.forEach(col => {
+                headers += `<th colspan="2">${col}</th>`;
+            });
+            template.quantitative.forEach(col => {
+                headers += `<th colspan="2">${col}</th>`;
+            });
+            template.miscellaneous.forEach(col => {
+                headers += `<th colspan="2">${col}</th>`;
+            });
+            template.mandatory.forEach(col => {
+                headers += `<th colspan="2">${col}</th>`;
+            });
+
+            return headers;
+        }
+
+        function generateHeaderRow4() {
+            return `
+                <tr>
+                    ${generateValueScoreHeaders('contracting')}
+                    ${generateValueScoreHeaders('trading')}
+                    ${generateValueScoreHeaders('realEstate')}
+                    ${generateValueScoreHeaders('personal')}
+                </tr>
+            `;
+        }
+
+        function generateValueScoreHeaders(templateKey) {
+            const template = TEMPLATE_COLUMNS[templateKey];
+            let headers = '';
+
+            const totalParams = template.qualitative.length + template.quantitative.length + 
+                               template.miscellaneous.length + template.mandatory.length;
+
+            for (let i = 0; i < totalParams; i++) {
+                headers += '<th>Value</th>';
+                headers += '<th style="background: #FFF4E0; color: #856404; font-weight: 700;">Assigned Score</th>';
+            }
+
+            return headers;
+        }
+
+        function generateDataRow(row) {
+            const rowClass = row.isDefaulted ? ' class="defaulted-row"' : (row.isBlankCIF ? ' class="blank-cif-row"' : '');
+            const cifDisplay = row.cif || '<strong style="color: #ffc107;">BLANK</strong>';
+
+            let html = `
+                <tr${rowClass}>
+                    <td>${cifDisplay}</td>
+                    <td>${row.name}</td>
+            `;
+
+            ['contracting', 'trading', 'realEstate', 'personal'].forEach(templateKey => {
+                const template = TEMPLATE_COLUMNS[templateKey];
+
+                // Qualitative parameters - Value and Assigned Score
+                template.qualitative.forEach((param, idx) => {
+                    const value = row[`${templateKey}_q${idx + 1}`];
+                    const score = row[`${templateKey}_q${idx + 1}_score`];
+                    html += value === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${value}</td>`;
+                    html += score === 'NA' ? '<td class="na-cell">NA</td>' : `<td class="score-cell">${score}</td>`;
+                });
+
+                // Quantitative parameters - Value and Assigned Score
+                template.quantitative.forEach((param, idx) => {
+                    const value = row[`${templateKey}_r${idx + 1}`];
+                    const score = row[`${templateKey}_r${idx + 1}_score`];
+                    html += value === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${value}</td>`;
+                    html += score === 'NA' ? '<td class="na-cell">NA</td>' : `<td class="score-cell">${score}</td>`;
+                });
+
+                // Miscellaneous parameters - Value and Assigned Score
+                template.miscellaneous.forEach((param, idx) => {
+                    const value = row[`${templateKey}_m${idx + 1}`];
+                    const score = row[`${templateKey}_m${idx + 1}_score`];
+                    html += value === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${value}</td>`;
+                    html += score === 'NA' ? '<td class="na-cell">NA</td>' : `<td class="score-cell">${score}</td>`;
+                });
+
+                // Mandatory parameters - Value and Assigned Score
+                template.mandatory.forEach((param, idx) => {
+                    const value = row[`${templateKey}_a${idx + 1}`];
+                    const score = row[`${templateKey}_a${idx + 1}_score`];
+                    html += value === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${value}</td>`;
+                    html += score === 'NA' ? '<td class="na-cell">NA</td>' : `<td class="score-cell">${score}</td>`;
+                });
+
+                // Summary columns (unchanged)
+                const qualScore = row[`${templateKey}_qualScore`];
+                const quantScore = row[`${templateKey}_quantScore`];
+                const scoreBeforeMandatory = row[`${templateKey}_scoreBeforeMandatory`];
+                const ratingBeforeMandatory = row[`${templateKey}_ratingBeforeMandatory`];
+                const mandatoryAdjParam = row[`${templateKey}_mandatoryAdjParam`];
+                const finalScore = row[`${templateKey}_finalScore`];
+                const finalRating = row[`${templateKey}_finalRating`];
+
+                html += qualScore === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${qualScore}</td>`;
+                html += quantScore === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${quantScore}</td>`;
+                html += scoreBeforeMandatory === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${scoreBeforeMandatory}</td>`;
+                html += ratingBeforeMandatory === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${ratingBeforeMandatory}</td>`;
+                html += mandatoryAdjParam === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${mandatoryAdjParam}</td>`;
+                html += finalScore === 'NA' ? '<td class="na-cell">NA</td>' : `<td>${finalScore}</td>`;
+                html += finalRating === 'NA' ? '<td class="na-cell">NA</td>' : `<td><strong>${finalRating}</strong></td>`;
+            });
+
+            html += '</tr>';
+            return html;
+        }
+
+
+        function renderHistoricalReport(data) {
+            const historyEntries = appState.ratingHistory.filter(entry => {
+                if (data.length === 0) return true;
+                return data.some(row => row.cif === entry.cif || (!row.cif && entry.cif.startsWith('BLANK')));
+            });
+
+            if (historyEntries.length === 0) {
+                return '<div class="alert alert-warning">No historical rating data available.</div>';
+            }
+
+            let html = `
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>CIF</th>
+                            <th>Borrower Name</th>
+                            <th>Template</th>
+                            <th>Qual Score</th>
+                            <th>Quant Score</th>
+                            <th>Score Before Adj</th>
+                            <th>Rating Before Adj</th>
+                            <th>Mandatory Adj</th>
+                            <th>Downgrade Notches</th>
+                            <th>Final Score</th>
+                            <th>Final Rating</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            historyEntries.forEach(entry => {
+                const rowClass = entry.isDefaulted ? ' class="defaulted-row"' : (entry.isBlankCIF ? ' class="blank-cif-row"' : '');
+                const cifDisplay = entry.cif.startsWith('BLANK') ? '<strong style="color: #ffc107;">BLANK</strong>' : entry.cif;
+                html += `
+                    <tr${rowClass}>
+                        <td>${entry.date || entry.timestamp.split('T')[0]}</td>
+                        <td>${cifDisplay}</td>
+                        <td>${entry.name}</td>
+                        <td>${TEMPLATE_COLUMNS[entry.template]?.name || entry.template}</td>
+                        <td>${entry.qualScore || 'NA'}</td>
+                        <td>${entry.quantScore || 'NA'}</td>
+                        <td>${entry.scoreBeforeMandatory || 'NA'}</td>
+                        <td>${entry.ratingBeforeMandatory || 'NA'}</td>
+                        <td>${entry.mandatoryAdj || 'NA'}</td>
+                        <td>${entry.downgradeNotches || 'NA'}</td>
+                        <td>${entry.finalScore || 'NA'}</td>
+                        <td><strong>${entry.finalRating}</strong></td>
+                        <td>${entry.isDefaulted ? '<span class="badge bg-danger">DEFAULTED</span>' : (entry.isBlankCIF ? '<span class="badge bg-warning">BLANK CIF</span>' : '<span class="badge bg-success">Active</span>')}</td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            return html;
+        }
+
+        function renderComparisonReport(data) {
+            if (data.length === 0) {
+                return '<div class="alert alert-warning">No data for comparison.</div>';
+            }
+
+            let html = `
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">CIF</th>
+                            <th rowspan="2">Name</th>
+                            <th rowspan="2">Template</th>
+                            <th colspan="2">Rating</th>
+                            <th colspan="2">Score</th>
+                            <th colspan="2">Mandatory Adj</th>
+                            <th colspan="2">Override</th>
+                        </tr>
+                        <tr>
+                            <th>Previous</th>
+                            <th>Current</th>
+                            <th>Previous</th>
+                            <th>Current</th>
+                            <th>Previous</th>
+                            <th>Current</th>
+                            <th>Previous</th>
+                            <th>Current</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.forEach(row => {
+                row.templates.forEach(template => {
+                    const searchCIF = row.cif || 'BLANK-' + row.name.substring(0, 10);
+                    const history = appState.ratingHistory.filter(h => 
+                        h.cif === searchCIF && h.template === template
+                    ).sort((a, b) => new Date(b.timestamp || b.date) - new Date(a.timestamp || a.date));
+
+                    if (history.length >= 2) {
+                        const current = history[0];
+                        const previous = history[1];
+
+                        html += `
+                            <tr${row.isBlankCIF ? ' class="blank-cif-row"' : ''}>
+                                <td>${row.cif || '<strong style="color: #ffc107;">BLANK</strong>'}</td>
+                                <td>${row.name}</td>
+                                <td>${TEMPLATE_COLUMNS[template].name}</td>
+                                <td>${previous.finalRating}</td>
+                                <td><strong>${current.finalRating}</strong></td>
+                                <td>${previous.finalScore}</td>
+                                <td>${current.finalScore}</td>
+                                <td>${previous.mandatoryAdj || 'NA'}</td>
+                                <td>${current.mandatoryAdj || 'NA'}</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                        `;
+                    }
+                });
+            });
+
+            html += '</tbody></table>';
+            return html;
+        }
+
+        function renderBlankCIFReport(data) {
+            const blankCIFData = data.filter(row => row.isBlankCIF);
+
+            if (blankCIFData.length === 0) {
+                return '<div class="alert alert-info">No Blank CIF applications under assessment.</div>';
+            }
+
+            let html = `
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Applicant Name</th>
+                            <th>Template</th>
+                            <th>Assessment Date</th>
+                            <th>Qual Score</th>
+                            <th>Quant Score</th>
+                            <th>Score Before Adj</th>
+                            <th>Mandatory Adj</th>
+                            <th>Final Score</th>
+                            <th>Final Rating</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            blankCIFData.forEach(row => {
+                row.templates.forEach(template => {
+                    html += `
+                        <tr class="blank-cif-row">
+                            <td>${row.name}</td>
+                            <td>${TEMPLATE_COLUMNS[template].name}</td>
+                            <td>${row.ratingDate}</td>
+                            <td>${row[`${template}_qualScore`]}</td>
+                            <td>${row[`${template}_quantScore`]}</td>
+                            <td>${row[`${template}_scoreBeforeMandatory`]}</td>
+                            <td>${row[`${template}_mandatoryAdjParam`]}</td>
+                            <td>${row[`${template}_finalScore`]}</td>
+                            <td><strong>${row[`${template}_finalRating`]}</strong></td>
+                            <td><span class="badge bg-warning">Under Assessment</span></td>
+                        </tr>
+                    `;
+                });
+            });
+
+            html += '</tbody></table>';
+            return html;
+        }
+
+        function renderIFRS9Report(data) {
+            if (data.length === 0) {
+                return '<div class="alert alert-warning">No data available for IFRS9 report.</div>';
+            }
+
+            let html = `
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>CIF</th>
+                            <th>Borrower Name</th>
+                            <th>Template</th>
+                            <th>Latest Rating</th>
+                            <th>Rating Date</th>
+                            <th>Final Score</th>
+                            <th>IFRS9 Stage</th>
+                            <th>PD %</th>
+                            <th>Days Past Due</th>
+                            <th>ECL Provision</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.forEach(row => {
+                row.templates.forEach(template => {
+                    const rating = row[`${template}_finalRating`];
+                    const score = row[`${template}_finalScore`];
+
+                    let stage = 'Stage 1';
+                    let pd = '< 1%';
+                    let dpd = '0';
+                    let ecl = 'Low';
+
+                    if (rating === 'D') {
+                        stage = 'Stage 3';
+                        pd = '100%';
+                        dpd = '> 90';
+                        ecl = 'High';
+                    } else if (['CCC', 'CC', 'C'].includes(rating)) {
+                        stage = 'Stage 3';
+                        pd = '> 50%';
+                        dpd = '> 90';
+                        ecl = 'High';
+                    } else if (['B', 'BB'].includes(rating)) {
+                        stage = 'Stage 2';
+                        pd = '5-25%';
+                        dpd = '30-90';
+                        ecl = 'Medium';
+                    }
+
+                    if (rating !== 'NA') {
+                        html += `
+                            <tr${row.isDefaulted ? ' class="defaulted-row"' : ''}>
+                                <td>${row.cif || '<strong style="color: #ffc107;">BLANK</strong>'}</td>
+                                <td>${row.name}</td>
+                                <td>${TEMPLATE_COLUMNS[template].name}</td>
+                                <td><strong>${rating}</strong></td>
+                                <td>${row.ratingDate}</td>
+                                <td>${score}</td>
+                                <td>${stage}</td>
+                                <td>${pd}</td>
+                                <td>${dpd}</td>
+                                <td>${ecl}</td>
+                            </tr>
+                        `;
+                    }
+                });
+            });
+
+            html += '</tbody></table>';
+            return html;
+        }
+
+        function renderCIFBasedReport(data) {
+            if (data.length === 0) {
+                return '<div class="alert alert-warning">No data available.</div>';
+            }
+
+            let html = `
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>CIF</th>
+                            <th>Borrower Name</th>
+                            <th>Template</th>
+                            <th>Latest Rating Date</th>
+                            <th>Final Rating</th>
+                            <th>Final Score</th>
+                            <th>Qual Score</th>
+                            <th>Quant Score</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.forEach(row => {
+                row.templates.forEach(template => {
+                    const rating = row[`${template}_finalRating`];
+                    if (rating !== 'NA') {
+                        html += `
+                            <tr${row.isBlankCIF ? ' class="blank-cif-row"' : ''}>
+                                <td>${row.cif || '<strong style="color: #ffc107;">BLANK</strong>'}</td>
+                                <td>${row.name}</td>
+                                <td>${TEMPLATE_COLUMNS[template].name}</td>
+                                <td>${row.ratingDate}</td>
+                                <td><strong>${rating}</strong></td>
+                                <td>${row[`${template}_finalScore`]}</td>
+                                <td>${row[`${template}_qualScore`]}</td>
+                                <td>${row[`${template}_quantScore`]}</td>
+                                <td>${row.isBlankCIF ? '<span class="badge bg-warning">BLANK CIF</span>' : '<span class="badge bg-success">Active</span>'}</td>
+                            </tr>
+                        `;
+                    }
+                });
+            });
+
+            html += '</tbody></table>';
+            return html;
+        }
+
+        function renderIntervalBasedReport(data) {
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+
+            const filteredHistory = appState.ratingHistory.filter(entry => {
+                const entryDate = entry.date || entry.timestamp.split('T')[0];
+                return entryDate >= dateFrom && entryDate <= dateTo;
+            }).sort((a, b) => new Date(b.date || b.timestamp) - new Date(a.date || a.timestamp));
+
+            if (filteredHistory.length === 0) {
+                return '<div class="alert alert-info">No rating entries found in the selected date range.</div>';
+            }
+
+            let html = `
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>CIF</th>
+                            <th>Borrower Name</th>
+                            <th>Template</th>
+                            <th>Final Rating</th>
+                            <th>Final Score</th>
+                            <th>Qual Score</th>
+                            <th>Quant Score</th>
+                            <th>Mandatory Adj</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            filteredHistory.forEach(entry => {
+                const rowClass = entry.isDefaulted ? ' class="defaulted-row"' : (entry.isBlankCIF ? ' class="blank-cif-row"' : '');
+                const cifDisplay = entry.cif.startsWith('BLANK') ? '<strong style="color: #ffc107;">BLANK</strong>' : entry.cif;
+                html += `
+                    <tr${rowClass}>
+                        <td>${entry.date || entry.timestamp.split('T')[0]}</td>
+                        <td>${cifDisplay}</td>
+                        <td>${entry.name}</td>
+                        <td>${TEMPLATE_COLUMNS[entry.template]?.name || entry.template}</td>
+                        <td><strong>${entry.finalRating}</strong></td>
+                        <td>${entry.finalScore || 'NA'}</td>
+                        <td>${entry.qualScore || 'NA'}</td>
+                        <td>${entry.quantScore || 'NA'}</td>
+                        <td>${entry.mandatoryAdj || 'NA'}</td>
+                        <td>${entry.isDefaulted ? '<span class="badge bg-danger">DEFAULTED</span>' : (entry.isBlankCIF ? '<span class="badge bg-warning">BLANK CIF</span>' : '<span class="badge bg-success">Active</span>')}</td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            return html;
+        }
+
+
+        function downloadExcel() {
+            try {
+                const reportType = document.getElementById('reportTypeFilter').value;
+                const workbook = XLSX.utils.book_new();
+
+                if (reportType === 'portfolio') {
+                    const portfolioData = buildPortfolioExcelData();
+                    const ws = XLSX.utils.aoa_to_sheet(portfolioData);
+                    XLSX.utils.book_append_sheet(workbook, ws, 'Portfolio Assessment');
+                } else if (reportType === 'historical') {
+                    const historicalData = buildHistoricalExcelData();
+                    const ws = XLSX.utils.aoa_to_sheet(historicalData);
+                    XLSX.utils.book_append_sheet(workbook, ws, 'Historical Ratings');
+                } else if (reportType === 'comparison') {
+                    const comparisonData = buildComparisonExcelData();
+                    const ws = XLSX.utils.aoa_to_sheet(comparisonData);
+                    XLSX.utils.book_append_sheet(workbook, ws, 'Rating Comparison');
+                } else if (reportType === 'blankcif') {
+                    const blankData = buildBlankCIFExcelData();
+                    const ws = XLSX.utils.aoa_to_sheet(blankData);
+                    XLSX.utils.book_append_sheet(workbook, ws, 'Blank CIF');
+                } else if (reportType === 'ifrs9') {
+                    const ifrs9Data = buildIFRS9ExcelData();
+                    const ws = XLSX.utils.aoa_to_sheet(ifrs9Data);
+                    XLSX.utils.book_append_sheet(workbook, ws, 'IFRS9 Report');
+                } else if (reportType === 'cifbased') {
+                    const cifData = buildCIFBasedExcelData();
+                    const ws = XLSX.utils.aoa_to_sheet(cifData);
+                    XLSX.utils.book_append_sheet(workbook, ws, 'CIF Based Report');
+                } else if (reportType === 'intervalbased') {
+                    const intervalData = buildIntervalBasedExcelData();
+                    const ws = XLSX.utils.aoa_to_sheet(intervalData);
+                    XLSX.utils.book_append_sheet(workbook, ws, 'Interval Report');
+                }
+
+                const filename = `${reportType}_report_${new Date().toISOString().split('T')[0]}.xlsx`;
+                XLSX.writeFile(workbook, filename);
+
+                showToast('Excel Download', 'Report exported successfully!', 'success');
+            } catch (error) {
+                console.error('Error generating Excel:', error);
+                showToast('Export Error', 'Failed to generate Excel file', 'danger');
+            }
+        }
+
+        function buildPortfolioExcelData() {
+            const data = [];
+            const header1 = ['CIF', 'Name'];
+            const header2 = ['', ''];
+            const header3 = ['', ''];
+            const header4 = ['', ''];
+
+            ['contracting', 'trading', 'realEstate', 'personal'].forEach(key => {
+                const template = TEMPLATE_COLUMNS[key];
+                const totalCols = (template.qualitative.length + template.quantitative.length + 
+                                  template.miscellaneous.length + template.mandatory.length) * 2 + 7;
+
+                header1.push(template.name);
+                for (let i = 1; i < totalCols; i++) header1.push('');
+
+                header2.push('Qualitative');
+                for (let i = 1; i < template.qualitative.length * 2; i++) header2.push('');
+                header2.push('Quantitative');
+                for (let i = 1; i < template.quantitative.length * 2; i++) header2.push('');
+                header2.push('Miscellaneous');
+                for (let i = 1; i < template.miscellaneous.length * 2; i++) header2.push('');
+                header2.push('Mandatory');
+                for (let i = 1; i < template.mandatory.length * 2; i++) header2.push('');
+                header2.push('Summary');
+                for (let i = 1; i < 7; i++) header2.push('');
+
+                template.qualitative.forEach(param => {
+                    header3.push(param);
+                    header3.push('');
+                });
+                template.quantitative.forEach(param => {
+                    header3.push(param);
+                    header3.push('');
+                });
+                template.miscellaneous.forEach(param => {
+                    header3.push(param);
+                    header3.push('');
+                });
+                template.mandatory.forEach(param => {
+                    header3.push(param);
+                    header3.push('');
+                });
+                header3.push('Qual Score', 'Quant Score', 'Score Before Adj', 'Rating Before Adj', 'Mandatory Adj', 'Final Score', 'Final Rating');
+
+                const totalParams = template.qualitative.length + template.quantitative.length + 
+                                   template.miscellaneous.length + template.mandatory.length;
+                for (let i = 0; i < totalParams; i++) {
+                    header4.push('Value');
+                    header4.push('Assigned Score');
+                }
+                for (let i = 0; i < 7; i++) header4.push('-');
+            });
+
+            data.push(header1, header2, header3, header4);
+
+            appState.reportData.forEach(row => {
+                const dataRow = [row.cif || 'BLANK', row.name];
+
+                ['contracting', 'trading', 'realEstate', 'personal'].forEach(key => {
+                    const template = TEMPLATE_COLUMNS[key];
+
+                    template.qualitative.forEach((param, idx) => {
+                        const val = row[`${key}_q${idx + 1}`];
+                        const score = row[`${key}_q${idx + 1}_score`];
+                        dataRow.push(val !== 'NA' ? val : 'NA');
+                        dataRow.push(score !== 'NA' ? score : 'NA');
+                    });
+
+                    template.quantitative.forEach((param, idx) => {
+                        const val = row[`${key}_r${idx + 1}`];
+                        const score = row[`${key}_r${idx + 1}_score`];
+                        dataRow.push(val !== 'NA' ? val : 'NA');
+                        dataRow.push(score !== 'NA' ? score : 'NA');
+                    });
+
+                    template.miscellaneous.forEach((param, idx) => {
+                        const val = row[`${key}_m${idx + 1}`];
+                        const score = row[`${key}_m${idx + 1}_score`];
+                        dataRow.push(val !== 'NA' ? val : 'NA');
+                        dataRow.push(score !== 'NA' ? score : 'NA');
+                    });
+
+                    template.mandatory.forEach((param, idx) => {
+                        const val = row[`${key}_a${idx + 1}`];
+                        const score = row[`${key}_a${idx + 1}_score`];
+                        dataRow.push(val !== 'NA' ? val : 'NA');
+                        dataRow.push(score !== 'NA' ? score : 'NA');
+                    });
+
+                    const hasTemplate = row.templates.includes(key);
+                    dataRow.push(hasTemplate ? row[`${key}_qualScore`] : 'NA');
+                    dataRow.push(hasTemplate ? row[`${key}_quantScore`] : 'NA');
+                    dataRow.push(hasTemplate ? row[`${key}_scoreBeforeMandatory`] : 'NA');
+                    dataRow.push(hasTemplate ? row[`${key}_ratingBeforeMandatory`] : 'NA');
+                    dataRow.push(hasTemplate ? row[`${key}_mandatoryAdjParam`] : 'NA');
+                    dataRow.push(hasTemplate ? row[`${key}_finalScore`] : 'NA');
+                    dataRow.push(hasTemplate ? row[`${key}_finalRating`] : 'NA');
+                });
+
+                data.push(dataRow);
+            });
+
+            return data;
+        }
+
+        function buildHistoricalExcelData() {
+            const data = [['Date', 'CIF', 'Borrower Name', 'Template', 'Qual Score', 'Quant Score', 
+                          'Score Before Adj', 'Rating Before Adj', 'Mandatory Adj', 'Downgrade Notches', 
+                          'Final Score', 'Final Rating', 'Status']];
+
+            appState.ratingHistory.forEach(entry => {
+                data.push([
+                    entry.date || entry.timestamp.split('T')[0],
+                    entry.cif.startsWith('BLANK') ? 'BLANK' : entry.cif,
+                    entry.name,
+                    TEMPLATE_COLUMNS[entry.template]?.name || entry.template,
+                    entry.qualScore || 'NA',
+                    entry.quantScore || 'NA',
+                    entry.scoreBeforeMandatory || 'NA',
+                    entry.ratingBeforeMandatory || 'NA',
+                    entry.mandatoryAdj || 'NA',
+                    entry.downgradeNotches || 'NA',
+                    entry.finalScore || 'NA',
+                    entry.finalRating,
+                    entry.isDefaulted ? 'DEFAULTED' : (entry.isBlankCIF ? 'BLANK CIF' : 'Active')
+                ]);
+            });
+
+            return data;
+        }
+
+        function buildComparisonExcelData() {
+            const data = [['CIF', 'Name', 'Template', 'Previous Rating', 'Current Rating', 
+                          'Previous Score', 'Current Score', 'Previous Mandatory Adj', 'Current Mandatory Adj']];
+
+            appState.reportData.forEach(row => {
+                row.templates.forEach(template => {
+                    const searchCIF = row.cif || 'BLANK-' + row.name.substring(0, 10);
+                    const history = appState.ratingHistory.filter(h => 
+                        h.cif === searchCIF && h.template === template
+                    ).sort((a, b) => new Date(b.timestamp || b.date) - new Date(a.timestamp || a.date));
+
+                    if (history.length >= 2) {
+                        const current = history[0];
+                        const previous = history[1];
+
+                        data.push([
+                            row.cif || 'BLANK',
+                            row.name,
+                            TEMPLATE_COLUMNS[template].name,
+                            previous.finalRating,
+                            current.finalRating,
+                            previous.finalScore,
+                            current.finalScore,
+                            previous.mandatoryAdj || 'NA',
+                            current.mandatoryAdj || 'NA'
+                        ]);
+                    }
+                });
+            });
+
+            return data;
+        }
+
+        function buildBlankCIFExcelData() {
+            const data = [['Applicant Name', 'Template', 'Assessment Date', 'Qual Score', 
+                          'Quant Score', 'Score Before Adj', 'Mandatory Adj', 'Final Score', 
+                          'Final Rating', 'Status']];
+
+            appState.reportData.filter(row => row.isBlankCIF).forEach(row => {
+                row.templates.forEach(template => {
+                    data.push([
+                        row.name,
+                        TEMPLATE_COLUMNS[template].name,
+                        row.ratingDate,
+                        row[`${template}_qualScore`],
+                        row[`${template}_quantScore`],
+                        row[`${template}_scoreBeforeMandatory`],
+                        row[`${template}_mandatoryAdjParam`],
+                        row[`${template}_finalScore`],
+                        row[`${template}_finalRating`],
+                        'Under Assessment'
+                    ]);
+                });
+            });
+
+            return data;
+        }
+
+        function buildIFRS9ExcelData() {
+            const data = [['CIF', 'Borrower Name', 'Template', 'Latest Rating', 'Rating Date', 
+                          'Final Score', 'IFRS9 Stage', 'PD %', 'Days Past Due', 'ECL Provision']];
+
+            appState.reportData.forEach(row => {
+                row.templates.forEach(template => {
+                    const rating = row[`${template}_finalRating`];
+                    const score = row[`${template}_finalScore`];
+
+                    let stage = 'Stage 1';
+                    let pd = '< 1%';
+                    let dpd = '0';
+                    let ecl = 'Low';
+
+                    if (rating === 'D') {
+                        stage = 'Stage 3';
+                        pd = '100%';
+                        dpd = '> 90';
+                        ecl = 'High';
+                    } else if (['CCC', 'CC', 'C'].includes(rating)) {
+                        stage = 'Stage 3';
+                        pd = '> 50%';
+                        dpd = '> 90';
+                        ecl = 'High';
+                    } else if (['B', 'BB'].includes(rating)) {
+                        stage = 'Stage 2';
+                        pd = '5-25%';
+                        dpd = '30-90';
+                        ecl = 'Medium';
+                    }
+
+                    if (rating !== 'NA') {
+                        data.push([
+                            row.cif || 'BLANK',
+                            row.name,
+                            TEMPLATE_COLUMNS[template].name,
+                            rating,
+                            row.ratingDate,
+                            score,
+                            stage,
+                            pd,
+                            dpd,
+                            ecl
+                        ]);
+                    }
+                });
+            });
+
+            return data;
+        }
+
+        function buildCIFBasedExcelData() {
+            const data = [['CIF', 'Borrower Name', 'Template', 'Latest Rating Date', 'Final Rating', 
+                          'Final Score', 'Qual Score', 'Quant Score', 'Status']];
+
+            appState.reportData.forEach(row => {
+                row.templates.forEach(template => {
+                    const rating = row[`${template}_finalRating`];
+                    if (rating !== 'NA') {
+                        data.push([
+                            row.cif || 'BLANK',
+                            row.name,
+                            TEMPLATE_COLUMNS[template].name,
+                            row.ratingDate,
+                            rating,
+                            row[`${template}_finalScore`],
+                            row[`${template}_qualScore`],
+                            row[`${template}_quantScore`],
+                            row.isBlankCIF ? 'BLANK CIF' : 'Active'
+                        ]);
+                    }
+                });
+            });
+
+            return data;
+        }
+
+        function buildIntervalBasedExcelData() {
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+
+            const data = [['Date', 'CIF', 'Borrower Name', 'Template', 'Final Rating', 'Final Score', 
+                          'Qual Score', 'Quant Score', 'Mandatory Adj', 'Status']];
+
+            const filteredHistory = appState.ratingHistory.filter(entry => {
+                const entryDate = entry.date || entry.timestamp.split('T')[0];
+                return entryDate >= dateFrom && entryDate <= dateTo;
+            });
+
+            filteredHistory.forEach(entry => {
+                data.push([
+                    entry.date || entry.timestamp.split('T')[0],
+                    entry.cif.startsWith('BLANK') ? 'BLANK' : entry.cif,
+                    entry.name,
+                    TEMPLATE_COLUMNS[entry.template]?.name || entry.template,
+                    entry.finalRating,
+                    entry.finalScore || 'NA',
+                    entry.qualScore || 'NA',
+                    entry.quantScore || 'NA',
+                    entry.mandatoryAdj || 'NA',
+                    entry.isDefaulted ? 'DEFAULTED' : (entry.isBlankCIF ? 'BLANK CIF' : 'Active')
+                ]);
+            });
+
+            return data;
+        }
+
+        function showToast(title, message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toastId = 'toast-' + Date.now();
+
+            const bgClass = type === 'success' ? 'bg-success' : type === 'danger' ? 'bg-danger' : 'bg-info';
+
+            const toastHTML = `
+                <div class="toast align-items-center text-white ${bgClass} border-0" role="alert" id="${toastId}">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <strong>${title}</strong><br>${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { autohide: true, delay: 3000 });
+            toast.show();
+
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
+            });
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem(STORAGE_KEYS.theme, isDark ? 'dark' : 'light');
+
+            const icon = document.querySelector('#themeToggle i');
+            icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem(STORAGE_KEYS.theme);
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.querySelector('#themeToggle i').className = 'fas fa-sun';
+            }
+        }
+    </script>
+</body>
+</html>

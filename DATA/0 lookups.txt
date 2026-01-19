@@ -1,0 +1,107 @@
+
+Entity Details
+Financial Factors
+Financial Inputs
+Mandatory Adjustments
+Discretionary Overrides
+Qualitative Factors
+6B
+6C
+
+Score Weightage
+PE - Score range
+NPE - Score selection
+
+
+********************************************************
+
+NPE Asset Classification
+    Sub-Standard
+    Doubtful
+    Loss Asset
+
+********************************************************
+
+PE Risk Category
+    Low
+    Medium
+    High
+
+************************************************************************************
+
+Financial Input Category
+    Balance Sheet
+    Assets
+    Liabilities
+    Equity
+    Profit & Loss
+    Revenue
+    Expenses
+    Cash Flow
+
+Financial Input Datatype
+    Decimal
+    Percentage
+    Integer 
+
+Financial Input Unit
+    Positive Numbers Only // /^(?:[1-9]\d*|0?\.\d+)$/
+    Non-Negative (<= 0) // /^(?:0|[1-9]\d*)(?:\.\d+)?$/
+    Percentage (0-100) // /^(100(\.0+)?|([0-9]{1,2})(\.\d+)?)$/
+
+Financial Input Unit
+    Currency
+    Percentage (%)
+    Ratio
+    Number
+
+************************************************************************************
+
+Financial Ratios Category
+    Liquidity Ratios
+    Leverage Ratios
+    Profitability Ratios
+
+Financial Ration Impression
+    Excellent
+    Good
+    Strong
+    Acceptable
+    Bad
+
+************************************************************************************
+
+Projection Year
+    1 Year
+    3 Years
+    5 Years
+
+************************************************************************************
+
+Qualitative Categories
+    Management Quality & Experience
+    Market Position & Competitive Landscape
+    Industry Outlook & Environment
+    Operational Efficiency & Risk Management
+    Financial Management & Strategy
+    ESG & Sustainability
+    Additional Risk Factors
+
+Qualitative Options Scores Imapct
+    Excellent
+    Good
+    Average
+    Poor
+
+************************************************************************************
+
+Discretionary Override Category
+    GEN - General / Overall Assessment
+    FIN - Financial Performance
+    BUSS. PERF - Business Performance
+    LEGAL - Legal Issues
+    ECONOMIC - Economic Environment
+    POLITICAL - Political Risk
+    INDUSTRY - Industry Outlook
+    MANAGEMENT - Management Quality
+    ACCOUNT CONDUCT - Banking Relationship
