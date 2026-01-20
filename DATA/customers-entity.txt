@@ -4,7 +4,7 @@
     cifNumber : "",
     entityName : "",
     entityType : "",
-    industrySectors : [ 1,2,3 ],
+    industrySectors : [ 1, 2, 3 ],
     externalRatingAvailable : true,
     businessActivity : "",
     cinetNumber : "",
