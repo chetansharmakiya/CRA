@@ -1,0 +1,72 @@
+External Rating Mapping
+
+API : /external-rating-mapping/create
+METHOD : POST
+REQUEST :
+{
+    auditUserId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+
+    externalRatingMappingId :  "ERM-1",
+    scoreRangeId : "SR-1", // Foreign Key of score-weightage
+    gradeType : "Investment Grade", // Investment Grade, Below Investment Grade
+    spRatings : [ "AAA", "AA+", "AA", "AA-" ],
+    moodyRatings : [ "Aaa", "Aa1", "Aa2" ]
+    fitchRatings : [ "AAA", "AA+", "AA" ]
+    description : "Some Description",
+    externalRatingMappingStatus : "Pending",
+    version : 1
+}
+
+API : /external-rating-mapping/update/{externalRatingMappingId}
+METHOD : PUT
+REQUEST : 
+{
+    auditUserId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+
+    scoreRangeId : "SR-1", // Foreign Key of score-weightage
+    gradeType : "Investment Grade", // Investment Grade, Below Investment Grade
+    spRatings : [ "AAA", "AA+", "AA", "AA-" ],
+    moodyRatings : [ "Aaa", "Aa1", "Aa2" ]
+    fitchRatings : [ "AAA", "AA+", "AA" ]
+    description : "Some Description",
+    externalRatingMappingStatus : "Pending",
+    version : 1
+}
+
+API : /external-rating-mapping/patch/status/{externalRatingMappingId}
+METHOD : PATCH
+REQUEST :
+{
+    auditUserId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+
+    externalRatingMappingStatus : "Approved",
+}
+
+API : /external-rating-mapping/view/{externalRatingMappingId}
+METHOD : GET
+RESPONSE :
+{
+    scoreRangeId : "SR-1", // Foreign Key of score-weightage
+    grade : 1, // get from score-weightage table range id
+    riskLevel : 'Low', // get from score-weightage table range id
+    
+    gradeType : "Investment Grade", // Investment Grade, Below Investment Grade
+    spRatings : [ "AAA", "AA+", "AA", "AA-" ],
+    moodyRatings : [ "Aaa", "Aa1", "Aa2" ],
+    fitchRatings : [ "AAA", "AA+", "AA" ],
+    description : "Some Description",
+    externalRatingMappingStatus : "Pending",
+    version : 1
+}
+
+API : /external-rating-mapping/delete/{externalRatingMappingId}
+METHOD : DELETE
+
+API : /external-rating-mapping/all
+METHOD : GET

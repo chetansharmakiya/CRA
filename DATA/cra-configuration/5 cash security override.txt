@@ -1,0 +1,126 @@
+Cash Security Override
+
+************************************************************************************
+
+API : /cash-security-coverage-matrix/create
+METHOD : POST
+REQUEST :
+    FIRST
+    {
+        auditUserId : 1,
+        auditModuleId : 1,
+        auditSubModuleId : 1,
+
+        cashSecurityCoverageId : "CSC-1",
+        coverageLevel : "≥110% (Cash as per Policy)",
+        expression : "cashCollateralCoverage>=100",
+        facilityGrade : "Grade 1",
+        adjustmentToORR : "Change ORR to 1",
+        finalAction : "Force Final Grade = 1"
+
+        version : 1,
+    }
+
+    SECOND
+    {
+        auditUserId : 1,
+        auditModuleId : 1,
+        auditSubModuleId : 1,
+
+        cashSecurityCoverageId : "CSC-2",
+        coverageLevel : "100% to <110% (Cash at 100%)",
+        expression : "100>=cashCollateralCoverage<100",
+        facilityGrade : "Grade 2",
+        adjustmentToORR : "Change ORR to 2",
+        finalAction : "Force Final Grade = 2"
+
+        version : 1,
+    }
+
+    THIRD
+    {
+        auditUserId : 1,
+        auditModuleId : 1,
+        auditSubModuleId : 1,
+
+        cashSecurityCoverageId : "CSC-3",
+        coverageLevel : "<100% (Partial Security)",
+        expression : "cashCollateralCoverage<100",
+        facilityGrade : "Not Applicable",
+        adjustmentToORR : "No override",
+        cashSecurityCoverageStatus : "Approved",
+        finalAction : "Use calculated grade"
+
+        version : 1,
+    }
+
+
+************************************************************************************
+
+API : /cash-security-coverage-matrix/update/{cashSecurityCoverageId}
+METHOD : PUT
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    coverageLevel : "≥110% (Cash as per Policy)",
+    expression : "cashCollateralCoverage>=100",
+    facilityGrade : "Grade 1",
+    adjustmentToORR : "Change ORR to 1",
+    finalAction : "Force Final Grade = 1"
+    cashSecurityCoverageStatus : "Approved",
+
+    version : 1,
+}
+
+************************************************************************************
+
+API : /cash-security-coverage-matrix/patch/status/{cashSecurityCoverageId}
+METHOD : PATCH
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    cashSecurityCoverageStatus : "Approved",
+}
+
+************************************************************************************
+
+API : /cash-security-coverage-matrix/view/{cashSecurityCoverageId}
+METHOD : GET
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    coverageLevel : "≥110% (Cash as per Policy)",
+    expression : "cashCollateralCoverage>=100",
+    facilityGrade : "Grade 1",
+    adjustmentToORR : "Change ORR to 1",
+    finalAction : "Force Final Grade = 1"
+    cashSecurityCoverageStatus : "Approved",
+
+    version : 1,
+    actionByUserId: 42,
+    actionDate: "2025-12-31T10:13:59.919Z",
+    action: "CREATE",
+    actionByUserName: "Chetan Sharma",
+    actionByEmailId: "chetan@gmail.com",
+    actionByRoleName: "Super Admin",
+    actionByWorkflow: "Maker"
+}
+
+************************************************************************************
+
+API : /cash-security-coverage-matrix/delete/{cashSecurityCoverageId}
+METHOD : DELETE
+
+************************************************************************************
+
+API : /cash-security-coverage-matrix/all
+METHOD : GET

@@ -13,3 +13,10 @@ CRA Configuration
     PD Mapping 
     Industry Benchmark Configuration
     External Rating Mapping 
+
+Template
+    Template Management
+
+Assesments
+    Create Assesments
+    Customers

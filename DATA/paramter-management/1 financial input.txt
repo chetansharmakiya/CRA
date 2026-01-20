@@ -18,9 +18,7 @@ REQUEST :
     description : "Some Description",
     isRequired : true,
     activeInStepper : true,
-    version : 1,
-    actionBy : "Chetan Sharma",
-    actionDate : "",
+    version : 1
 }
 
 API : /financial-input/update/{financialInputId}
@@ -41,9 +39,6 @@ REQUEST :
     isRequired : true,
     activeInStepper : true,
     version : 1,
-
-    actionBy : "Chetan Sharma",
-    actionDate : "",
 }
 
 API : /financial-input/patch/status/{financialInputId}

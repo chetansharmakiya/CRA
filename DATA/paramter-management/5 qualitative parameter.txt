@@ -10,7 +10,7 @@ REQUEST :
     auditModuleId : 1,
     auditSubModuleId : 1,
 
-    qualitativeFactorId : "QP-1",
+    qualitativeFactorId : "QF-1",
     qualitativeFactorName : "Years of Industry Experience",
     category : "Management Quality & Experience",
     controlName : "yearsOfIndustryExperience",
@@ -103,7 +103,7 @@ API : /qualitative-factor/view/{qualitativeFactorId}
 METHOD : GET
 RESPONSE : 
 {
-    qualitativeFactorId : "QP-1",
+    qualitativeFactorId : "QF-1",
     qualitativeFactorName : "Years of Industry Experience",
     category : "Management Quality & Experience",
     controlName : "yearsOfIndustryExperience",

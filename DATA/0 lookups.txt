@@ -62,7 +62,7 @@ Financial Ratios Category
     Leverage Ratios
     Profitability Ratios
 
-Financial Ration Impression
+Financial Ratio Impression
     Excellent
     Good
     Strong
@@ -71,10 +71,16 @@ Financial Ration Impression
 
 ************************************************************************************
 
-Projection Year
-    1 Year
-    3 Years
-    5 Years
+Discretionary Override Category
+    GEN - General / Overall Assessment
+    FIN - Financial Performance
+    BUSS. PERF - Business Performance
+    LEGAL - Legal Issues
+    ECONOMIC - Economic Environment
+    POLITICAL - Political Risk
+    INDUSTRY - Industry Outlook
+    MANAGEMENT - Management Quality
+    ACCOUNT CONDUCT - Banking Relationship
 
 ************************************************************************************
 
@@ -95,13 +101,7 @@ Qualitative Options Scores Imapct
 
 ************************************************************************************
 
-Discretionary Override Category
-    GEN - General / Overall Assessment
-    FIN - Financial Performance
-    BUSS. PERF - Business Performance
-    LEGAL - Legal Issues
-    ECONOMIC - Economic Environment
-    POLITICAL - Political Risk
-    INDUSTRY - Industry Outlook
-    MANAGEMENT - Management Quality
-    ACCOUNT CONDUCT - Banking Relationship
+Projection Year
+    1 Year
+    3 Years
+    5 Years

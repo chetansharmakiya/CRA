@@ -132,11 +132,11 @@ RESPONSE :
     ],
     formulaExpression : "currentAssets/currentLiabilities",
     controlName : "currentRatio",
-    description : "",
     category : "Liquidity Ratios",
-    financialRatioStatus : "Pending",
     isRequired : true,
     activeInStepper : true,
+    description : "",
+    financialRatioStatus : "Pending",
     scoreRange : [
         {
             optionLabel : "Current Ratio < 0.78",

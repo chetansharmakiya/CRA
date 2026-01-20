@@ -1,0 +1,463 @@
+Template Management
+
+API : /template-management/create
+METHOD : POST
+REQUEST :
+{
+    auditUserId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+    
+    templateId :  "TEMP-1",
+    templateName : "Current Liabilities",
+    templateStatus : "Pending",
+    category : "Liabilities",
+    Industry Sector
+    description : "Some Description",
+    isActive : true,
+    parameters : {
+        financialInputs : [
+            {
+                financialInputId : "FI-1",
+                sortOrder : 1
+            },
+            {
+                financialInputId : "FI-2",
+                sortOrder : 2
+            }
+        ],
+        financialRatios : [
+            {
+                financialRatioId : "FR-1",
+                sortOrder : 1
+            },
+            {
+                financialRatioId : "FR-2",
+                sortOrder : 2
+            }
+        ],
+        mandatoryAdjustments : [
+            {
+                mandatoryAdjustmentId : "MA-1",
+                sortOrder : 1
+            },
+            {
+                mandatoryAdjustmentId : "MA-1",
+                sortOrder : 1
+            }
+        ],
+        discretionaryOverrides : [
+            {
+                discretionaryOverrideId : "DO-1",
+                sortOrder : 1
+            },
+            {
+                discretionaryOverrideId : "DO-2",
+                sortOrder : 2
+            },
+        ],
+        qualitativeFactors : [
+            {
+                qualitativeFactors : "QF-1",
+                sortOrder : 1
+            },
+            {
+                qualitativeFactors : "QF-2",
+                sortOrder : 2
+            }
+        ]
+    },
+    version : 1
+}
+
+
+API : /template-management/update/{templateId}
+METHOD : PUT
+REQUEST :
+{
+    auditUserId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+    
+    templateName : "Current Liabilities",
+    templateStatus : "Pending",
+    category : "Liabilities",
+    Industry Sector
+    description : "Some Description",
+    isActive : true,
+    parameters : {
+        financialInputs : [
+            {
+                financialInputId : "FI-1",
+                sortOrder : 1
+            },
+            {
+                financialInputId : "FI-2",
+                sortOrder : 2
+            }
+        ],
+        financialRatios : [
+            {
+                financialRatioId : "FR-1",
+                sortOrder : 1
+            },
+            {
+                financialRatioId : "FR-2",
+                sortOrder : 2
+            }
+        ],
+        mandatoryAdjustments : [
+            {
+                mandatoryAdjustmentId : "MA-1",
+                sortOrder : 1
+            },
+            {
+                mandatoryAdjustmentId : "MA-1",
+                sortOrder : 1
+            }
+        ],
+        discretionaryOverrides : [
+            {
+                discretionaryOverrideId : "DO-1",
+                sortOrder : 1
+            },
+            {
+                discretionaryOverrideId : "DO-2",
+                sortOrder : 2
+            },
+        ],
+        qualitativeFactors : [
+            {
+                qualitativeFactors : "QF-1",
+                sortOrder : 1
+            },
+            {
+                qualitativeFactors : "QF-2",
+                sortOrder : 2
+            }
+        ]
+    },
+    version : 1
+}
+
+
+API : /template-management/patch/status/{templateId}
+METHOD : PATCH
+REQUEST :
+{
+    auditId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+
+    templateStatus : "Approved"
+}
+
+
+API : /template-management/view/{templateId}
+METHOD : GET
+RESPONSE : 
+{
+    auditUserId : "",
+    auditModuleId : "",
+    auditSubModuleId : "",
+    
+    templateId :  "TEMP-1",
+    templateName : "Current Liabilities",
+    templateStatus : "Pending",
+    category : "Liabilities",
+    Industry Sector
+    description : "Some Description",
+    isActive : true,
+    parameters : {
+        financialInputs : [
+            {
+                financialInputId : "FI-1",
+                financialInputName : "Total Current Assets",
+                category : "Liabilities",
+                controlName : "currentLiabilities",
+                fieldType : "decimal",
+                unit : "currency",
+                validationRule : "/^(?:[1-9]\d*|0?\.\d+)$/",
+                activeInStepper : true,
+                isRequired : true,
+                sortOrder : 1
+            },
+            {
+                financialInputId : "FI-2",
+                financialInputName : "Total Current Assets",
+                category : "Liabilities",
+                controlName : "currentLiabilities",
+                fieldType : "decimal",
+                unit : "currency",
+                validationRule : "/^(?:[1-9]\d*|0?\.\d+)$/",
+                activeInStepper : true,
+                isRequired : true,
+                sortOrder : 1
+            }
+        ],
+        financialRatios : [
+            {
+                financialRatioId : "FR-1",
+                financialRatioName : "Current Ratio",
+                financialInputs : [
+                    {
+                        financialInputId : "FI-1",
+                        financialInputName : "Current Assets"
+                    },
+                    {
+                        financialInputId : "FI-2"
+                        financialInputName : "Current Liabilities"
+                    }
+                ],
+                formulaExpression : "currentAssets/currentLiabilities",
+                controlName : "currentRatio",
+                category : "Liquidity Ratios",
+                isRequired : true,
+                activeInStepper : true,
+                scoreRange : [
+                    {
+                        optionLabel : "Current Ratio < 0.78",
+                        minValue : 0,
+                        maxValue : 0.78,
+                        score : 7.1,
+                        impression : "Good"
+                    },
+                    {
+                        optionLabel : "0.78 ≤ Current Ratio < 1.1",
+                        minValue : 0.78,
+                        maxValue : 1.1,
+                        score : 11.9,
+                        impression : "Excellent"
+                    },
+                    {
+                        optionLabel : "Current Ratio ≥ 1.1",
+                        minValue : 1.1,
+                        maxValue : 9999,
+                        score : 27.1,
+                        impression : "Strong"
+                    },
+                    {
+                        optionLabel : "Current Ratio ≥ 1.1",
+                        minValue : 1.1,
+                        maxValue : 9999,
+                        score : 27.1,
+                        impression : "Acceptable"
+                    }
+                ],
+                sortOrder : 1
+            },
+            {
+                financialRatioId : "FR-2",
+                financialRatioName : "Current Ratio",
+                financialInputs : [
+                    {
+                        financialInputId : "FI-1",
+                        financialInputName : "Current Assets"
+                    },
+                    {
+                        financialInputId : "FI-2"
+                        financialInputName : "Current Liabilities"
+                    }
+                ],
+                formulaExpression : "currentAssets/currentLiabilities",
+                controlName : "currentRatio",
+                category : "Liquidity Ratios",
+                isRequired : true,
+                activeInStepper : true,
+                scoreRange : [
+                    {
+                        optionLabel : "Current Ratio < 0.78",
+                        minValue : 0,
+                        maxValue : 0.78,
+                        score : 7.1,
+                        impression : "Good"
+                    },
+                    {
+                        optionLabel : "0.78 ≤ Current Ratio < 1.1",
+                        minValue : 0.78,
+                        maxValue : 1.1,
+                        score : 11.9,
+                        impression : "Excellent"
+                    },
+                    {
+                        optionLabel : "Current Ratio ≥ 1.1",
+                        minValue : 1.1,
+                        maxValue : 9999,
+                        score : 27.1,
+                        impression : "Strong"
+                    },
+                    {
+                        optionLabel : "Current Ratio ≥ 1.1",
+                        minValue : 1.1,
+                        maxValue : 9999,
+                        score : 27.1,
+                        impression : "Acceptable"
+                    }
+                ],
+                sortOrder : 1
+            }
+        ],
+        mandatoryAdjustments : [
+            {
+                mandatoryAdjustmentId : "MA-1",
+                mandatoryAdjustmentName : "Missing Audited Financials",
+                controlName : "missingAuditedFinancials",
+                category : "GEN",
+                isRequired : true,
+                activeInStepper : true,
+                options : [
+                    {
+                        label : "Partial Audit / Management Accounts",
+                        value : -5
+                    },
+                    {
+                        label : "Unaudited Financials Only",
+                        value : -10
+                    },
+                    {
+                        label : "No Financial Statements",
+                        value : -15
+                    }
+                ],
+                sortOrder : 1
+            },
+            {
+                mandatoryAdjustmentId : "MA-1",
+                mandatoryAdjustmentName : "Missing Audited Financials",
+                controlName : "missingAuditedFinancials",
+                category : "GEN",
+                isRequired : true,
+                activeInStepper : true,
+                options : [
+                    {
+                        label : "Partial Audit / Management Accounts",
+                        value : -5
+                    },
+                    {
+                        label : "Unaudited Financials Only",
+                        value : -10
+                    },
+                    {
+                        label : "No Financial Statements",
+                        value : -15
+                    }
+                ],
+                sortOrder : 2
+            }
+        ],
+        discretionaryOverrides : [
+            {
+                discretionaryOverrideId : "DO-1",
+                discretionaryOverrideName : "Industry Risk Adjustment",
+                controlName : "industryRiskAdjustment",
+                category : "GEN",
+                maxUpgrade : 2,
+                maxDowngrade : -2,
+                isRequired : true,
+                activeInStepper : true,
+                reasons : [
+                    "Favorable Industry Outlook",
+                    "Adverse Industry Conditions",
+                    "Cyclical Industry Downturn",
+                    "Regulatory Headwinds"
+                ],
+                sortOrder : 1
+            },
+            {
+                discretionaryOverrideId : "DO-2",
+                discretionaryOverrideName : "Industry Risk Adjustment",
+                controlName : "industryRiskAdjustment",
+                category : "GEN",
+                maxUpgrade : 2,
+                maxDowngrade : -2,
+                isRequired : true,
+                activeInStepper : true,
+                reasons : [
+                    "Favorable Industry Outlook",
+                    "Adverse Industry Conditions",
+                    "Cyclical Industry Downturn",
+                    "Regulatory Headwinds"
+                ],
+                sortOrder : 2
+            },
+        ],
+        qualitativeFactors : [
+            {
+                qualitativeFactors : "QF-1",
+                qualitativeFactorName : "Years of Industry Experience",
+                category : "Management Quality & Experience",
+                controlName : "yearsOfIndustryExperience",
+                isRequired : true,
+                activeInStepper : true,
+                qualitativeOptionsScores : [
+                    {
+                        optionLabel : "15+ years (Excellent)",
+                        optionScore : 10,
+                        impact : "Excellent"
+                    },
+                    {
+                        optionLabel : "10-15 years (Good)",
+                        optionScore : 7,
+                        impact : "Good"
+                    },
+                    {
+                        optionLabel : "5-10 years (Average)",
+                        optionScore : 4,
+                        impact : "Average"
+                    },
+                    {
+                        optionLabel : "<5 years (Poor)",
+                        optionScore : 1,
+                        impact : "Poor"
+                    }
+                ],
+                sortOrder : 1
+            },
+            {
+                qualitativeFactors : "QF-2",
+                qualitativeFactorName : "Years of Industry Experience",
+                category : "Management Quality & Experience",
+                controlName : "yearsOfIndustryExperience",
+                isRequired : true,
+                activeInStepper : true,
+                qualitativeOptionsScores : [
+                    {
+                        optionLabel : "15+ years (Excellent)",
+                        optionScore : 10,
+                        impact : "Excellent"
+                    },
+                    {
+                        optionLabel : "10-15 years (Good)",
+                        optionScore : 7,
+                        impact : "Good"
+                    },
+                    {
+                        optionLabel : "5-10 years (Average)",
+                        optionScore : 4,
+                        impact : "Average"
+                    },
+                    {
+                        optionLabel : "<5 years (Poor)",
+                        optionScore : 1,
+                        impact : "Poor"
+                    }
+                ],
+                sortOrder : 2
+            }
+        ]
+    },
+    version : 1,
+    actionByUserId: 42,
+    actionDate: "2025-12-31T10:13:59.919Z",
+    action: "CREATE",
+    actionByUserName: "Chetan Sharma",
+    actionByEmailId: "chetan@gmail.com",
+    actionByRoleName: "Super Admin",
+    actionByWorkflow: "Maker"
+}
+
+API : /template-management/delete/{templateId}
+METHOD : DELETE
+
+API : /template-management/all
+METHOD : GET
