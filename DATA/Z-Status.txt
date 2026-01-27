@@ -15,7 +15,7 @@ CRA Configuration
     Industry Benchmark Configuration
 
 Template
-    Template Management
+    Template Management (Design)
 
 Assesments
     Create Assesments
