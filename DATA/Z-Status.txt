@@ -4,15 +4,15 @@ Paramater Management
     Financial Inputs (DONE)
     Financial Ratios  (DONE)
     Mandatory Adjustments  (DONE)
-    Discretionary Overrides (In Progress)
+    Discretionary Overrides (Done)
     Qualitative Overrides (Design)
-    Cash Security Overrides
 
 CRA Configuration
     Score Weightage  (DONE)
+    External Rating Mapping (Design) 
+    Cash Security Overrides (Design)
     PD Mapping 
     Industry Benchmark Configuration
-    External Rating Mapping 
 
 Template
     Template Management

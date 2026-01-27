@@ -1,0 +1,10 @@
+Unrated Loan PD Averaging Rules
+
+
+{
+    Loan Category
+    Category Description
+    Select Grades for Averaging
+    expression
+    Priority Order
+}
