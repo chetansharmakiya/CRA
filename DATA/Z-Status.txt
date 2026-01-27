@@ -11,8 +11,8 @@ CRA Configuration
     Score Weightage  (DONE)
     External Rating Mapping (Design) 
     Cash Security Overrides (Design)
+    Industry Benchmark Configuration (Design)
     PD Mapping 
-    Industry Benchmark Configuration
 
 Template
     Template Management (Design)

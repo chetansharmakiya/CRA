@@ -1,0 +1,187 @@
+Industry Benchmark Configurations
+
+************************************************************************************
+
+API : /industry-benchmark/create
+METHOD : POST
+REQUEST :
+
+    NOTE : also add constraint one country, one sector, one financialRatioId
+    exmaple, 
+        if india's (356) && Oil and Gas companies (fix the benchmark and industry average for sector ) && financialRatioId
+        I cannot add one more oil and gas sector with same financialRatioId (ROE, Current Ratio, Net Profit Margin) in india (356)
+
+    {
+        auditUserId : 1,
+        auditModuleId : 1,
+        auditSubModuleId : 1,
+
+        industryBenchmarkId : "IB-1", // unique value
+        countryCode : 356, // India
+        industrySector : "Banking", // Banking, Gas & Oil, etc.
+        entityType : "SME", // Corporate, SME (Small Medium Ent), Limited Liability Partner
+        industryBenchmarkStatus : "Approved",
+        
+        benchmarking : [
+            {
+                financialRatioId :  "FR-1" // Drop down coming from financial ratios
+                industryAverage : 1.20,
+                industryBenchmark : 1.30,
+                unit : "number", // percentage, number // dropdown
+            },
+            {
+                financialRatioId :  "FR-2" // Drop down coming from financial ratios
+                industryAverage : 30,
+                industryBenchmark : 35,
+                unit : "percentage", // percentage, number // dropdown
+            }
+        ],
+        
+        version : 1,
+    }
+
+
+************************************************************************************
+
+API : /industry-benchmark/update/{industryBenchmarkId}
+METHOD : PUT
+REQUEST :
+    {
+        auditUserId : 1,
+        auditModuleId : 1,
+        auditSubModuleId : 1,
+
+        countryCode : 356, // India
+        industrySector : "Banking", // Banking, Gas & Oil, etc.
+        entityType : "SME", // Corporate, SME (Small Medium Ent), Limited Liability Partner
+        industryBenchmarkStatus : "Approved",
+        
+        benchmarking : [
+            {
+                financialRatioId :  "FR-1" // Drop down coming from financial ratios
+                industryAverage : 1.20,
+                industryBenchmark : 1.30,
+                unit : "number", // percentage, number // dropdown
+            },
+            {
+                financialRatioId :  "FR-2" // Drop down coming from financial ratios
+                industryAverage : 30,
+                industryBenchmark : 35,
+                unit : "percentage", // percentage, number // dropdown
+            }
+        ],
+        
+        version : 1,
+    }
+
+************************************************************************************
+
+API : /industry-benchmark/patch/status/{industryBenchmarkId}
+METHOD : PATCH
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    industryBenchmarkStatus : "Approved",
+}
+
+************************************************************************************
+
+API : /industry-benchmark/view/{industryBenchmarkId}
+METHOD : GET
+RESPONSE :
+    {
+        auditUserId : 1,
+        auditModuleId : 1,
+        auditSubModuleId : 1,
+
+        countryCode : 356, // India
+        industrySector : "Banking", // Banking, Gas & Oil, etc.
+        entityType : "SME", // Corporate, SME (Small Medium Ent), Limited Liability Partner
+        industryBenchmarkStatus : "Approved",
+        
+        benchmarking : [
+            {
+                financialRatioId :  "FR-1",
+
+                financialRatioName :  "Current Ratio", // field coming from financialRatio table
+                controlName : "currentRatio", // field coming from financialRatio table
+                category : "Liquidity Ratios", // field coming from financialRatio table
+
+                industryAverage : 1.20,
+                industryBenchmark : 1.30,
+                unit : "number", // percentage, number // dropdown
+            },
+            {
+                financialRatioId :  "FR-2",
+                financialRatioName :  "ROE", // field coming from financialRatio table
+                controlName : "roe", // field coming from financialRatio table
+                category : "Liquidity Ratios", // field coming from financialRatio table
+                industryAverage : 30,
+                industryBenchmark : 35,
+                unit : "percentage", // percentage, number // dropdown
+            }
+        ],
+        
+        version : 1,
+    }
+
+************************************************************************************
+
+API : /industry-benchmark/by-country-and-industry
+METHOD : POST
+REQUEST :
+    {
+        auditUserId : 1,
+        auditModuleId : 1,
+        auditSubModuleId : 1,
+
+        countryCode : 356,
+        industrySector : "Banking",
+        entityType : "SME",
+    }
+
+
+************************************************************************************
+
+API : /industry-benchmark/by-country-and-industries
+METHOD : POST
+REQUEST :
+    {
+        auditUserId : 1,
+        auditModuleId : 1,
+        auditSubModuleId : 1,
+
+        countryCode : 356,
+        industrySector : [ "Banking", "Oil & Gas", "Manufacturing" ],
+        entityType : "SME",
+    }
+
+************************************************************************************
+
+API : /industry-benchmark/advance-search
+METHOD : POST
+REQUEST :
+    {
+        auditUserId : 1,
+        auditModuleId : 1,
+        auditSubModuleId : 1,
+
+        countryCodes : [ 356, 4 ],
+        industrySectors : [ "Banking", "Oil & Gas", "Manufacturing" ],
+        entityTypes : [ "SME", "Corporate" ],
+        industryBenchmarkStatus : [ "Pending", "Approved" ],
+        financialRatioIds : [ "FR-1", "FR-2" ],
+    }
+
+************************************************************************************
+
+API : /industry-benchmark/delete/{industryBenchmarkId}
+METHOD : DELETE
+
+************************************************************************************
+
+API : /industry-benchmark/all
+METHOD : GET

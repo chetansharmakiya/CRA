@@ -106,6 +106,21 @@ Projection Year
     3 Years
     5 Years
 
+Entity Type
+    Corporate
+    SME (Small Medium Ent)
+    Limited Liability Partner
+
+Industry Sector
+    Manufacturing
+    Services
+    Retail & Trade
+    Agriculture
+    Technology & IT
+    Construction & Real Estate
+    Healthcare
+    Education
+
 ************************************************************************************
 
 S&P Mapping
