@@ -18,7 +18,7 @@ REQUEST :
 
         industryBenchmarkId : "IB-1", // unique value
         countryCode : 356, // India
-        industrySector : "Banking", // Banking, Gas & Oil, etc.
+        industrySector : "banking", // Banking, Gas & Oil, etc.
         entityType : "SME", // Corporate, SME (Small Medium Ent), Limited Liability Partner
         industryBenchmarkStatus : "Approved",
         
@@ -52,7 +52,7 @@ REQUEST :
         auditSubModuleId : 1,
 
         countryCode : 356, // India
-        industrySector : "Banking", // Banking, Gas & Oil, etc.
+        industrySector : "banking", // Banking, Gas & Oil, etc.
         entityType : "SME", // Corporate, SME (Small Medium Ent), Limited Liability Partner
         industryBenchmarkStatus : "Approved",
         
@@ -98,7 +98,7 @@ RESPONSE :
         auditSubModuleId : 1,
 
         countryCode : 356, // India
-        industrySector : "Banking", // Banking, Gas & Oil, etc.
+        industrySector : "banking", // Banking, Gas & Oil, etc.
         entityType : "SME", // Corporate, SME (Small Medium Ent), Limited Liability Partner
         industryBenchmarkStatus : "Approved",
         
@@ -139,7 +139,7 @@ REQUEST :
         auditSubModuleId : 1,
 
         countryCode : 356,
-        industrySector : "Banking",
+        industrySector : "banking",
         entityType : "SME",
     }
 
@@ -155,7 +155,7 @@ REQUEST :
         auditSubModuleId : 1,
 
         countryCode : 356,
-        industrySector : [ "Banking", "Oil & Gas", "Manufacturing" ],
+        industrySector : [ "banking", "oil & gas", "manufacturing" ],
         entityType : "SME",
     }
 
@@ -170,7 +170,7 @@ REQUEST :
         auditSubModuleId : 1,
 
         countryCodes : [ 356, 4 ],
-        industrySectors : [ "Banking", "Oil & Gas", "Manufacturing" ],
+        industrySectors : [ "banking", "oil & gas", "manufacturing" ],
         entityTypes : [ "SME", "Corporate" ],
         industryBenchmarkStatus : [ "Pending", "Approved" ],
         financialRatioIds : [ "FR-1", "FR-2" ],

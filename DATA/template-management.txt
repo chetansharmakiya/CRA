@@ -12,7 +12,7 @@ REQUEST :
     templateName : "Current Liabilities",
     templateStatus : "Pending",
     category : "Liabilities",
-    Industry Sector
+    industrySector : [ "banking", "oil & gas", "manufacturing" ],
     description : "Some Description",
     isActive : true,
     parameters : {
@@ -82,7 +82,7 @@ REQUEST :
     templateName : "Current Liabilities",
     templateStatus : "Pending",
     category : "Liabilities",
-    Industry Sector
+    industrySector : [ "banking", "oil & gas", "manufacturing" ],
     description : "Some Description",
     isActive : true,
     parameters : {
@@ -165,7 +165,7 @@ RESPONSE :
     templateName : "Current Liabilities",
     templateStatus : "Pending",
     category : "Liabilities",
-    Industry Sector
+    industrySector : [ "banking", "oil & gas", "manufacturing" ],
     description : "Some Description",
     isActive : true,
     parameters : {

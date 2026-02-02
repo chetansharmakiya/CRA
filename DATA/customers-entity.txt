@@ -1,13 +1,28 @@
 
 
 {
-    cifNumber : "",
-    entityName : "",
-    entityType : "",
-    industrySectors : [ 1, 2, 3 ],
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    cifNumber : "CIF-123",
+    entityName : "Kiya.AI",
+    industrySector : [ "banking", "oil & gas", "manufacturing" ],
+    entityType : "SME",
     externalRatingAvailable : true,
-    businessActivity : "",
-    cinetNumber : "",
-    registrationNumber : "",
-    taxIdOrPan :  "",
+    businessActivity : "Description of Business Activities for KIYA.AI",
+    cinetNumber : "1234567",
+    registrationNumber : "ABC12345",
+    taxIdOrPan :  "ABCD12345",
+    isNonPerforming: false,
+    grade : 9,
+
+    nonPerforming : {
+        nonPerformingEntityId : "NFE-1",
+        assetClassification : "Sub-Standard", // Sub-Standard, Doubtful, Loss Asset
+        reason : "",
+    }
+    
+    lastAssessedBy : 2,
+    lastAssessedOn : ISO Date format
 }
