@@ -1,0 +1,60 @@
+
+
+{
+    cifNumber : "",
+    entityName : "",
+    entityType : "",
+    industrySectors : [ "Banking", "Oil & Gas" ],
+    isExternalRatingAvailable : true,
+    externalRating : {
+        ratingAgency : "",
+        ratingGrade : "",
+        ratingDate : "",
+        ratingDocumentName : "",
+        ratingDocumentObj : "",
+    },
+    businessActivity : "",
+    cinetNumber : "",
+    ratingTemplate : "",
+    finacialYear : "",
+    registrationNumber : "",
+    taxIdOrPan :  "",
+
+    isNonPerformingEntity : true, // true or false
+    nonPerformingEntity : {
+        npRating : 11,
+        npClassification : ""
+    },
+
+    hasCashSecurity : true,
+    cashSecurity : {
+        totalCreditLimitAmount : 1000,
+        cashCollateral 1000,
+        collateralCoveragePercentage : ">=100%"
+        collateralType : [ "Cash Deposits", "Cash Margin" ]
+        supportingDocuments : [
+            {
+                documentName : "",
+                documentObj : ""
+            },
+            {
+                documentName : "",
+                documentObj : ""
+            }
+        ]
+        comments : ""
+    },
+
+    finacialData : {
+        historicalDataInYears :  3
+        
+        financials : [
+            {
+                year : "2025",
+                financialInputId : "FI-1",
+                value : 1000
+            }
+        ]
+        
+    }
+}
