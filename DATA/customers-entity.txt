@@ -1,5 +1,10 @@
+Customer Management (Entity Management)
 
+************************************************************************************
 
+API : /entity-management/create
+METHOD : POST
+REQUEST :
 {
     auditUserId : 1,
     auditModuleId : 1,
@@ -14,6 +19,7 @@
     cinetNumber : "1234567",
     registrationNumber : "ABC12345",
     taxIdOrPan :  "ABCD12345",
+    customerStatus : "Approved",
     isNonPerforming: false,
     grade : 9,
 
@@ -22,7 +28,103 @@
         assetClassification : "Sub-Standard", // Sub-Standard, Doubtful, Loss Asset
         reason : "",
     }
-    
-    lastAssessedBy : 2,
-    lastAssessedOn : ISO Date format
 }
+
+************************************************************************************
+
+API : /entity-management/update/{cifNumber}
+METHOD : PUT
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    entityName : "Kiya.AI",
+    industrySector : [ "banking", "oil & gas", "manufacturing" ],
+    entityType : "SME",
+    externalRatingAvailable : true,
+    businessActivity : "Description of Business Activities for KIYA.AI",
+    cinetNumber : "1234567",
+    registrationNumber : "ABC12345",
+    taxIdOrPan :  "ABCD12345",
+    customerStatus : "Approved",
+    isNonPerforming: false,
+    grade : 9,
+
+    nonPerforming : {
+        nonPerformingEntityId : "NFE-1",
+        assetClassification : "Sub-Standard", // Sub-Standard, Doubtful, Loss Asset
+        reason : "",
+    }
+}
+
+************************************************************************************
+
+API : /entity-management/patch/status/{cifNumber}
+METHOD : PATCH
+REQUEST :
+{
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
+
+    customerStatus : "Approved"
+}
+
+************************************************************************************
+
+API : /entity-management/view/{cifNumber}
+METHOD : GET
+RESPONSE : 
+{
+    entityName : "Kiya.AI",
+    industrySector : [ "banking", "oil & gas", "manufacturing" ],
+    entityType : "SME",
+    externalRatingAvailable : true,
+    businessActivity : "Description of Business Activities for KIYA.AI",
+    cinetNumber : "1234567",
+    registrationNumber : "ABC12345",
+    taxIdOrPan :  "ABCD12345",
+    customerStatus : "Approved",
+    isNonPerforming: false,
+    grade : 9,
+
+    nonPerforming : {
+        nonPerformingEntityId : "NFE-1",
+        assetClassification : "Sub-Standard", // Sub-Standard, Doubtful, Loss Asset
+        reason : "Some Reason",
+    }
+    
+    actionByUserId: 42,
+    actionDate: "2025-12-31T10:13:59.919Z",
+    action: "CREATE",
+    actionByUserName: "Chetan Sharma",
+    actionByEmailId: "chetan@gmail.com",
+    actionByRoleName: "Super Admin",
+    actionByWorkflow: "Maker"
+}
+
+************************************************************************************
+
+(OPTIONAL)
+API : /entity-management/delete/{cifNumber}
+METHOD : DELETE
+
+************************************************************************************
+
+(OPTIONAL)
+API : /entity-management/all
+METHOD : GET
+
+************************************************************************************
+
+API : /entity-management/filter-all
+METHOD : POST
+REQUEST : SAME AS OTHER REQUEST'S FOR FILTER ALL (For Now default)
+
+************************************************************************************
+
+API : /entity-management/search
+METHOD : POST
+REQUEST : SAME AS OTHER REQUEST'S FOR FILTER ALL (For Now default)

@@ -19,4 +19,4 @@ Template
 
 Assesments
     Create Assesments
-    Customers
+    Customers (Design)
