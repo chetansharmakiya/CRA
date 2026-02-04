@@ -7,6 +7,7 @@ REQUEST :
     auditId : "",
     auditModuleId : "",
     auditSubModuleId : "",
+    
     financialInputId :  "FF-1",
     financialInputName : "Current Liabilities",
     status : "Pending",
@@ -28,7 +29,8 @@ REQUEST :
     auditId : "",
     auditModuleId : "",
     auditSubModuleId : "",
-    financialInputId : "Current Liabilities",
+
+    financialInputName : "Current Liabilities",
     status : "Pending",
     category : "Liabilities",
     controlName : "currentLiabilities",
@@ -48,16 +50,15 @@ REQUEST :
     auditId : "",
     auditModuleId : "",
     auditSubModuleId : "",
-    status : "Approved",
-    actionBy : "Chetan Sharma",
-    actionDate : "",
+
+    status : "Approved"
 }
 
 API : /financial-input/view/{financialInputId}
 METHOD : GET
 RESPONSE : 
 {
-    financialInputId : "Current Liabilities",
+    financialInputName : "Current Liabilities",
     status : "Pending",
     category : "Liabilities",
     controlName : "currentLiabilities",
