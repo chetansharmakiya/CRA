@@ -10,18 +10,18 @@ REQUEST :
     auditModuleId : 1,
     auditSubModuleId : 1,
 
-    qualitativeFactorId : "QF-1",
-    qualitativeFactorName : "Years of Industry Experience",
+    qualitativeFactorId : "QF-1",  // unique, string
+    qualitativeFactorName : "Years of Industry Experience", // string
     category : "Management Quality & Experience",
-    controlName : "yearsOfIndustryExperience",
-    qualitativeFactorStatus : "Pending",
+    controlName : "yearsOfIndustryExperience",  // unique, string
+    qualitativeFactorStatus : "Pending", 
     description : "",
     isRequired : true,
     activeInStepper : true,
     qualitativeOptionsScores : [
         {
             optionLabel : "15+ years (Excellent)",
-            optionScore : 10,
+            optionScore : 10, // number
             impact : "Excellent"
         },
         {
@@ -54,7 +54,7 @@ REQUEST :
     auditSubModuleId : 1,
 
     qualitativeFactorName : "Years of Industry Experience",
-    category : "Management Quality & Experience",
+    category : "Management Quality & Experience", 
     controlName : "yearsOfIndustryExperience",
     qualitativeFactorStatus : "Pending",
     description : "",
