@@ -70,6 +70,7 @@ REQUEST :
     version : 1
 }
 
+************************************************************************************
 
 API : /template-management/update/{templateId}
 METHOD : PUT
@@ -140,6 +141,7 @@ REQUEST :
     version : 1
 }
 
+************************************************************************************
 
 API : /template-management/patch/status/{templateId}
 METHOD : PATCH
@@ -152,6 +154,7 @@ REQUEST :
     templateStatus : "Approved"
 }
 
+************************************************************************************
 
 API : /template-management/view/{templateId}
 METHOD : GET
@@ -199,21 +202,23 @@ RESPONSE :
             {
                 financialRatioId : "FR-1",
                 financialRatioName : "Current Ratio",
-                financialInputs : [
-                    {
-                        financialInputId : "FI-1",
-                        financialInputName : "Current Assets"
-                    },
-                    {
-                        financialInputId : "FI-2"
-                        financialInputName : "Current Liabilities"
-                    }
-                ],
                 formulaExpression : "currentAssets/currentLiabilities",
                 controlName : "currentRatio",
                 category : "Liquidity Ratios",
                 isRequired : true,
                 activeInStepper : true,
+                financialInputs : [
+                    {
+                        financialInputId : "FI-1",
+                        financialInputName : "Current Assets",
+                        controlName : "currentAssets",
+                    },
+                    {
+                        financialInputId : "FI-2"
+                        financialInputName : "Current Liabilities"
+                        controlName : "currentLiabilities",
+                    }
+                ],
                 scoreRange : [
                     {
                         optionLabel : "Current Ratio < 0.78",
@@ -249,21 +254,23 @@ RESPONSE :
             {
                 financialRatioId : "FR-2",
                 financialRatioName : "Current Ratio",
-                financialInputs : [
-                    {
-                        financialInputId : "FI-1",
-                        financialInputName : "Current Assets"
-                    },
-                    {
-                        financialInputId : "FI-2"
-                        financialInputName : "Current Liabilities"
-                    }
-                ],
                 formulaExpression : "currentAssets/currentLiabilities",
                 controlName : "currentRatio",
                 category : "Liquidity Ratios",
                 isRequired : true,
                 activeInStepper : true,
+                financialInputs : [
+                    {
+                        financialInputId : "FI-1",
+                        financialInputName : "Current Assets",
+                        controlName : "currentAssets",
+                    },
+                    {
+                        financialInputId : "FI-2"
+                        financialInputName : "Current Liabilities",
+                        controlName : "currentLiabilities",
+                    }
+                ],
                 scoreRange : [
                     {
                         optionLabel : "Current Ratio < 0.78",
@@ -456,8 +463,24 @@ RESPONSE :
     actionByWorkflow: "Maker"
 }
 
-API : /template-management/delete/{templateId}
+************************************************************************************
+
+API : /template-management/delete/{templateId} (Optional)
 METHOD : DELETE
 
-API : /template-management/all
+************************************************************************************
+
+API : /template-management/all (Optional)
 METHOD : GET
+
+************************************************************************************
+
+API : /template-management/filter-all
+METHOD : POST
+REQUEST : SAME AS OTHER REQUEST'S FOR FILTER ALL (For Now default)
+
+************************************************************************************
+
+API : /template-management/search
+METHOD : POST
+REQUEST : SAME AS OTHER REQUEST'S FOR FILTER ALL (For Now default)
