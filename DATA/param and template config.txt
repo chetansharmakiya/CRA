@@ -1,0 +1,248 @@
+Financial Parameters
+    Gross Profit
+    Revenue
+    General And Administrative Expenses
+    Cash And Bank Balances
+    Total Long Term Liabilities
+    Current Debt
+    Inventory
+    Unquoted Asset
+    Interest
+    Unrealized Gains
+    Operating Revenue
+    External Liabilities
+    Cost of Goods Sold
+    Total Current Assets
+    Net Profit
+    Affiliates Due
+    Investment Assets
+    Total Assets
+    Total Current Liabilities
+    Total Debt
+    Total Bank Borrowings
+    Total Liabilities Incl Owners Funds
+    Net Worth
+    Operating Cash
+    Turnover
+    Cost of Sales
+    Net Sales
+
+Financial Ratios
+    Affiliates Due to Net Worth Ratio
+    Current Ratio
+    Debt Equity Ratio (DER)
+    Debt Ratio
+    Investment Assets To Total Assets
+    Net Profit Margin
+    Operating Revenue To External Liabilities
+    Working Capital Turnover
+
+Template Management
+    1. Contracting & Service Template 
+        1. Financial Parameters
+            1. Revenue
+            2. Cost of Goods Sold
+            3. Net Profit
+            4. Total Current Assets
+            5. Affiliates Due
+            6. Investment Assets
+            7. Total Assets
+            8. Total Current Liabilities
+            9. Total Debt
+            10. Total Bank Borrowings
+            11. Total Liabilities Incl Owners Funds
+            12. Net Worth
+            13. Operating Cash
+
+        2. Financial Ratios
+            1. Debt Ratio
+                totalCurrentLiabilities / totalCurrentAssets
+            2. Investment Assets To Total Assets
+                investmentAssets / TotalAssets
+            3. Debt Equity Ratio (DER)
+                totalDebt / netWorth
+            4. Working Capital Turnover
+                netSales / ( totalCurrentAssets - totalCurrentLiabilities )
+            5. Operating Revenue To External Liabilities
+                operatingRevenue / externalLiabilities
+            6. Net Profit Margin
+                (netProfit / revenue) * 100
+            7. Current Ratio
+                totalCurrentAssets / totalCurrentLiabilities
+            8. Affiliates Due to Net Worth Ratio
+                affiliatesDue / netWorth
+        
+        3. Mandatory Adjustments
+            1. Age of Financial Information
+                Financial statements older than 18 months	           -10	104
+                Financial statements older than 12 months	            -5	104
+                Interim financials used in lieu of audited accounts	   -15	104
+                No updated financial information available	           -20	104
+            2. Historical Account Performance
+                Past due history > 30 days	                            -5	106
+                Past due history > 60 days	                           -10	106
+                Restructured / rescheduled facilities	               -15	106
+                Frequent excesses or covenant breaches	               -20	106
+                Prior write-off or settlement history	               -25	106
+            3. Qualification of Audit Report
+                Qualified audit opinion	                                -5	107
+                Adverse audit opinion	                               -10	107
+                Disclaimer of opinion	                               -15	107
+                Emphasis of matter impacting going concern	           -20	107
+                Material uncertainty noted by auditor	               -25	107
+            4. Quality of Financial Information
+                Unaudited financial statements	                        -5	105
+                Reviewed (not audited) financial statements	           -10	105
+                Reviewed (not audited) financial statements	           -15	105
+                Reviewed (not audited) financial statements	           -20	105
+                Weak internal controls noted	                       -25	105
+
+        4. Discretionary Overrides
+            1. Economic Environment
+                Drastic fall in capital markets
+                Drastic fall in oil prices
+                Global economic deterioration
+            2. Business Performance
+                Strategic contract signed / loss of key contract
+                Change in Market Position
+                Performance vs. Budget (better/worse)
+                Reputation (Strong / Poor) 
+            3. Legal Issues
+                Ongoing legal dispute / Court order
+                Ongoing legal dispute / Court order
+            4. Account Conduct / Banking Relationship
+                Persistent ever-greening (>2 years)
+            5. Political Risk
+                Social disturbances / unrest
+            6. General / Overall Assessment
+                Management changes
+                Change in Regulation
+                Length of relationship – Strong / Weak
+                External Relationship (Part of strong group /  troubled group)
+                Deposit availability / Ancillary business
+                Bankruptcy, Liquidation
+                Deterioration of group accounts exposure
+                Unresolved conflict between owners
+                Death of a key person
+                Non-existence of succession plan
+            7. Financial Performance
+                Income Diversification
+            8. Assignments / Contracts
+                100% Govt. sector contracts with legal  assignment
+                Majority contracts (>75%) with strong assignment
+                >50% contracts without credible assignment
+
+        5. Qualitative Factors
+            F1 - Constitution and Establishment 
+                Government / Semi-government                             29 
+                Public Shareholding Companies                            22 
+                Closed Shareholding Companies                            15 
+                Partnership with >50% ownership / Sole Proprietorship     7 
+                Other Partnership or Establishment                        0 
+            F2 — Number of Years in Business   
+                More than 20 years                                       29 
+                10 - 20 years                                            22 
+                2 - 10 years                                             11 
+                Less than 2 years                                         0 
+            F3 — Availability of Unutilized Credit Lines
+                Available & utilized < 20%                               29 
+                Available & utilized 20-70%                              22 
+                Sole Bank                                                15 
+                Available & utilized > 70%                                7 
+                Over-utilization beyond limits                            0
+            F4 — Financial Planning & Internal Control
+                Not Applicable                                           23 
+                Good                                                     27 
+                Moderate                                                 18 
+                No financial planning & control                           9
+            F5 — Position in the Market 
+                Market Leaders                                           29 
+                Strong Position                                          22 
+                Below Average                                            11 
+                New Entrant                                               0
+            F6 — Govt. / Private Sector Contracting 
+                Not Applicable (Neutral Score)                           23 
+                100% Govt. / Public Sector                               29 
+                >75% Govt. / Public Sector                               22 
+                >50% Govt. + strong private                              15 
+                Majority private - net worth known                        7 
+                Majority private - net worth unknown                      0 
+            F7 — Sensitivity to Economic Shocks
+                Unlikely to be affected                                  29 
+                Minor impact                                             22 
+                Likely to see impact                                     11 
+                Highly sensitive                                          0 
+            F8 — Contractor / Subcontractor Grade 
+                Grade I                                                  26 
+                Not Applicable (Service Companies)                       23 
+                Grade II                                                 22 
+                Grade III                                                17 
+                Grade IV / Ungraded                                      12
+            F9 — Past Track Record
+                Excellent                                                31 
+                Not Applicable                                           23 
+                Good                                                     21 
+                Average                                                   7 
+                Poor                                                     -8 
+            F10 — Competition & Demand
+                Low competition & high demand                            29 
+                High competition & high demand                           22 
+                Low competition & low demand                             11 
+                High competition & low demand                             0 
+            F11 — Resource & Management Capability 
+                Well Qualified                                           33 
+                Partially Qualified                                       9 
+                Not adequately qualified                                -14
+
+    2. Trading & Manufacturing Template 
+        Financial Parameters
+            Revenue
+            Cost of Goods Sold
+            Net Profit
+            Total Current Assets
+            Affiliates Due
+            Investment Assets
+            Total Assets
+            Total Current Liabilities
+            Total Debt
+            Total Bank Borrowings
+            Total Liabilities Incl Owners Funds
+            Net Worth
+            Operating Cash
+
+    3. Investment Real estate & finance 
+        Financial Parameters
+            Gross Profit
+            General & Administrative Expenses
+            Interest
+            Net Profit
+            Inventory
+            Total Current Assets
+            Total Assets
+            Total Current Liabilities
+            Total Long Term Liabilities
+            Current Debt
+            Total Debt
+            Total Liabilities Incl Owners Funds
+            Total Bank Borrowings 
+            Unquoted Asset 
+            Unrealized Gains 
+            Operating Cash
+            Net Worth
+
+    4. Personal Networth Declaration Borrowers Grading 
+        Financial Parameters
+            Cash & Bank Balances 
+            Total Current Assets
+            Total Assets 
+            Total Current Liabilities 
+            Total Long Term Liabilities
+            Total Liabilities 
+            Net Worth
+            Turnover
+            Cost of Sales 
+            Gross Profit
+            General & Administrative Expenses 
+            Interest
+            Net Profit
+
