@@ -1,11 +1,28 @@
 
+Issues and functionalities
+    1. legal issues, Political Risk,Account Conduct,  in Discritionary overrides should accept 0 as well in max upgrade
+    2. Discritionary overrides description field place holder should be change in add and edit screen
+    3. Entity Management List table is not right (action column is moving)
+    4. Need to add one more status in all the list tables (Draft)
+    5. Non perfoming entity should be in ascending order by grade
+
+    6. forgot password button should be there on login screen
+    7. Reset My password should also be there as link
+    8. password should get expired after 30 days of renewal or creation
+    9. Enforce password change on first login & reset password 
+    10. password history table with the user details should be there
+    11. Password Complexity details. (Already Available)
+    12. portal timeout should be in 10 mins
+    13. Logs of failed / successful login attempts .
+    14. Unique Password Enforcement .
+    15. After three failed login attempts, the user is locked .
 
 Paramater Management
     Financial Inputs (DONE)
     Financial Ratios  (DONE)
     Mandatory Adjustments  (DONE)
     Discretionary Overrides (Done)
-    Qualitative Overrides (Design)
+    Qualitative Overrides (DONE)
 
 CRA Configuration
     Score Weightage  (DONE)
@@ -19,4 +36,4 @@ Template
 
 Assesments
     Create Assesments
-    Customers (Design)
+    Customers - Entity Management (DONE)

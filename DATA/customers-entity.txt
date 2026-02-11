@@ -6,28 +6,29 @@ API : /entity-management/create
 METHOD : POST
 REQUEST :
 {
-    auditUserId : 1,
-    auditModuleId : 1,
-    auditSubModuleId : 1,
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
 
-    cifNumber : "CIF-123",
-    entityName : "Kiya.AI",
-    industrySector : [ "banking", "oil & gas", "manufacturing" ],
-    entityType : "SME",
-    externalRatingAvailable : true,
-    businessActivity : "Description of Business Activities for KIYA.AI",
-    cinetNumber : "1234567",
-    registrationNumber : "ABC12345",
-    taxIdOrPan :  "ABCD12345",
-    customerStatus : "Approved",
-    isNonPerforming: false,
-    grade : 9,
+    cifNumber : "CIF-123", -- unique
+    entityName : "Kiya.AI",
+    industrySector : [ "banking", "oil & gas", "manufacturing" ],
+    entityType : "SME",
+    externalRatingAvailable : true, -- nullable
+    businessActivity : "Description of Business Activities for KIYA.AI",
+    cinetNumber : "1234567", -- unique
+    registrationNumber : "ABC12345", -- unique
+    taxIdOrPan :  "ABCD12345", -- unique
+    customerStatus : "Approved",
+
+    grade : 9, -- nullable
+
+    isNonPerforming: false, // true or false
 
     nonPerforming : {
-        nonPerformingEntityId : "NFE-1",
-        assetClassification : "Sub-Standard", // Sub-Standard, Doubtful, Loss Asset
-        reason : "",
+        nonPerformingEntityId : "NFE-1", (Nullable)
     }
+    nonPerformingReason : "Some Reason", (Nullable)
 }
 
 ************************************************************************************
@@ -36,27 +37,28 @@ API : /entity-management/update/{cifNumber}
 METHOD : PUT
 REQUEST :
 {
-    auditUserId : 1,
-    auditModuleId : 1,
-    auditSubModuleId : 1,
+    auditUserId : 1,
+    auditModuleId : 1,
+    auditSubModuleId : 1,
 
-    entityName : "Kiya.AI",
-    industrySector : [ "banking", "oil & gas", "manufacturing" ],
-    entityType : "SME",
-    externalRatingAvailable : true,
-    businessActivity : "Description of Business Activities for KIYA.AI",
-    cinetNumber : "1234567",
-    registrationNumber : "ABC12345",
-    taxIdOrPan :  "ABCD12345",
-    customerStatus : "Approved",
-    isNonPerforming: false,
-    grade : 9,
+    entityName : "Kiya.AI",
+    industrySector : [ "banking", "oil & gas", "manufacturing" ],
+    entityType : "SME",
+    externalRatingAvailable : true, -- nullable
+    businessActivity : "Description of Business Activities for KIYA.AI",
+    cinetNumber : "1234567", -- unique
+    registrationNumber : "ABC12345", -- unique
+    taxIdOrPan :  "ABCD12345", -- unique
+    customerStatus : "Approved",
+
+    grade : 9, -- nullable
+
+    isNonPerforming: false, // true or false
 
     nonPerforming : {
-        nonPerformingEntityId : "NFE-1",
-        assetClassification : "Sub-Standard", // Sub-Standard, Doubtful, Loss Asset
-        reason : "",
+        nonPerformingEntityId : "NFE-1", (Nullable)
     }
+    nonPerformingReason : "Some Reason", (Nullable)
 }
 
 ************************************************************************************
@@ -78,23 +80,26 @@ API : /entity-management/view/{cifNumber}
 METHOD : GET
 RESPONSE : 
 {
+
     entityName : "Kiya.AI",
-    industrySector : [ "banking", "oil & gas", "manufacturing" ],
-    entityType : "SME",
-    externalRatingAvailable : true,
-    businessActivity : "Description of Business Activities for KIYA.AI",
-    cinetNumber : "1234567",
-    registrationNumber : "ABC12345",
-    taxIdOrPan :  "ABCD12345",
-    customerStatus : "Approved",
-    isNonPerforming: false,
-    grade : 9,
+    industrySector : [ "banking", "oil & gas", "manufacturing" ],
+    entityType : "SME",
+    externalRatingAvailable : true, -- nullable
+    businessActivity : "Description of Business Activities for KIYA.AI",
+    cinetNumber : "1234567", -- unique
+    registrationNumber : "ABC12345", -- unique
+    taxIdOrPan :  "ABCD12345", -- unique
+    customerStatus : "Approved",
+
+    grade : 9, -- nullable
+
+    isNonPerforming: false, // true or false
 
     nonPerforming : {
-        nonPerformingEntityId : "NFE-1",
+        nonPerformingEntityId : "NFE-1", (Nullable)
         assetClassification : "Sub-Standard", // Sub-Standard, Doubtful, Loss Asset
-        reason : "Some Reason",
     }
+    nonPerformingReason : "Some Reason", (Nullable)
     
     actionByUserId: 42,
     actionDate: "2025-12-31T10:13:59.919Z",

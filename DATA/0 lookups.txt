@@ -93,7 +93,7 @@ Qualitative Categories
     ESG & Sustainability
     Additional Risk Factors
 
-Qualitative Options Scores Imapct
+Qualitative Options Scores Impact
     Excellent
     Good
     Average
@@ -106,12 +106,12 @@ Projection Year
     3 Years
     5 Years
 
-Entity Type
+CRA Entity Type
     Corporate
     SME (Small Medium Ent)
     Limited Liability Partner
 
-Industry Sector
+CRA Industry Sector
     Manufacturing
     Services
     Retail & Trade
