@@ -41,24 +41,28 @@ REQUEST :
     auditModuleId : 1,
     auditSubModuleId : 1,
 
-    entityName : "Kiya.AI",
-    industrySector : [ "banking", "oil & gas", "manufacturing" ],
-    entityType : "SME",
-    externalRatingAvailable : true, -- nullable
-    businessActivity : "Description of Business Activities for KIYA.AI",
-    cinetNumber : "1234567", -- unique
-    registrationNumber : "ABC12345", -- unique
-    taxIdOrPan :  "ABCD12345", -- unique
-    customerStatus : "Approved",
+    "cifNumber": "CIF-65423",
+    "entityName": "Kiya",
+    "industrySector": [
+        "Agriculture",
+        "Retail & Trade",
+        "Services"
+    ],
+    "entityType": [
+        "Limited Liability Partner",
+        "SME (Small Medium Ent)"
+    ],
+    "cinetNumber": "4534534",
+    "registrationNumber": "54346456",
+    "taxProofId": "4564564",
+    "customerStatus": "Pending",
+    "businessActivity": "Some Acttivity",
 
-    grade : 9, -- nullable
-
-    isNonPerforming: false, // true or false
-
-    nonPerforming : {
-        nonPerformingEntityId : "NFE-1", (Nullable)
-    }
-    nonPerformingReason : "Some Reason", (Nullable)
+    "isNonPerforming": true,
+    "nonPerforming": {
+        "nonPerformingEntityId": "NPE-2"
+    },
+    "nonPerformingReason": "Some Reason",
 }
 
 ************************************************************************************
@@ -79,19 +83,23 @@ REQUEST :
 API : /entity-management/view/{cifNumber}
 METHOD : GET
 RESPONSE : 
-{
-
-    entityName : "Kiya.AI",
-    industrySector : [ "banking", "oil & gas", "manufacturing" ],
-    entityType : "SME",
-    externalRatingAvailable : true, -- nullable
-    businessActivity : "Description of Business Activities for KIYA.AI",
-    cinetNumber : "1234567", -- unique
-    registrationNumber : "ABC12345", -- unique
-    taxIdOrPan :  "ABCD12345", -- unique
-    customerStatus : "Approved",
-
-    grade : 9, -- nullable
+{  
+   "cifNumber": "CIF-65423",
+    "entityName": "Kiya",
+    "industrySector": [
+        "Agriculture",
+        "Retail & Trade",
+        "Services"
+    ],
+    "entityType": [
+        "Limited Liability Partner",
+        "SME (Small Medium Ent)"
+    ],
+    "cinetNumber": "4534534",
+    "registrationNumber": "54346456",
+    "taxProofId": "4564564",
+    "customerStatus": "Pending",
+    "businessActivity": "Some Acttivity",
 
     isNonPerforming: false, // true or false
 
