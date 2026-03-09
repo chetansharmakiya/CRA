@@ -1,0 +1,195 @@
+API : /api/cra/main-dashboard
+METHOD : POST
+RESPONSE : 
+{
+    "data": {
+        "entity": {
+            assessmentDistribution : { // Main Cards
+                totalCompletedAssessments : 10,
+                thisMonthCompletedAssessments : 10,
+
+                totalPendingAssessments : 10,
+                thisMonthPendingAssessments : 10,
+
+                totalRejectedAssessments : 10,
+                thisMonthRejectedAssessments : 10,
+
+                totalDraftAssessments : 10,
+                thisMonthDraftAssessments : 10,
+
+                totalRevisedAssessments : 10,
+                thisMonthRevisedAssessments : 10,
+            },
+            customerDetails : { // Cards Chart
+                totalCustomers : 10,
+                thisWeekAddedCustomers : 10,
+                thisMonthAddedCustomers : 10,
+                thisYearAddedCustomers : 10,
+            },
+            ratingDistribution : [ // Bar Chart
+                {
+                    'grade' : 1,
+                    'totalCount' : 10
+                },
+                {
+                    'grade' : 2,
+                    'totalCount' : 10
+                },
+                {
+                    'grade' : 3,
+                    'totalCount' : 10
+                },
+                {
+                    'grade' : 4,
+                    'totalCount' : 10
+                },
+                {
+                    'grade' : 5,
+                    'totalCount' : 10
+                },
+                {
+                    'grade' : 6,
+                    'totalCount' : 10
+                },
+                {
+                    'grade' : 7,
+                    'totalCount' : 10
+                },
+                {
+                    'grade' : 8,
+                    'totalCount' : 10
+                }
+            ],
+            npeRatingDistribution : [ // Bar Chart
+                {
+                    'grade' : 9,
+                    'totalCount' : 10
+                },
+                {
+                    'grade' : 10,
+                    'totalCount' : 10
+                },
+                {
+                    'grade' : 11,
+                    'totalCount' : 10
+                }
+            ],
+            currentYearAssessment : [ // completed assessments for current year // Bar Chart
+                {
+                    "label": "Jan",
+                    "value": "12"
+                },
+                {
+                    "label": "Feb",
+                    "value": "47"
+                },
+                {
+                    "label": "Mar",
+                    "value": "1"
+                },
+                {
+                    "label": "Apr",
+                    "value": "0"
+                },
+                {
+                    "label": "May",
+                    "value": "0"
+                },
+                {
+                    "label": "Jun",
+                    "value": "0"
+                },
+                {
+                    "label": "Jul",
+                    "value": "0"
+                },
+                {
+                    "label": "Aug",
+                    "value": "0"
+                },
+                {
+                    "label": "Sep",
+                    "value": "0"
+                },
+                {
+                    "label": "Oct",
+                    "value": "0"
+                },
+                {
+                    "label": "Nov",
+                    "value": "0"
+                },
+                {
+                    "label": "Dec",
+                    "value": "0"
+                }
+            ],
+            currentMonthAssessment : [ // completed assessments for current month // Line Chart
+                {
+                    label : "1, March 2026",
+                    value : 10
+                },
+                {
+                    label : "2, March 2026",
+                    value : 10
+                },
+                {
+                    label : "3, March 2026",
+                    value : 10
+                },
+                {
+                    label : "4, March 2026",
+                    value : 10
+                },
+                .
+                .
+                .
+                .
+                .
+                {
+                    label : "30, March 2026",
+                    value : 10
+                },
+                {
+                    label : "31, March 2026",
+                    value : 10
+                }
+            ],
+            currentWeekAssessment : [ // completed assessments for current week  // Bar Chart
+                {
+                    label : "Mon",
+                    value : 1
+                },
+                {
+                    label : "Tue",
+                    value : 1
+                },
+                {
+                    label : "Wed",
+                    value : 1
+                },
+                {
+                    label : "Thu",
+                    value : 1
+                },
+                {
+                    label : "Fri",
+                    value : 1
+                },
+                {
+                    label : "Sat",
+                    value : 1
+                },
+                {
+                    label : "Sun",
+                    value : 1
+                } 
+            ]
+        },
+        "response": {
+            "dateTime": "2026-03-06T13:04:46.4671733",
+            "code": "200 OK",
+            "message": "Dashboard statistics retrieved successfully"
+        }
+    }
+}

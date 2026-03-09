@@ -137,3 +137,31 @@ Fitch Ratings
 [
   "AAA", "AA+", "AA", "AA-", "A+", "A", "A-", "BBB+", "BBB", "BBB-", "BB+", "BB", "BB-", "B+", "B", "B-", "CCC+", "CCC", "CCC-", "CC", "C", "RD", "D"
 ]
+
+************************************************************************************
+
+Cash Security Adjustments
+
+Collateral Type Details 
+    Cash Deposits (Fixed Deposits)
+    Cash Margin Accounts
+    Bank Guarantees (100% cash backed)
+    Other (specify in comments)
+
+Cash Collateral Coverage Percentage
+    100% to <110%
+    <100%
+    ≥110% Cash as per Policy
+
+Financial Year of Entity
+    2026-2027
+    2025-2026
+    2024-2025
+    2023-2024
+    2022-2023
+    2021-2022
+    2020-2021
+
+
+
+    
