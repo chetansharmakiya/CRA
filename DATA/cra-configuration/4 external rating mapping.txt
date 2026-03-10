@@ -1,5 +1,7 @@
 External Rating Mapping
 
+************************************************************************************
+
 API : /external-rating-mapping/create
 METHOD : POST
 REQUEST :
@@ -15,9 +17,10 @@ REQUEST :
     moodyRatings : [ "Aaa", "Aa1", "Aa2" ]
     fitchRatings : [ "AAA", "AA+", "AA" ]
     description : "Some Description",
-    externalRatingMappingStatus : "Pending",
-    version : 1
+    externalRatingMappingStatus : "Pending"
 }
+
+************************************************************************************
 
 API : /external-rating-mapping/update/{externalRatingMappingId}
 METHOD : PUT
@@ -34,8 +37,9 @@ REQUEST :
     fitchRatings : [ "AAA", "AA+", "AA" ]
     description : "Some Description",
     externalRatingMappingStatus : "Pending",
-    version : 1
 }
+
+************************************************************************************
 
 API : /external-rating-mapping/patch/status/{externalRatingMappingId}
 METHOD : PATCH
@@ -47,6 +51,8 @@ REQUEST :
 
     externalRatingMappingStatus : "Approved",
 }
+
+************************************************************************************
 
 API : /external-rating-mapping/view/{externalRatingMappingId}
 METHOD : GET
@@ -62,11 +68,14 @@ RESPONSE :
     fitchRatings : [ "AAA", "AA+", "AA" ],
     description : "Some Description",
     externalRatingMappingStatus : "Pending",
-    version : 1
 }
+
+************************************************************************************
 
 API : /external-rating-mapping/delete/{externalRatingMappingId}
 METHOD : DELETE
+
+************************************************************************************
 
 API : /external-rating-mapping/all
 METHOD : GET

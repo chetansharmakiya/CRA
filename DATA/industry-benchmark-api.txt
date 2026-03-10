@@ -5,12 +5,6 @@ Industry Benchmark Configurations
 API : /industry-benchmark/create
 METHOD : POST
 REQUEST :
-
-    NOTE : also add constraint one country, one sector, one financialRatioId
-    exmaple, 
-        if india's (356) && Oil and Gas companies (fix the benchmark and industry average for sector ) && financialRatioId
-        I cannot add one more oil and gas sector with same financialRatioId (ROE, Current Ratio, Net Profit Margin) in india (356)
-
     {
         auditUserId : 1,
         auditModuleId : 1,

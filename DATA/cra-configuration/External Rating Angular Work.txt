@@ -1,0 +1,26 @@
+
+
+1. fix the main list dashboard same like paramater management
+    status tabs - Approve, Rejected, Pending, Draft, Revised (follow same sequance as parameter management)
+2. create a below reactive form with below configuration (Please have a look for all the api realted to this module)
+    // Text Field wil validation same like parameter management
+        externalRatingMappingId :  "ERM-1", 
+
+    // dropdown containing all the score weightage
+        scoreRangeId : "SR-1", 
+
+    // Dropdown coming from lookup management    
+        gradeType : "Investment Grade", 
+
+    // Dropdown with all the ratings from Lookup Management (External Rating Grade)
+        spRatings : [ "AAA", "AA+", "AA", "AA-" ],
+        moodyRatings : [ "Aaa", "Aa1", "Aa2" ] 
+        fitchRatings : [ "AAA", "AA+", "AA" ] 
+
+    // text field
+        description : "Some Description",
+
+    // Reactive form field, holding status of application
+        externalRatingMappingStatus : "Pending"
+    
+3. Work on Add, Edit, View and List page
