@@ -138,6 +138,50 @@ Fitch Ratings
   "AAA", "AA+", "AA", "AA-", "A+", "A", "A-", "BBB+", "BBB", "BBB-", "BB+", "BB", "BB-", "B+", "B", "B-", "CCC+", "CCC", "CCC-", "CC", "C", "RD", "D"
 ]
 
+Lookup
+AAA
+Aaa
+AA+
+Aa1
+AA
+Aa2
+AA−
+Aa3
+A+
+A1
+A
+A2
+A−
+A3
+BBB+
+Baa1
+BBB
+Baa2
+BBB−
+Baa3
+BB+
+Ba1
+BB
+Ba2
+BB−
+Ba3
+B+
+B1
+B
+B2
+B−
+B3
+CCC+
+Caa1
+CCC
+Caa2
+CCC−
+Caa3
+CC
+Ca
+C
+D
+
 ************************************************************************************
 
 Cash Security Adjustments
