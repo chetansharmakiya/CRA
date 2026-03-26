@@ -13,6 +13,10 @@ REQUEST :
     templateStatus : "Pending",
     category : [ "Liabilities", "Liabilities" ],
     industrySector : [ "banking", "oil & gas", "manufacturing" ],
+    
+    qualitativeFactorsWeightage : 50,
+    quantitativeFactorsWeightage : 50,
+
     description : "Some Description",
     isActive : true,
     parameters : {
@@ -84,6 +88,8 @@ REQUEST :
     templateStatus : "Pending",
     category : [ "Liabilities", "Liabilities" ],
     industrySector : [ "banking", "oil & gas", "manufacturing" ],
+    qualitativeFactorsWeightage : 50,
+    quantitativeFactorsWeightage : 50,
     description : "Some Description",
     isActive : true,
     parameters : {
@@ -169,6 +175,8 @@ RESPONSE :
     templateStatus : "Pending",
     category : [ "Liabilities", "Liabilities" ],
     industrySector : [ "banking", "oil & gas", "manufacturing" ],
+    qualitativeFactorsWeightage : 50,
+    quantitativeFactorsWeightage : 50,
     description : "Some Description",
     isActive : true,
     parameters : {
